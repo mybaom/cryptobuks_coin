@@ -1,0 +1,275 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+  <meta name="format-detection" content="telephone=no">
+  <title>U利派</title>
+  <link rel="stylesheet" type="text/css" href="css/swiper.min.css">
+  <link rel="stylesheet" type="text/css" href="css/common.css" />
+  <link rel="stylesheet" type="text/css" href="css/global.css">
+  <link rel="stylesheet" href="css/footer.css">
+  <style>
+    body{
+        background: #fff;
+    }
+    /* section li a>div{padding: 10px 0;} */
+    .swiper-container {
+      width: 100%;
+    }
+
+    .header {
+      border-bottom: none;
+    }
+
+    .header-scroll {
+      box-shadow: 0 2px 2px #7d818a
+    }
+    .line{
+        width: 100%;
+        height: 10px;
+        background: #f4f8fb;
+    }
+    header img {
+      width: 24px;
+      height: 24px;
+      float: left;
+      margin-left: 10px;
+      margin-top: 5px;
+    }
+
+    header a {
+      position: absolute;
+    }
+
+    header span {
+      line-height: 35px;
+      margin: 0 5px;
+      color: #758a8f;
+      padding-bottom: 4px;
+    }
+
+    header .active {
+      color: #fff;
+    }
+
+    li a {
+      color: inherit;
+      display: block;
+      border: 1px solid #f1f1f1;
+      padding: 10px;
+      background: #fff;
+      border-radius: 2px;
+    }
+
+    li a .flex1>p {
+      font-size: 14px;
+    }
+
+    .swiper-slide {
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .agent_level {
+      width: 100%;
+    }
+
+    .mr5 {
+      margin-right: 5px;
+    }
+
+
+    .back {
+      background: url(images/return2.png)no-repeat;
+      background-size: 30px 24px;
+    }
+    .bgfff{
+        background: #fff;
+    }
+    .header-title{
+        padding: 10px 0;
+        text-align: center;
+        font-size: 18px;
+        font-weight: bold;
+    }
+    .header-bg{
+        position: relative;
+        height: 150px;
+    }
+    .header-bg img{
+        width: 100%;
+        height: 150px;
+    }
+    .header-zichan-box{
+        position: absolute;
+        top: 20px;
+        margin: 0 8%;
+    }
+    .header-zichan-title{
+        color: #b0c9fe;
+        font-size: 12px;
+    }
+    .header-zichan-ftitle{
+        margin-top: 8px;
+    font-size: 20px;
+    color: #fff;
+    font-weight: bold;
+    text-align: center;
+    }
+    .menu{
+        display: flex;
+        flex-direction: row;
+        padding-bottom: 30px;
+    }
+    .menu a{
+        text-align: center;
+        width: 50%;
+    }
+    .menu a img{
+        width: 30px;
+        height: 30px;
+    }
+    .account{
+        display: flex;
+        flex-direction: row;
+    }
+    .account span{
+        width: 100%;
+        text-align: center;
+        padding: 15px 0;
+        color: #90a2b0;
+    }
+    .active{
+        color: #588bf7 !important;
+        border-bottom: 2px solid #588bf7;
+    }
+  </style>
+</head>
+
+<body>
+    
+    <div id="app" v-cloak>
+        <header class="header">
+            <a class="back mt5" href="index.html">
+    
+            </a>
+            <h4 class="ft16" data-localize="ulipai.index">U利派</h4>
+        </header>
+        <div class="bgfff">
+        
+            <div class="header-title" data-localize="ulipai.index">U利派</div>
+            <div class="header-bg">
+                <div class="header-zichan-box" >
+                    <div class="header-zichan-title" data-localize="ulipai.trusteeship_funds">正在托管的资金</div>
+                    <div class="header-zichan-ftitle">{{trusteeship_funds | toFixedfour}}</div>
+                </div>
+            
+                 <div class="header-zichan-box" style="top: 33px; right: -5px; width: 61px; height: 30px; line-height: 30px;padding: 0px auto; text-align: center;  background-color: #007aff;    border-radius: 6px;"  @click="window.location.href ='ulipaiorderlist.html'">
+                    <div class="header-zichan-title" data-localize="ulipai.wtdd">委托订单</div>
+                </div>
+            
+                <div class="header-zichan-box" style="top: 90px;">
+                    <div class="header-zichan-title" data-localize="ulipai.yjjrsy">预计今日收益</div>
+                    <div class="header-zichan-ftitle" style="font-size: 14px;margin-top:1px">{{expected_earnings_today | toFixedfour}}</div>
+                </div>
+            
+                <div class="header-zichan-box" style="top: 90px;  right: 35%;">
+                    <div class="header-zichan-title" data-localize="ulipai.ljsy">累计收益</div>
+                    <div class="header-zichan-ftitle" style="font-size: 14px;margin-top:1px">{{cumulative_revenue | toFixedfour}}</div>
+                </div>
+            
+                <div class="header-zichan-box" style="top: 90px;  right: 0px;">
+                    <div class="header-zichan-title" data-localize="ulipai.tgzddd">托管中的订单</div>
+                    <div class="header-zichan-ftitle" style="font-size: 14px;margin-top:1px">{{orders_in_custody}}</div>
+                </div>
+            
+                <img src="images/new/zc_bg.7087424.png">
+            </div>
+        </div>
+    
+       
+        <div class="level_con">
+      
+            <ul class="deal_lists"  >
+              <li v-for="item in ulipaiList" :key="item.id">
+                  
+                  
+                <a href="javascript:;" >
+                  <p class="flex between">
+                    <span class="f16" style="font-size: 18px;  font-weight: bold;">{{item.title}}</span>
+                    
+                     <button style="width: 60px;height: 30px;background-color: #588bf7;border-radius: 10px;color: #fff;"  @click="window.location.href ='zhuanru.html?id='+item.id"  data-localize="ulipai.qmr">{{getlg('qmr')}}</button>
+                    <!--<img src="images/arrrowr.png" alt="" style="width:12px;height:12px;">-->
+                  </p>
+                  
+                  <div class="flex" style=" margin-top: 15px;">
+                    <div class="flex1 mr5" style="text-align: center;">
+                      <span class="ft12 blue2" data-localize="ulipai.dbxe">{{getlg('dbxe')}}</span>
+                      <p style="color: #007aff;">{{item.min}}~{{item.max}}</p>
+                    </div>
+                    <div class="flex1 mr5" style="text-align: center;">
+                      <span class="ft12 blue2" data-localize="ulipai.rsyl">{{getlg('rsyl')}}</span><span class="ft12 blue2">(%)</span>
+                      <p style="color: #007aff;">{{item.min_daily_yield}}~{{item.max_daily_yield}}</p>
+                    </div>
+                    <div class="flex1 tr" style="text-align: center;">
+                      <span class="ft12 blue2" data-localize="ulipai.zq">{{getlg('zq')}}</span>
+                      <p class="white_gray" style="color: #007aff;">{{item.cycle}}
+                      </p>
+                    </div>
+                  </div>
+                  
+                </a>
+                
+                
+              </li>
+            </ul>
+
+     
+        </div>
+
+    
+    </div>
+   
+  
+  
+    <div style="height: 40px;"></div>
+   	
+
+  <script type="text/javascript" src="lib/jquery-1.8.3.min.js"></script>
+  <script type="text/javascript" src="lib/swiper.min.js"></script>
+  <script type="text/javascript" src="javascripts/jquery.cookie.js"></script>
+  <script type="text/javascript" src="lib/layer_mobile/layer.js"></script>
+  <script type="text/javascript" src="lib/vue.min.js"></script>
+  <script type="text/javascript" src="lib/jquery.localize.min.js"></script>
+	<script type="text/javascript" src="lib/language_cookie.js"></script>
+	
+  <script type="text/javascript" src="javascripts/main.js"></script>
+  <script type="text/javascript" src="javascripts/assets.js?5"></script>
+	<script>
+  window.onload = function() {
+    // 阻止双击放大
+    var lastTouchEnd = 0;
+    document.addEventListener('touchstart', function(event) {
+        if (event.touches.length > 1) {
+            event.preventDefault();
+        }
+    });
+    document.addEventListener('touchend', function(event) {
+        var now = (new Date()).getTime();
+        if (now - lastTouchEnd <= 300) {
+            event.preventDefault();
+        }
+        lastTouchEnd = now;
+    }, false);
+
+    // 阻止双指放大
+    document.addEventListener('gesturestart', function(event) {
+        event.preventDefault();
+    });
+}
+</script>
+</body>
+
+</html>

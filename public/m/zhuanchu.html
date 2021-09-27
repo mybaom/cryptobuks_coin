@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>U利派</title>
+    <link rel="stylesheet" href="css/common.css">
+    <script>
+        function code(result) {
+            $(".address").val(result)
+        }
+    </script>
+</head>
+<style>
+    .bline {
+        border-bottom: 1px solid #eee;
+        padding: 10px 0;
+    }
+
+    .mt30 {
+        margin-top: 30px
+    }
+
+    .color1b {
+        color: #728daf
+    }
+
+    .mention {
+        width: 100%;
+        height: 50px;
+        line-height: 50px;
+        color: #fff;
+        background: #f0b90b;
+        border-radius: 2px;
+        font-size: 20px;
+    }
+
+    .addbox img {
+        width: 20px;
+    }
+
+    .addbox span {
+        padding: 0 5px
+    }
+
+    input {
+        background-color: rgba(0, 0, 0, 0);
+    }
+    .address{
+        width:90%;
+    }
+</style>
+
+<body class="bgWhite">
+    <header class="header">
+        <a class="back mt5" href="javascript:history.go(-1)">
+
+        </a>
+        <h4 class="ft16" data-localize="yubao.yubao">U利派</h4>
+    </header>
+    <div class="header-space"></div>
+    <div class="plr15 ft14 mt20">
+        <p class="mt20" data-localize="assets.avaiable">可用转出</p>
+        <p class="mt20 ft14 bold"><span class="balance-num">0.00</span> <span class="title">USDT</span></p>
+        
+        <div class="bline mt30">
+            <p data-localize="assets.num">数量</p>
+            <div class="flex between alcenter mt20">
+                <input type="number" data-localize="yubao.zhuanchunum" placeholder="请输入转出数量" class="ft14 count">
+                <div>
+                    <span class="white_gray title">USDT</span>
+                    <span class="">|</span>
+                    <span class=" bold all_in" data-localize="deals.all">全部</span>
+                </div>
+            </div>
+        </div>
+        
+      
+        <div class="mention tc ft14 mt20" data-localize="yubao.tmoney">转出</div>
+    </div>
+    <script src="lib/jquery-2.1.1.min.js"></script>
+    <script src="javascripts/fastclick.js"></script>
+    <script src="javascripts/jquery.cookie.js"></script>
+    <script src="lib/layer_mobile/layer.js"></script>
+    <script type="text/javascript" src="lib/jquery.localize.min.js"></script>
+    <script type="text/javascript" src="lib/language_cookie.js"></script>
+    <script src="javascripts/main.js"></script>
+    <script>
+        $(function () {
+            // FastClick.attach(document.body);
+            var currency =3;// get_param('id');
+            var yubao, min_number, rate;
+            initDataToken({
+                url: 'wallet/get_info',
+                type: 'post',
+                data: {
+                    currency
+                }
+            }, function (res) {
+                yubao = res.yubao;
+                $('.balance-num').html(yubao)
+                $('.title').html(res.name)
+                rate = res.rate;
+                $('.ratenum').html(rate)
+                min_number = res.min_number;
+                // $('.count').attr('placeholder', getlg('minimum') + iTofixed(min_number,2))
+                var num = 0;
+                $('.reach-num').html(iTofixed(num,2));
+            })
+
+            function postData() {
+                // var address = $('.address').val();
+                var number = $('.count').val();
+                // if (!address) {
+                //     layer_msg(getlg('withdrawalAddress'));
+                //     return;
+                // }
+                if (!number) {
+                    layer_msg(getlg('zhuanzhuAmount'));
+                    return;
+                }
+
+                if (number <= 0) {
+                    //请输入转入数量
+                    return layer_msg(getlg('zhuanchuAmount'));
+                }
+
+                initDataToken({
+                    url: 'wallet/yubaozhuanchu',
+                    type: 'post',
+                    data: {
+                        currency,
+                        number,
+                    }
+                }, function (res) {
+                   
+                    layer_msg(res)
+                    setTimeout(() => {
+                        location.href = 'yubao.html'
+                    }, 1500);
+                })
+
+            }
+            $('.mention').click(function () {
+                postData();
+            })
+            $('.all_in').click(function () {
+                $('.count').val(balance);
+                var num = iTofixed(balance - rate,2);
+                if (num > 0) {
+                    $('.reach-num').html(num);
+                } else {
+                    $('.reach-num').html('0.00');
+                }
+
+            })
+            $('.count').keyup(function () {
+                var value = $(this).val();
+                var num = iTofixed(value - rate,2);
+                if (num > 0) {
+                    $('.reach-num').html(num);
+                } else {
+                    $('.reach-num').html('0.00');
+                }
+
+            })
+
+        })
+    </script>
+</body>
+
+</html>

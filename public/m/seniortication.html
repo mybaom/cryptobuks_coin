@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	<title>高级验证</title>
+	<link rel="stylesheet" type="text/css" href="css/common.css">
+	<link rel="stylesheet" type="text/css" href="css/style.css" />
+	
+	<style>
+	.bgLinearblue	{
+    height: 50px;
+    border-radius: 2px;
+    color: #fff;
+    background: #588bf7;
+    text-align: center;
+    line-height: 50px;
+    font-size: 18px;
+		padding: 0;
+		margin: 40px 12px 10px;
+		
+		}
+	</style>
+</head>
+<style>
+</style>
+
+<body class="bgWhite">
+	<div id="app">
+		<header class="header">
+			<a class="back mt5" href="javascript:history.go(-1)">
+
+			</a>
+			<h4 class="ft16" data-localize="senior.test">高级认证</h4>
+		</header>
+		<div class="header-space"></div>
+		<div class="from mb20 ml12 auth">
+			<div class="mb20 mt20">
+				<p data-localize="senior.name">居住地址：</p>
+				<input type="text" class="name bdb pb5 ft14" data-localize="senior.pname" placeholder="请输入居住地址" />
+			</div>
+			<!--<div class="mb20">-->
+			<!--	<p data-localize="auth.number">身份证号：</p>-->
+			<!--	<input type="text" class="sfzh bdb pb5 ft14" data-localize="auth.pnum" placeholder="请输入身份证号" />-->
+			<!--</div>-->
+		</div>
+		<div class="text ml12 ">
+			<p class="white_gray ft12" data-localize="senior.upimg">请上传居住地</p>
+		</div>
+		<div class="flex jucenter mt15">
+			<div class="qwe">
+				<div id="prev" class="haokan">
+					<img src="images/myimg/688660269851391423.png" alt="" id="view" />
+					<input type="file" id="file" accept="image/*" name='file' />
+				</div>
+			</div>
+		
+		</div>
+
+
+		<button class="bgLinearblue ftw ft16" data-localize="auth.updata">提交</button>
+	</div>
+	<script type="text/javascript" src="lib/jquery-2.1.1.min.js"></script>
+	<script type="text/javascript" src="lib/layer_mobile/layer.js"></script>
+	<script type="text/javascript" src="javascripts/jquery.cookie.js"></script>
+	<script type="text/javascript" src="lib/jquery.localize.min.js"></script>
+	<script type="text/javascript" src="lib/language_cookie.js"></script>
+	<script type="text/javascript" src="javascripts/main.js"></script>
+	<script>
+		$(function () {
+			// FastClick.attach(document.body);
+			$('#file').change(function () {
+				var formData = new FormData();
+				formData.append("file", $("#file")[0].files[0]);
+				var i = layer_loading()
+				$.ajax({
+					url: _API + 'upload',
+					type: 'post',
+					data: formData,
+					processData: false,
+					contentType: false,
+					success: function (msg) {
+						if (msg.type == 'ok') {
+							$("#view").attr("src", msg.message);
+							setTimeout(function () {
+								layer_close(i);
+							}, 3000)
+						} else {
+							$("#view").attr("src", 'images/myimg/688660269851391423.png');
+							layer_msg(msg.message)
+						}
+					}
+				});
+			});
+		
+			$("button").click(function () {
+				var token = get_user_login();
+				var name = $(".name").val();
+			
+				var img1 = $("#view").attr("src");
+			
+			
+				if (!name) {
+					layer_msg(getlg('juzudz'));
+					return false;
+				}
+			
+				if (img1 == 'images/myimg/688660269851391423.png' ) {
+					layer_msg(getlg('juzuimg'));
+					return false;
+				}
+				$.ajax({
+					url: _API + 'user/residence',
+					type: 'POST',
+					data: {
+						name: name,
+						front_pic: img1,
+					},
+					dataType: 'JSON',
+					async: true,
+					beforeSend: function beforeSend(request) {
+						request.setRequestHeader("Authorization", token);
+					},
+					success: function (data) {
+						layer_msg(data.message);
+	
+						if (data.type == 'ok') {
+							setTimeout(function () {
+								location.href = 'index.html'
+							}, 1500)
+						}
+	
+					}
+	
+				})
+			})
+		})
+	</script>
+</body>
+
+</html>

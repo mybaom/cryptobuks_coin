@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="88b03bd5-235f-43c2-94f2-e70e08393711" name=".">
+        <fileTransfer rootFolder="/var/www/coinmsexchange.com" accessType="SFTP" host="45.32.127.103" port="22" sshConfigId="1188fc9c-b0a4-42d0-8d88-65560f4d6f4a" sshConfig="root@45.32.127.103:22 password">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
