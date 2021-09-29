@@ -96,9 +96,9 @@ Route::group([ 'middleware' => ['lang', /*'check_user'*/]], function () {
     Route::post('api/deal/market_k', 'Api\CurrencyController@market_k');//行情详情  测试接口
 
 
-Route::any('api/currency/market_day', 'Api\CurrencyController@market_day');//当天行情
- Route::any('api/currency/new_timeshar', 'Api\CurrencyController@newTimeshars')->middleware(['cross']); //K线分时数据，对接tradeingview
-//    Route::any('api/currency/new_timeshar','Api\CurrencyController@klineMarket')->middleware(['cross']); //K线分时数据，对接tradeingview
+    Route::any('api/currency/market_day', 'Api\CurrencyController@market_day');//当天行情
+    //Route::any('api/currency/new_timeshar', 'Api\CurrencyController@newTimeshars')->middleware(['cross']); //K线分时数据，对接tradeingview
+    Route::any('api/currency/new_timeshar','Api\CurrencyController@klineMarket')->middleware(['cross']); //K线分时数据，对接tradeingview
     Route::any('api/currency/kline_market',
         'Api\CurrencyController@klineMarket')->middleware(['cross']); //K线分时数据，对接tradeingview
     Route::any('api/currency/timeshar', 'Api\CurrencyController@timeshar');//分时
