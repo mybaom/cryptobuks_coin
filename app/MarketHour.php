@@ -431,8 +431,8 @@ class MarketHour extends Model
         $interval = $interval_list[$peroid];
         $size = intval(($to - $from) / $interval) + 100;
         $size > 10000 && $size = 10000;
-        $type = $base_currency . '.' . $quote_currency . '.' . $peroid;
-        
+//        $type = $base_currency . '.' . $quote_currency . '.' . $peroid;
+        $type = 'doc';
         $es_client = self::getEsearchClient();
 
         $params = [
