@@ -39,6 +39,12 @@
 					<span>简体中文</span></li>
 				<li data-type="en"><img class="logos" src="images/en.png">
 					<span>English</span></li>
+				<li data-type="de"><img class="logos" src="images/de-logo.png">
+					<span>德语</span></li>
+				<li data-type="fr"><img class="logos" src="images/fr-logo.png">
+					<span>法语</span></li>
+				<li data-type="es"><img class="logos" src="images/es-logo.png">
+					<span>西班牙语</span></li>
 				<li data-type="kor"><img class="logos" src="images/kor.png">
 					<span>韩语</span></li>
 
@@ -289,7 +295,13 @@
         $('.langs .logos').attr('src', 'images/jp.png');
     }else if(getLocal('language') && getLocal('language') == 'th'){
         $('.langs .logos').attr('src', 'images/th.png');
-    }
+    }else if(getLocal('language') && getLocal('language') == 'de'){
+		$('.langs .logos').attr('src', 'images/de-logo.png');
+	}else if(getLocal('language') && getLocal('language') == 'fr'){
+		$('.langs .logos').attr('src', 'images/fr-logo.png');
+	}else if(getLocal('language') && getLocal('language') == 'es'){
+		$('.langs .logos').attr('src', 'images/es-logo.png');
+	}
     var picList = [];
 
     $(".demos").bootstrapNews({
@@ -557,9 +569,14 @@
         $('.langs span').text($(this).find('span').text());
         $('.lang-list').hide();
         var texts = $(this).attr('data-type');
+        console.log(texts);
         setLocal('language', texts);
-        location.reload();
-        setLang(texts)
+
+		//return false;
+        setLang(texts);
+		setTimeout(function(){
+			location.reload();
+		}, 300)
     })
     function runbanner(){
         new Swiper('#certify .swiper-container', {

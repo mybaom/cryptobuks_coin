@@ -22,7 +22,10 @@ class News extends ShopModel
         'zh' => '中文简体',
         'en' => '英文',
         'jp' => '日语',
-        'hk' => '中文繁体'
+        'hk' => '中文繁体',
+        'fr' => '法语',
+        'es' => '西班牙语',
+        'de' => '德语'
     ];
 
     public static function getLangeList()

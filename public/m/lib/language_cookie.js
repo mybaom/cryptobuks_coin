@@ -11,6 +11,7 @@ function setLang(lang) {
         },
         async: true,
         success: function (res) {
+            location.reload();
             // window.location.href = 'index.html';
         }
     });
@@ -48,6 +49,12 @@ function changeLg() {
     }else if (getLocal('language') && getLocal('language') == 'kor') {
         lang = getLocal('language')
     }else if (getLocal('language') && getLocal('language') == 'jp') {
+        lang = getLocal('language')
+    }else if (getLocal('language') && getLocal('language') == 'es') {
+        lang = getLocal('language')
+    }else if (getLocal('language') && getLocal('language') == 'fr') {
+        lang = getLocal('language')
+    }else if (getLocal('language') && getLocal('language') == 'de') {
         lang = getLocal('language')
     }else if (getLocal('language') && getLocal('language') == 'th') {
         lang = getLocal('language')
