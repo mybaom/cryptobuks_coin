@@ -565,18 +565,13 @@
         $('.lang-list').toggle();
     })
     $('.lang-list li').click(function () {
-        $('.langs .logos').attr('src', $(this).find('.logos').attr('src'));
-        $('.langs span').text($(this).find('span').text());
-        $('.lang-list').hide();
-        var texts = $(this).attr('data-type');
-        console.log(texts);
-        setLocal('language', texts);
-
-		//return false;
-        setLang(texts);
-		setTimeout(function(){
-			location.reload();
-		}, 300)
+		$('.langs .logos').attr('src', $(this).find('.logos').attr('src'));
+		$('.langs span').text($(this).find('span').text());
+		$('.lang-list').hide();
+		var texts = $(this).attr('data-type');
+		setLocal('language', texts);
+		setLang(texts)
+		location.reload();
     })
     function runbanner(){
         new Swiper('#certify .swiper-container', {

@@ -11,7 +11,6 @@ function setLang(lang) {
         },
         async: true,
         success: function (res) {
-            location.reload();
             // window.location.href = 'index.html';
         }
     });
