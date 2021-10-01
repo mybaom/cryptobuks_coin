@@ -106,7 +106,7 @@
                 <div id="code"></div>
             </div>
         </div>
-       <div class="address tc plr10 ft14">{{chargeAddress[currentChangeName].value}}</div>
+       <div class="address tc plr10 ft14">{{chargeAddress[currentChangeName]}}</div>
         <div class="copy blue tc mt10 ft14" data-localize="assets.copyaddress">复制地址</div>
         <div class="cz-row">
 	    	<label data-localize="assets.num">充值数量</label>
@@ -165,7 +165,7 @@
                             $('#code').qrcode({
                                 width: 200, //宽度
                                 height: 200, //高度
-                                text: app.chargeAddress[app.currentChangeName].value ? app.chargeAddress[app.currentChangeName].value : ''
+                                text: app.chargeAddress[app.currentChangeName]
                             });
                         }
                     }
@@ -216,7 +216,7 @@
                     $('#code').qrcode({
                         width: 200, //宽度
                         height: 200, //高度
-                        text: this.chargeAddress[e.target.value].value ? this.chargeAddress[e.target.value].value : ''
+                        text: this.chargeAddress[e.target.value]
                     });
                 }
             },
