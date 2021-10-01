@@ -349,7 +349,7 @@ class CurrencyController extends Controller
 
     public function getChargeCoinAddress()
     {
-        $getRechargeAddress = Setting::query()->whereIn('key', 'recharge_btc_address,recharge_eth_address,recharge_usdt_address')->select();
+        $getRechargeAddress = Setting::whereIn('key', 'recharge_btc_address,recharge_eth_address,recharge_usdt_address')->select();
         return $this->success($getRechargeAddress);
     }
 
