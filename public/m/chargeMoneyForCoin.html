@@ -163,11 +163,11 @@
                         var data = res.message;
                         var quotation = data.find((item) => item.name == 'USDT').quotation;
                         app.currencyList = [
-                            {name:"BTC", now_price : quotation.find((item) => item.legal_name == 'BTC').now_price},
-                            {name:"ETH", now_price : quotation.find((item) => item.legal_name == 'ETH').now_price},
-                            {name:"USDT", now_price : quotation.find((item) => item.legal_name == 'USDT').now_price}
+                            {name:"BTC", now_price : quotation.find((item) => item.currency_name == 'BTC').now_price},
+                            {name:"ETH", now_price : quotation.find((item) => item.currency_name == 'ETH').now_price},
+                            {name:"USDT", now_price : quotation.find((item) => item.currency_name == 'USDT').now_price}
                         ];
-                        app.nowPrice = quotation.find((item) => item.legal_name == app.currentChangeName).now_price;
+                        app.nowPrice = quotation.find((item) => item.currency_name == app.currentChangeName).now_price;
                     }
                 }
             })
