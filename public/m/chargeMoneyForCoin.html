@@ -106,7 +106,7 @@
                 <div id="code"></div>
             </div>
         </div>
-       <div class="address tc plr10 ft14 "></div>
+       <div class="address tc plr10 ft14">{{chargeAddress[currentChangeName].value}}</div>
         <div class="copy blue tc mt10 ft14" data-localize="assets.copyaddress">复制地址</div>
         <div class="cz-row">
 	    	<label data-localize="assets.num">充值数量</label>
@@ -160,7 +160,14 @@
                 },
                 success: function (res) {
                     if (res.type == 'ok') {
-
+                        app.chargeAddress = res.message;
+                        if(app.nowPrice !== 0){
+                            $('#code').qrcode({
+                                width: 200, //宽度
+                                height: 200, //高度
+                                text: app.chargeAddress[app.currentChangeName].value ? app.chargeAddress[app.currentChangeName].value : ''
+                            });
+                        }
                     }
                 }
             })
@@ -200,11 +207,17 @@
                 // {name:"USDT", now_price : 0}
                 currentChangeName: "BTC",
                 nowPrice: 0,
+                chargeAddress: [],
             },
             methods: {
                 currencyChange: function(e){
                     this.currentChangeName = e.target.value;
-                    this.nowPrice = this.currencyList.find((item) => item.name == e.target.value).now_price
+                    this.nowPrice = this.currencyList.find((item) => item.name == e.target.value).now_price;
+                    $('#code').qrcode({
+                        width: 200, //宽度
+                        height: 200, //高度
+                        text: this.chargeAddress[e.target.value].value ? this.chargeAddress[e.target.value].value : ''
+                    });
                 }
             },
             created: function () {
