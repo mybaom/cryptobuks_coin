@@ -162,6 +162,7 @@
                     if (res.type == 'ok') {
                         app.chargeAddress = res.message;
                         if(app.nowPrice !== 0){
+                            $('#code').html('');
                             $('#code').qrcode({
                                 width: 200, //宽度
                                 height: 200, //高度
@@ -191,6 +192,15 @@
                         ];
                         // {name:"USDT", now_price : quotation.find((item) => item.currency_name == 'USDT').now_price}
                         app.nowPrice = quotation.find((item) => item.currency_name == app.currentChangeName).now_price;
+
+                        if(app.chargeAddress.length !== 0){
+                            $('#code').html('');
+                            $('#code').qrcode({
+                                width: 200, //宽度
+                                height: 200, //高度
+                                text: app.chargeAddress[app.currentChangeName]
+                            });
+                        }
                     }
                 }
             })
@@ -213,6 +223,7 @@
                 currencyChange: function(e){
                     this.currentChangeName = e.target.value;
                     this.nowPrice = this.currencyList.find((item) => item.name == e.target.value).now_price;
+                    $('#code').html('');
                     $('#code').qrcode({
                         width: 200, //宽度
                         height: 200, //高度
