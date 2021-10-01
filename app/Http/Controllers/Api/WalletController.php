@@ -443,6 +443,7 @@ class WalletController extends Controller
             return $this->error($ex->getMessage());
         }
     }
+
 	public function chargeReq(){
 		$user_id = Users::getUserId();
         $currency_id = Input::get("currency", '');
@@ -750,6 +751,7 @@ class WalletController extends Controller
             return $this->error($ex->getMessage());
         }
     }
+
     //充币地址
     //充币地址
     public function getWalletAddressIn(){
@@ -759,6 +761,7 @@ class WalletController extends Controller
         if (empty($user_id) || empty($currency_id)) {
             return $this->error('参数错误');
         }
+
         $currencyInfo = Currency::find($currency_id);
         if(!$currencyInfo){
         	 return $this->error('参数错误');

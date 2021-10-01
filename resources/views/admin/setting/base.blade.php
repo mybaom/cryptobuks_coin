@@ -169,6 +169,27 @@
                             </div>
                         </div> -->
                         <div class="layui-form-item">
+                            <label class="layui-form-label">一级代理分佣（%）</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="recharge_distribution_I" autocomplete="off" class="layui-input"
+                                       value="@if(isset($setting['recharge_distribution_I'])){{$setting['recharge_distribution_I']}}@endif">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">二级代理分佣（%）</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="recharge_distribution_II" autocomplete="off" class="layui-input"
+                                       value="@if(isset($setting['recharge_distribution_II'])){{$setting['recharge_distribution_II']}}@endif">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">三级代理分佣（%）</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="recharge_distribution_III" autocomplete="off" class="layui-input"
+                                       value="@if(isset($setting['recharge_distribution_III'])){{$setting['recharge_distribution_III']}}@endif">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
                             <label class="layui-form-label">余额宝利率（%）</label>
                             <div class="layui-input-block">
                                 <input type="text" name="yubao_linv" autocomplete="off" class="layui-input"

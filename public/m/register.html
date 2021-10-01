@@ -54,6 +54,7 @@
 <!--                       name="invite" value="" />-->
 <!--                &lt;!&ndash; <p id="mes3" style="color:#cc704b;font-size: 12px;margin:5px 0 0 10px;"></p> &ndash;&gt;-->
 <!--            </div>-->
+            <input id="invite" type="hidden" name="invite" />
             <div class="checkbox">
                 <label> <input type="checkbox" checked id="agree" /> <span
                         data-localize="contract.agree">我同意</span> <a href="policy.html"
@@ -73,13 +74,13 @@
 <script type="text/javascript" src="lib/language_cookie.js"></script>
 <script type="text/javascript" src="javascripts/main.js"></script>
 <script type="text/javascript">
-    // $(function() {
-    //     // FastClick.attach(document.body);
-    //     if(get_param('cod') && get_param('cod') != 'null') {
-    //         $('#invite').val(get_param('cod'));
-    //         $('#invite').attr("disabled",true);
-    //     }
-    // })
+    $(function() {
+        // FastClick.attach(document.body);
+        console.log(get_param('code'))
+        if(get_param('code') && get_param('code') != 'null') {
+            $('#invite').val(get_param('code'));
+        }
+    })
     $("#agree").click(function() {
         $("#sendSet").toggleClass("agree");
         var st = $("#sendSet").attr("disabled");
@@ -147,7 +148,7 @@
         var verify = $("#verificate").val();
         var pass = $('#setpassword').val();
         var repass = $("#verifypassword").val();
-        // var extensionCode = $("#invite").val();
+        var extensionCode = $("#invite").val();
         var reg = /^1[3456789]\d{9}$/;
         var emreg = /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/;
 /*        if (!extensionCode) {
@@ -166,7 +167,7 @@
                         data: {
                             "user_string": name,
                             "password": pass,
-                            // "extension_code": extensionCode,
+                            "extension_code": extensionCode,
                             "re_password": repass,
                             "type": "mobile",
                             "code": verify,
@@ -210,7 +211,7 @@
                         data: {
                             "user_string": name,
                             "password": pass,
-                            // "extension_code": extensionCode,
+                            "extension_code": extensionCode,
                             "re_password": repass,
                             "type": "email",
                             "code": verify
