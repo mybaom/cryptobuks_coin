@@ -110,7 +110,7 @@
         <div class="copy blue tc mt10 ft14" data-localize="assets.copyaddress">复制地址</div>
         <div class="cz-row">
 	    	<label data-localize="assets.num">充值数量</label>
-	    	<input id="number" type="number">
+	    	<input id="number" type="number" :value="quantity" v-model="quantity" />
 	    </div>
         <div class="qb-box">
             <aside data-localize="assets.currencyName">交易币种</aside>
@@ -120,11 +120,11 @@
         </div>
         <div class="qb-box">
             <aside data-localize="deals.nowprice">当前价</aside>
-            <input id="nowprice" type="text" :value="nowPrice" />
+            <input id="nowprice" type="text" :value="nowPrice" readonly />
         </div>
 	    <div class="qb-box">
-	    	<aside data-localize="assets.caddress">钱包地址</aside>
-	    	<input id="address" type="text">
+	    	<aside data-localize="assets.dnum">到账金额</aside>
+	    	<input id="dnum" type="text" :value="(Math.floor(quantity * nowPrice * 100) / 100)" />
 	    </div>
 	    <div class="ck-btn" data-localize="assets.cmoney" id="submit">充值</div>
         <div class="ft12 mt40 colorGrey">
@@ -165,7 +165,6 @@
                         app.currencyList = [
                             {name:"BTC", now_price : quotation.find((item) => item.currency_name == 'BTC').now_price},
                             {name:"ETH", now_price : quotation.find((item) => item.currency_name == 'ETH').now_price},
-
                         ];
                         // {name:"USDT", now_price : quotation.find((item) => item.currency_name == 'USDT').now_price}
                         app.nowPrice = quotation.find((item) => item.currency_name == app.currentChangeName).now_price;
@@ -177,14 +176,14 @@
         app = new Vue({
             el: '#app',
             data: {
+                quantity: 10,
                 currencyList: [
                     {name:"BTC", now_price : 0},
                     {name:"ETH", now_price : 0},
-
                 ],
                 // {name:"USDT", now_price : 0}
                 currentChangeName: "BTC",
-                nowPrice: 0,
+                nowPrice: 10,
             },
             methods: {
                 currencyChange: function(e){
@@ -201,8 +200,6 @@
         })
     </script>
     <script>
-
-
         $(function () {
         	$('#submit').on('click',function(){
 				var acc = $('#address').val()
