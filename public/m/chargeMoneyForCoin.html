@@ -114,11 +114,13 @@
 	    </div>
         <div class="qb-box">
             <aside data-localize="assets.currencyName">交易币种</aside>
-            <select id="currency" style="width: 100%; height: 40px; margin-top: 20px;">
-                <option value="BTC">BTC</option>
-                <option value="ETH">ETH</option>
-                <option value="USDT">USDT</option>
+            <select @change="currencyChange" id="currency" v-on:change="" style="width: 100%; height: 40px; margin-top: 20px;">
+                <option v-for="currency in currencyList" :value="currency.name">{{currency.name}}</option>
             </select>
+        </div>
+        <div class="qb-box">
+            <aside data-localize="deals.nowprice">当前价</aside>
+            <input id="nowprice" type="text" :value="nowPrice" />
         </div>
 	    <div class="qb-box">
 	    	<aside data-localize="assets.caddress">钱包地址</aside>
@@ -146,7 +148,7 @@
         var token = get_user_login();
         var currency = get_param('id');
         var name = get_param('name');
-        console.log(token)
+        var app;
 
         function intervalData(isFisrt) {
             $.ajax({
@@ -159,74 +161,34 @@
                 success: function (res) {
                     if (res.type == 'ok') {
                         var data = res.message;
-                        var html = ''
-                        var usdtData = data.find((item) => item.name == 'USDT').quotation;
-                        for (var i in usdtData) {
-                            if (usdtData[i].is_display == 1) {
-                                html +=
-                                    `<li class="swiper-slide">
-                                        <a href="dataMap.html?legal_id=${usdtData[i].legal_id}&currency_id=${usdtData[i].currency_id}&symbol=${usdtData[i].currency_name}/USDT">
-                                        <small class="usdt">${usdtData[i].currency_name}/USDT</small>
-                                        <h4 style="color:${usdtData[i].change<0?'#ff3e60':'#00c087'}">${iTofixed(usdtData[i].now_price,4) || '0.00'}<span>${usdtData[i].change || '0.00'}%</span></h4>
-                                        <small class="cny">≈${iTofixed((usdtData[i].now_price-0)*1,2) || '0.00'}$</small></a>
-                                    </li>`
-                            }
-
-                        }
-                        $('.trade_list').html(html)
-                        var swiper = new Swiper('.trade', {
-                            slidesPerView: 3,
-                            spaceBetween: 30,
-                            // pagination: {
-                            //     el: '.swiper-pagination',
-                            //     clickable: true,
-                            // },
-                        });
-                        var phHtml = ''
-                        var phData = [];
-                        for (var i = 0; i < data.length; i++) {
-                            var quotation = data[i].quotation;
-                            for (var j = 0; j < quotation.length; j++) {
-                                var item = quotation[j];
-                                item['legal_name'] = data[i].name;
-                                // item['cny_price']=data[i].cny_price;
-                                phData.push(item);
-                            }
-                        }
-                        data.find((item) => item.name == 'USDT').quotation;
-                        phData = phData.filter((item) => item.change != null)
-                        phData = phData.sort(compare('change'))
-                        let num = 0;
-                        for (var i in phData) {
-                            if (phData[i].is_display == 1) {
-                                num++;
-                                if (num >= 10) {
-                                    break;
-                                }
-                                // <small>${(num-0)}.</small>
-                                phHtml +=
-                                    `
-                                    <li><a href="dataMap.html?legal_id=${phData[i].legal_id}&currency_id=${phData[i].currency_id}&symbol=${phData[i].currency_name}/${phData[i].legal_name}">
-
-                                        <b>${phData[i].currency_name} <span>/${phData[i].legal_name}</span><br /><span>${getlg('voltxt')} ${iTofixed((phData[i].volume || 0),0)}</span></b>
-                                        <b class="tc">${iTofixed(phData[i].now_price * 1,4) || '0.00'}<br /><span>≈${iTofixed((phData[i].now_price -0) *(phData[i].rmb_relation -0),2)|| '0.00'}CNY</span></b>
-                                        <button class="btn btn-default" style="background:${(phData[i].change - 0) >= 0 ? '#00c087' : '#ff3e60'}">${phData[i].change || '0.00'}%</button>
-                                        </a>
-                                    </li>
-                                `
-                            }
-                        }
-                        $('#performer').html(phHtml)
+                        var quotation = data.find((item) => item.name == 'USDT').quotation;
+                        app.currencyList = [
+                            {name:"BTC", now_price : quotation.find((item) => item.legal_name == 'BTC').now_price},
+                            {name:"ETH", now_price : quotation.find((item) => item.legal_name == 'ETH').now_price},
+                            {name:"USDT", now_price : quotation.find((item) => item.legal_name == 'USDT').now_price}
+                        ];
+                        app.nowPrice = quotation.find((item) => item.legal_name == app.currentChangeName).now_price;
                     }
                 }
             })
-
         }
 
-        var app = new Vue({
+        app = new Vue({
             el: '#app',
             data: {
-                quotation:[]
+                currencyList: [
+                    {name:"BTC", now_price : 0},
+                    {name:"ETH", now_price : 0},
+                    {name:"USDT", now_price : 0}
+                ],
+                currentChangeName: "BTC",
+                nowPrice: 0,
+            },
+            methods: {
+                currencyChange: function(e){
+                    this.currentChangeName = e.target.value;
+                    this.nowPrice = this.currencyList.find((item) => item.name == e.target.value).now_price
+                }
             },
             created: function () {
                 intervalData(true);
@@ -387,9 +349,3 @@
 </body>
 
 </html>
-<script>
-    import Select from "./element-ui/lib/select";
-    export default {
-        components: {Select}
-    }
-</script>
