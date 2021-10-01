@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Setting;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Http\Request;
@@ -344,6 +345,12 @@ class CurrencyController extends Controller
         
      
         return $this->success($currency);
+    }
+
+    public function getChargeCoinAddress()
+    {
+        $getRechargeAddress = Setting::query()->whereIn('key', 'recharge_btc_address,recharge_eth_address,recharge_usdt_address')->select();
+        return $this->success($getRechargeAddress);
     }
 
     public function dealInfo()

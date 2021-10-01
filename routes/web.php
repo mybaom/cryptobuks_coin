@@ -91,6 +91,7 @@ Route::group([ 'middleware' => ['lang', /*'check_user'*/]], function () {
     Route::get('api/currency/list', 'Api\CurrencyController@lists');//币种列表
     Route::get('api/currency/quotation', 'Api\CurrencyController@quotation');//币种列表带行情
     Route::any('api/currency/quotation_new', 'Api\CurrencyController@newQuotation'); //币种列表带行情(支持交易对)
+    Route::get('api/currency/get_charge_coin_address', 'Api\CurrencyController@getChargeCoinAddress'); //币种列表带行情(支持交易对)
     Route::post('api/deal/info', 'Api\CurrencyController@dealInfo');//行情详情
 
     Route::post('api/deal/market_k', 'Api\CurrencyController@market_k');//行情详情  测试接口

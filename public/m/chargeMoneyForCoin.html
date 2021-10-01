@@ -150,6 +150,22 @@
         var name = get_param('name');
         var app;
 
+        function getChargeCoinAddress() {
+            $.ajax({
+                url: _API + 'currency/get_charge_coin_address',
+                type: 'get',
+                dataType: 'json',
+                beforeSend: function beforeSend(request) {
+                    request.setRequestHeader("Authorization", token);
+                },
+                success: function (res) {
+                    if (res.type == 'ok') {
+
+                    }
+                }
+            })
+        }
+
         function intervalData(isFisrt) {
             $.ajax({
                 url: _API + 'currency/quotation_new',
@@ -183,7 +199,7 @@
                 ],
                 // {name:"USDT", now_price : 0}
                 currentChangeName: "BTC",
-                nowPrice: 10,
+                nowPrice: 0,
             },
             methods: {
                 currencyChange: function(e){
@@ -192,6 +208,7 @@
                 }
             },
             created: function () {
+                getChargeCoinAddress();
                 intervalData(true);
                 setInterval(function () {
                     intervalData(false)
