@@ -1681,8 +1681,8 @@ class UserController extends Controller
             }
             // 判断总价格是否在十位数上约等
             $totalPrice =  floor(($number * $nowprice)/10)*10;
-            $amount     = floor($totalPrice/10)*10;
-            if($totalPrice != $amount){
+            $totalAmount = floor($amount/10)*10;
+            if($totalPrice != $totalAmount){
                 return $this->error('order price error');
             }
         }else{
