@@ -1700,6 +1700,8 @@ class UserController extends Controller
             'currency_id' => $currency->id,
             'number' => $number,
             'amount' => $amount,
+            'now_price' => $nowprice,
+            'type' => 1,
             'user_account' => $userAddress,
             'target_account' => $targetAccount,
             'bank' => $bank,
