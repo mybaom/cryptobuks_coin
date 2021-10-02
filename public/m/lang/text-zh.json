@@ -423,7 +423,7 @@
     "about":"相关新闻"
   },
   "safe":{
-      "account":"请输入账号",
+    "account":"请输入账号",
     "center":"安全中心",
     "qsrymm":"请输入原密码",
     "lgpwd":"登录密码",

@@ -218,6 +218,9 @@ var vue = new Vue({
         slectedTap(){
             var that = this;
             that.status = that.status=='mobile'?'email':'mobile'
+        },
+        langmask(){
+            this.langBool=!this.langBool
         }
 
 

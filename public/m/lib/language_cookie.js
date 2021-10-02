@@ -96,6 +96,9 @@ var ts = {
         ry:"日语",
         yy:"英语",
         ty:"泰语",
+        de:"德语",
+        fr:"法语",
+        es:"西班牙语",
         tiaojiegg:"调节杠杆",
         xianjia:"限价",
         shijia:"市价",
@@ -358,6 +361,9 @@ var ts = {
         ry:"日語",
         yy:"英語",
         ty:"泰語",
+        de:"德文",
+        fr:"法文",
+        es:"西班牙文",
          tiaojiegg:"調節槓桿",
         xianjia:"限價",
         shijia:"市價",
@@ -622,6 +628,9 @@ var ts = {
         ry:"Japanese",
         yy:"English",
         ty:"Thai",
+        de:"German",
+        fr:"French",
+        es:"Spanish",
         tiaojiegg:"Adjustment multiple",
          xianjia:"Limit price",
         shijia:"Market price",
@@ -873,7 +882,7 @@ var ts = {
       mr:"buy",
       renamerequired: "Real name cannot be empty"
     },
-       jp: {
+    jp: {
               juzudz:"住所を入力してください。",
         juzuimg:"住所証明書をアップロードしてください。",
            zwjt:"簡体字中国語",
@@ -882,6 +891,9 @@ var ts = {
         ry:"日本人",
         yy:"英語",
         ty:"タイ人",
+        de:"ドイツ語",
+        fr:"フランス語",
+        es:"スペイン語",
         tiaojiegg:"レバーの調節",
         xianjia:"指し値",
         shijia:"市場価格",
@@ -1137,7 +1149,7 @@ var ts = {
       mr:"買い入れる",
       renamerequired: "実名は空ではいけません。"
     },
-     kor: {
+    kor: {
              juzudz:"거주 지 를 입력 하 세 요",
         juzuimg:"거주 지 를 입력 하 세 요",
            zwjt:"중국어 번체",
@@ -1146,6 +1158,9 @@ var ts = {
         ry:"일본어",
         yy:"영어",
         ty:"타이",
+        de:"독일어",
+        fr:"프랑스어",
+        es:"스페인어",
         tiaojiegg: "레버 조절", 
 		xianjia: "가격제한", 
 		shijia: "시장가격", 
@@ -1401,8 +1416,8 @@ var ts = {
       mr:"매입 하 다.",
       renamerequired: "실명 은 비어 있 으 면 안 됩 니 다."
     },
-       th: {
-               juzudz:"กรุณาระบุที่อยู่",
+    th: {
+        juzudz:"กรุณาระบุที่อยู่",
         juzuimg:"กรุณาอัปโหลดหลักฐานที่อยู่อาศัย",
         zwjt:"จีนตัวย่อ",
         zwft:"ภาษาจีนดั้งเดิม",
@@ -1410,6 +1425,9 @@ var ts = {
         ry:"ญี่ปุ่น",
         yy:"ภาษาอังกฤษ",
         ty:"ไทย",
+        de:"ภาษาเยอรมัน",
+        fr:"ภาษาฝรั่งเศส",
+        es:"ภาษาสเปน",
         tiaojiegg: "ปรับคันโยก", 
 		xianjia:" จำกัด ราคา", 
 		shijia: "ราคาตลาด", 

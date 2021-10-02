@@ -287,7 +287,7 @@ class SmsController extends Controller
             $code = $this->createSmsCode(6);
             $mail->MsgHTML('Your verification code is' . '【' . $code . '】');   //邮件内容
             $mail->addAddress($email);  //收件人（用户输入的邮箱）
-             dd($mail);exit;
+//             dd($mail);exit;
             $res = $mail->send();
             
            

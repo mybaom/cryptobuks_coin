@@ -285,9 +285,17 @@
             <div class="theme">
                 <form>
                     <div class="form-group">
-                        <input type="text" class="form-control logtxt focu" id="emails"  data-localize="safe.account" placeholder="请输入账号"
-                            name="emails" value="" />
+                        <input type="text" class="form-control logtxt focu" id="emails"  data-localize="lg.pemail" placeholder="请输入邮箱" name="emails" value="" />
+                    </div>
+                    <div class="form-group verification">
+                        <!--<label id="email" data-localize="lg.scode">发送验证码</label>-->
+                        <input type="text" class="form-control" id="emailverifi" data-localize="lg.pemcode"
+                               placeholder="请输入邮箱验证码" name="" value="" />
+                        <input type="button" id="mbtain" data-localize="safe.send" value="发送" />
 
+                    </div>
+                    <div style="text-align: left;">
+                        <text id="mess1" style="color:#e56737"></text>
                     </div>
 
                     <a class="btn btn-default emailbtn" data-toggle="modal" onclick="regismail()"  
@@ -347,9 +355,9 @@
                     <form>
                         <div class="form-group verification">
                             <!--<label id="email" data-localize="lg.scode">发送验证码</label>-->
-                            <input type="text" class="form-control" id="emailverifi" data-localize="lg.pemcode"
-                                placeholder="请输入邮箱验证码" name="" value="" />
-                            <input type="button" id="mbtain" data-localize="safe.send" value="发送" />
+<!--                            <input type="text" class="form-control" id="emailverifi" data-localize="lg.pemcode"-->
+<!--                                placeholder="请输入邮箱验证码" name="" value="" />-->
+<!--                            <input type="button" id="mbtain" data-localize="safe.send" value="发送" />-->
 
                         </div>
                     </form>
@@ -396,7 +404,7 @@
         //
         function regismail() {
             var email = $("#emails").val();
-            var emverify = 9188;
+            var emverify = $("#emailverifi").val();
 
             $.ajax({
                 type: "post",
@@ -561,6 +569,15 @@
                 var disabled = $("#mbtain").attr("disabled");
                 var email = $("#emails").val();
                 var emverify = $('#emailverifi').val();
+                var emreg =
+                    /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/;
+                if (emreg.test(email)) {
+                    $("#mess1").html("");
+                } else {
+                    $("#mess1").html(getlg('mnot'));
+                    return false;
+                }
+
                 if (disabled) {
                     return false;
                 }
