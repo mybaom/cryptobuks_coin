@@ -441,7 +441,7 @@
                                 html +=
                                     `<li class="swiper-slide">
                                         <a href="dataMap1.html?heyueId=${usdtData[i].id}&legal_id=${usdtData[i].legal_id}&currency_id=${usdtData[i].currency_id}&symbol=${usdtData[i].currency_name}/${usdtData[i].legal_name}">
-                                        <small class="usdt">${usdtData[i].currency_name}/${usdtData[i].legal_name2}</small>
+                                        <small class="usdt">${usdtData[i].currency_name}</small>
                                         <h4 style="color:${usdtData[i].change<0?'#00c087':'#ff3e60'}">${iTofixed(usdtData[i].now_price,4) || '0.00'}<span>${iTofixed(usdtData[i].change,2) || '0.00'}%</span></h4>
 
                                     </li>`
@@ -527,7 +527,7 @@
                                     `
                                     <li><a href="dataMap1.html?heyueId=${usdtData[i].id}&legal_id=${phData[i].legal_id}&currency_id=${phData[i].currency_id}&symbol=${phData[i].currency_name}/${phData[i].legal_name}">
 
-                                        <b>${phData[i].currency_name}<span>/${phData[i].legal_name2}</span></b>
+                                        <b>${phData[i].currency_name}</b>
                                         <b class="tc" style="color:${(phData[i].change - 0) >= 0 ? '#ff3e60' : '#00c087'}">${iTofixed(phData[i].now_price * 1,4) || '0.00'}</b>
                                         <button class="btn btn-default" style="background:${(phData[i].change - 0) >= 0 ? '#ff3e60' : '#00c087'}">${iTofixed(phData[i].change,2) || '0.00'}%</button>
                                         </a>
