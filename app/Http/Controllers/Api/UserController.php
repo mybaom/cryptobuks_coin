@@ -1668,7 +1668,7 @@ class UserController extends Controller
         }
 
         if($currency->id != 3){
-            $quotation = Db::table('quotation')->where('currency_id', $currency->id)->first();
+            $quotation = Db::table('currency_quotation')->where('currency_id', $currency->id)->first();
             if(!$quotation) {
                 return $this->error('参数错误');
             }
