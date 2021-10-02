@@ -20,4 +20,8 @@ class TestRecharge extends BaseTestCase
         //Agent::getAgentId();
     }
 
+    public function testa(){
+        echo floor(1695/10)*10 . "\n";
+    }
+
 }

@@ -119,6 +119,8 @@ Route::group([ 'middleware' => ['lang', /*'check_user'*/]], function () {
     Route::any('api/user/e_pwd', 'Api\UserController@e_pwd');//修改密码
     Route::any('api/currency/update_date', 'Api\CurrencyController@update_date');//测试
     Route::any('user/walletaddress', 'Api\UserController@walletaddress');//钱包地址
+    Route::get('api/user/recharge', 'Api\UserController@recharge'); // 钱包充值
+    Route::post('api/user/applyRecharge', 'Api\UserController@applyRecharge'); // 钱包充值
 
     Route::any('/test555', 'Api\PrizePoolController@test555');
     // Route::any('api/cron/yubaointerest', 'Api\CronController@yubaoInterest'); //余额宝利息

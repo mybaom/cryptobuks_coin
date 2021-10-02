@@ -1508,6 +1508,208 @@ class UserController extends Controller
         App::setLocale($lang);
         $this->success_ceshi([1]);
     }
+
+    //调节账号  type  1法币交易余额  2法币交易锁定余额 3币币交易余额 4币币交易锁定余额  5杠杆交易余额 6杠杆交易锁定余额
+    public function recharge(Request $request)
+    {
+        $message = [
+            'required' => ':attribute 不能为空',
+        ];
+        $userId = Users::getUserId();
+        $validator = Validator::make($request->all(), [
+            'type' => 'required',       //原生余额1；消费余额2；增值余额3；可增加其他账户调节字段
+            'conf_value' => 'required', //值
+        ], $message);
+        // dd($request->all());
+        $wallet = UsersWallet::getUsdtWallet($userId);
+        //以上验证通过后 继续验证
+        $validator->after(function ($validator) use ($wallet) {
+            if (empty($wallet)) {
+                return $validator->errors()->add('isUser', '没有此钱包');
+            }
+            $user = Users::getById($wallet->user_id);
+            if (empty($user)) {
+                return $validator->errors()->add('isUser', '没有此用户');
+            }
+
+        });
+        //如果验证不通过
+        if ($validator->fails()) {
+            return $this->error($validator->errors()->first());
+        }
+        // 钱包ID
+        $id = $wallet->id;
+        // 充值账户
+        $type = $request->get('type', 1);
+        // 金额
+        $conf_value = $request->get('conf_value', 0);
+        // 备注
+        $info = $request->get('info', ':');
+        $user = Users::getById($wallet->user_id);
+
+        $data_wallet['wallet_id'] = $id;
+        $data_wallet['create_time'] = time();
+        DB::beginTransaction();
+        try {
+            if ($type == 1) {
+                $data_wallet['balance_type'] = 1;
+                $data_wallet['lock_type'] = 0;
+                $data_wallet['before'] = $wallet->legal_balance;
+                $data_wallet['change'] = $conf_value;
+                $data_wallet['after'] = bc_add($wallet->legal_balance, $conf_value, 5);
+                $wallet->increment('legal_balance', $conf_value);
+                AccountLog::insertLog(['user_id' => $user->id, 'value' => $conf_value, 'info' => AccountLog::getTypeInfo(AccountLog::ADMIN_LEGAL_BALANCE) . ":" . $info, 'type' => AccountLog::ADMIN_LEGAL_BALANCE, 'currency' => $wallet->currency], $data_wallet);
+
+            } elseif ($type == 2) {
+                $data_wallet['balance_type'] = 1;
+                $data_wallet['lock_type'] = 1;
+                $data_wallet['before'] = $wallet->lock_legal_balance;
+                $data_wallet['change'] = $conf_value;
+                $data_wallet['after'] = bc_add($wallet->lock_legal_balance, $conf_value, 5);
+                $wallet->increment('lock_legal_balance', $conf_value);
+                AccountLog::insertLog(['user_id' => $user->id, 'value' => $conf_value, 'info' => AccountLog::getTypeInfo(AccountLog::ADMIN_LOCK_LEGAL_BALANCE) . ":" . $info, 'type' => AccountLog::ADMIN_LOCK_LEGAL_BALANCE, 'currency' => $wallet->currency], $data_wallet);
+
+            } elseif ($type == 3) {
+                $data_wallet['balance_type'] = 2;
+                $data_wallet['lock_type'] = 0;
+                $data_wallet['before'] = $wallet->change_balance;
+                $data_wallet['change'] = $conf_value;
+                $data_wallet['after'] = bc_add($wallet->change_balance, $conf_value, 5);
+                $wallet->increment('change_balance', $conf_value);
+                AccountLog::insertLog(['user_id' => $user->id, 'value' => $conf_value, 'info' => AccountLog::getTypeInfo(AccountLog::ADMIN_CHANGE_BALANCE) . ":" . $info, 'type' => AccountLog::ADMIN_CHANGE_BALANCE, 'currency' => $wallet->currency], $data_wallet);
+
+            } elseif ($type == 4) {
+                $data_wallet['balance_type'] = 2;
+                $data_wallet['lock_type'] = 1;
+                $data_wallet['before'] = $wallet->lock_change_balance;
+                $data_wallet['change'] = $conf_value;
+                $data_wallet['after'] = bc_add($wallet->lock_change_balance, $conf_value, 5);
+                $wallet->increment('lock_change_balance', $conf_value);
+                AccountLog::insertLog(['user_id' => $user->id, 'value' => $conf_value, 'info' => AccountLog::getTypeInfo(AccountLog::ADMIN_LOCK_CHANGE_BALANCE) . ":" . $info, 'type' => AccountLog::ADMIN_LOCK_CHANGE_BALANCE, 'currency' => $wallet->currency], $data_wallet);
+
+            } elseif ($type == 5) {
+                $data_wallet['balance_type'] = 3;
+                $data_wallet['lock_type'] = 0;
+                $data_wallet['before'] = $wallet->lever_balance;
+                $data_wallet['change'] = $conf_value;
+                $data_wallet['after'] = bc_add($wallet->lever_balance, $conf_value, 5);
+                $wallet->increment('lever_balance', $conf_value);
+                AccountLog::insertLog(['user_id' => $user->id, 'value' => $conf_value, 'info' => AccountLog::getTypeInfo(AccountLog::ADMIN_LEVER_BALANCE) . ":" . $info, 'type' => AccountLog::ADMIN_LEVER_BALANCE, 'currency' => $wallet->currency], $data_wallet);
+
+            } elseif ($type == 6) {
+                $data_wallet['balance_type'] = 3;
+                $data_wallet['lock_type'] = 1;
+                $data_wallet['before'] = $wallet->lock_lever_balance;
+                $data_wallet['change'] = $conf_value;
+                $data_wallet['after'] = bc_add($wallet->lock_lever_balance, $conf_value, 5);
+                $wallet->increment('lock_lever_balance', $conf_value);
+                AccountLog::insertLog(['user_id' => $user->id, 'value' => $conf_value, 'info' => AccountLog::getTypeInfo(AccountLog::ADMIN_LOCK_LEVER_BALANCE) . ":" . $info, 'type' => AccountLog::ADMIN_LOCK_LEVER_BALANCE, 'currency' => $wallet->currency], $data_wallet);
+
+            } elseif ($type == 7) {
+                $data_wallet['balance_type'] = 4;
+                $data_wallet['lock_type'] = 0;
+                $data_wallet['before'] = $wallet->micro_balance;
+                $data_wallet['change'] = $conf_value;
+                $data_wallet['after'] = bc_add($wallet->micro_balance, $conf_value, 5);
+                $wallet->increment('micro_balance', $conf_value);
+                AccountLog::insertLog(['user_id' => $user->id, 'value' => $conf_value, 'info' => AccountLog::getTypeInfo(AccountLog::ADMIN_MICRO_BALANCE) . ":" . $info, 'type' => AccountLog::ADMIN_MICRO_BALANCE, 'currency' => $wallet->currency], $data_wallet);
+
+            } elseif ($type == 8) {
+                $data_wallet['balance_type'] = 4;
+                $data_wallet['lock_type'] = 1;
+                $data_wallet['before'] = $wallet->lock_micro_balance;
+                $data_wallet['change'] = $conf_value;
+                $data_wallet['after'] = bc_add($wallet->lock_micro_balance, $conf_value, 5);
+                $wallet->increment('lock_micro_balance', $conf_value);
+                AccountLog::insertLog(['user_id' => $user->id, 'value' => $conf_value, 'info' => AccountLog::getTypeInfo(AccountLog::ADMIN_LOCK_MICRO_BALANCE) . ":" . $info, 'type' => AccountLog::ADMIN_LOCK_MICRO_BALANCE, 'currency' => $wallet->currency], $data_wallet);
+            }
+//            $wallet->save();
+//            $user->save();
+            DB::commit();
+            return $this->success('操作成功');
+        } catch (\Exception $e) {
+            DB::rollback();
+            return $this->error($e->getMessage());
+        }
+    }
+
+    public function applyRecharge()
+    {
+        $user_id = Users::getUserId();
+        $currencyName = Input::get("currency", '');
+        $number = Input::get("number", '');
+        $amount = Input::get("dnum",0);
+        $bank = $currencyName."地址充值";
+        $userAddress = Input::get("user_address", "");
+        $isBank = Input::get("isBank", 0);
+        $targetAccount = Input::get("target_account", "");
+        $nowprice = Input::get("nowprice", "");
+
+        if($isBank==0){
+            if(empty($bank)){
+                return $this->error('银行卡必填');
+            }
+        }
+
+        if(empty($amount) ){
+            return $this->error('请输入充币数量');
+        }
+
+        if(empty($number) ){
+            return $this->error('请输入充币地址');
+        }
+
+        if(empty($currencyName)) {
+            return $this->error('参数错误1');
+        }
+        $currency = Db::table('currency')->where('name', $currencyName)->first();
+        if(!$currency) {
+            return $this->error('参数错误');
+        }
+
+        if($currency->id != 3){
+            $quotation = Db::table('quotation')->where('currency_id', $currency->id)->first();
+            if(!$quotation) {
+                return $this->error('参数错误');
+            }
+            // 判断当前价格是否在十位数上约等
+            $nowPriceOnDb = floor($quotation->now_price/10)*10;
+            $nowpriceOnClient = floor($nowprice/10)*10;
+            if(($nowPriceOnDb + 2) < $nowpriceOnClient || ($nowPriceOnDb - 2) > $nowpriceOnClient)
+            {
+                return $this->error('now price error');
+            }
+            // 判断总价格是否在十位数上约等
+            $totalPrice =  floor(($number * $nowprice)/10)*10;
+            $amount     = floor($totalPrice/10)*10;
+            if($totalPrice != $amount){
+                return $this->error('order price error');
+            }
+        }else{
+            // 如果是泰达币则判断价格是否是1（美元）
+            if($nowprice != 1){
+                return $this->error('now price error');
+            }
+            if($amount != ($nowprice * $number)){
+                return $this->error('order price error');
+            }
+        }
+
+        $data = [
+            'uid' => $user_id,
+            'currency_id' => $currency->id,
+            'number' => $number,
+            'amount' => $amount,
+            'user_account' => $userAddress,
+            'target_account' => $targetAccount,
+            'bank' => $bank,
+            'status' => 1,
+            'created_at' => date('Y-m-d H:i:s')
+        ];
+        Db::table('charge_req')->insert($data);
+        return $this->success('申请成功');
+    }
+
 }
 
 ?>

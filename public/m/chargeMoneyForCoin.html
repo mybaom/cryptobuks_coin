@@ -110,13 +110,27 @@
         <div class="copy blue tc mt10 ft14" data-localize="assets.copyaddress">复制地址</div>
         <div class="cz-row">
 	    	<label data-localize="assets.num">充值数量</label>
-	    	<input id="number" type="number" :value="quantity" v-model="quantity" />
+	    	<input id="number" type="number" :value="quantity" v-model="quantity"  style="background: #FFF; border:solid 1px #bbb;" />
 	    </div>
         <div class="qb-box">
             <aside data-localize="assets.currencyName">交易币种</aside>
             <select @change="currencyChange" id="currency" v-on:change="" style="width: 100%; height: 40px; margin-top: 20px;">
                 <option v-for="currency in currencyList" :value="currency.name">{{currency.name}}</option>
             </select>
+        </div>
+        <div class="qb-box">
+            <label data-localize="zdy.huazhuan" class="layui-form-label">划转账户</label>
+                <select id="account_type" name="account_type" lay-verify="required" style="width: 100%; height: 40px; margin-top: 20px;">
+                    <option value=""></option>
+                    <option value="1" data-localize="assets.legalAccount">法币账户</option>
+                    <option value="3" data-localize="assets.curAccount">币币账户</option>
+                    <option value="7" data-localize="assets.secondContractAccount">秒合约账户</option>
+                    <option value="5" data-localize="assets.leverAccount">杠杆账户</option>
+                </select>
+        </div>
+        <div class="qb-box">
+            <aside data-localize="assets.caddress">充币地址</aside>
+            <input id="address" data-localize="assets.beizhu" placeholder="assets.caddress" style="background: #FFF; border:solid 1px #bbb;" />
         </div>
         <div class="qb-box">
             <aside data-localize="deals.nowprice">当前价</aside>
@@ -187,6 +201,7 @@
                         var data = res.message;
                         var quotation = data.find((item) => item.name == 'USDT').quotation;
                         app.currencyList = [
+                            {name:"USDT", now_price : 1},
                             {name:"BTC", now_price : quotation.find((item) => item.currency_name == 'BTC').now_price},
                             {name:"ETH", now_price : quotation.find((item) => item.currency_name == 'ETH').now_price},
                         ];
@@ -211,12 +226,13 @@
             data: {
                 quantity: 10,
                 currencyList: [
+                    {name:"USDT", now_price : 1},
                     {name:"BTC", now_price : 0},
                     {name:"ETH", now_price : 0},
                 ],
                 // {name:"USDT", now_price : 0}
-                currentChangeName: "BTC",
-                nowPrice: 0,
+                currentChangeName: "USDT",
+                nowPrice: 1,
                 chargeAddress: [],
             },
             methods: {
@@ -246,19 +262,23 @@
 				var acc = $('#address').val()
 				var money = $('#number').val()
 				var isBank = 1
-				var url = _API + 'wallet/charge_req'
-				console.log(money);
+                var data = {
+                    currency: $('#currency').val() ? $('#currency').val() : 0,
+                    number: $('#number').val(),
+                    type: $('#account_type').val(),
+                    user_address: $('#address').val(),
+                    nowprice: $('#nowprice').val(),
+                    dnum: $('#dnum').val(),
+                    target_account: app.chargeAddress[app.currentChangeName],
+                };
+
+				var url = _API + 'user/applyRecharge'
 				layer_loading();
 				$.ajax({
 					type:'POST',
 					url:url,
-					data:{
-						amount:money,
-						account:acc,
-						currency:currency,
-                        isBank:isBank
-					},
-					 dataType: "json",
+					data:data,
+					dataType: "json",
 					beforeSend: function beforeSend(request) {
 		                request.setRequestHeader("Authorization", token);
 		            },
