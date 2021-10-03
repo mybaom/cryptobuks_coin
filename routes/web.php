@@ -820,7 +820,12 @@ Route::group([ 'middleware' => ['lang', /*'check_user'*/]], function () {
         Route::any('ulipai/goodslist_data', 'Admin\UlipaiController@goodsListData');//U利派列表数据
         Route::any('ulipai/goodsadd', 'Admin\UlipaiController@goodsAdd');//U利派列表数据
         Route::any('ulipai/goodsstart', 'Admin\UlipaiController@goodsStart');//U利派列表数据
-        
+
+        //认购产品
+        Route::any('offerproduct/goodslist', 'Admin\OfferProduct@goodsList');//认购产品列表
+        Route::any('offerproduct/goodslist_data', 'Admin\OfferProduct@goodsListData');//认购产品列表数据
+        Route::any('offerproduct/goodsadd', 'Admin\OfferProduct@goodsAdd');//新增认购产品数据
+        Route::any('offerproduct/goodsstart', 'Admin\OfferProduct@goodsStart');//修改认购产品状态
         
         Route::any('ulipai/orderlist', 'Admin\UlipaiController@orderList');//U利派订单
         Route::any('ulipai/orderlist_data', 'Admin\UlipaiController@orderListData');//U利派列表数据

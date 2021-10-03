@@ -251,6 +251,17 @@
       "extend": false,
       "childs": null,
       "id": 48
+    },
+    {
+      "title": "认购产品",
+      "pageURL": "/admin/offerproduct/goodslist",
+      "name": "认购产品",
+      "icon": "fa-ioxhost",
+      "openType": 2,
+      "maxOpen": -1,
+      "extend": false,
+      "childs": null,
+      "id": 49
     }
 
   ]
