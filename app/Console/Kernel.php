@@ -51,10 +51,10 @@ class Kernel extends ConsoleKernel
         $schedule->command('cancel:c2cdeal')->everyMinute()->appendOutputTo('./storage/logs/cancel_c2cdeal.log'); //c2c取消订单倒计时执行 add by tian
         $schedule->command('auto_cancel_legal')->hourly()->appendOutputTo('./storage/logs/auto_cancel_legal.log');
         $schedule->command('update_balance')->everyTenMinutes()->withoutOverlapping()->appendOutputTo('./storage/logs/update_balance.log');
-       
+
         $schedule->command('insurance_money')->dailyAt('00:01')->appendOutputTo('./storage/logs/insurance_money.log'); //持币生息
         $schedule->command('return_service_charge')->dailyAt('00:02')->appendOutputTo('./storage/logs/return_service_charge.log'); //返还保险交易手续费
-        $schedule->command('CreateOfferBuyProductQuotation')->everyMinute()->appendOutputTo('./storage/logs/CreateOfferBuyProductQuotation.log');
+        //$schedule->command('CreateOfferBuyProductQuotation')->everyMinute()->appendOutputTo('./storage/logs/CreateOfferBuyProductQuotation.log');
     }
 
     /**
