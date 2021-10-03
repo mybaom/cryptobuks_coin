@@ -73,7 +73,7 @@
         }
         section {
             width: 100%;
-            padding: 0 5%;
+            padding: 0 5% 50px 5%;
         }
         img {
             vertical-align: middle;
@@ -245,20 +245,20 @@
     </style>
 </head>
 <body>
-<section>
-    <div class="col-12">
+<section id="app">
+    <div v-for="(item, key) in products" class="col-12">
         <div class="card profile-widget">
-            <a href="?Chain&amp;Name=EME">
+            <a :href="'offeProductDetail.html?id='+item.id">
                 <div class="profile-widget-header">
-                    <img src="https://ohaxa.com/chainLogo/EME.png" class="rounded-circle profile-widget-picture">
+                    <img :src="item.icon" class="rounded-circle profile-widget-picture">
                     <div class="profile-widget-items">
                         <div class="profile-widget-item">
                             <div class="profile-widget-item-label text-secondary">price</div>
-                            <div class="profile-widget-item-value price_emeusdt text-danger">82.1940</div>
+                            <div :class="item.rise_fall_symbol == 1 ? 'profile-widget-item-value price_emeusdt text-success' : 'profile-widget-item-value price_emeusdt text-danger'">{{item.now_price}}</div>
                         </div>
                         <div class="profile-widget-item">
                             <div class="profile-widget-item-label text-secondary">change</div>
-                            <div class="profile-widget-item-value change_emeusdt text-danger">-0.09%</div>
+                            <div :class="item.rise_fall_symbol == 1 ? 'profile-widget-item-value change_emeusdt text-success' : 'profile-widget-item-value change_emeusdt text-danger'">{{item.rise_fall_symbol == 1 ? '+' : '-'}}{{item.rise_fall_probability_today}}%</div>
                         </div>
 <!--                        <div class="profile-widget-item d-none d-lg-block">-->
 <!--                            <div class="profile-widget-item-label text-secondary">open</div>-->
@@ -280,7 +280,7 @@
                 </div>
                 <div class="profile-widget-description pb-0">
                     <div class="profile-widget-name">
-                        EME                            <div class="text-muted d-inline font-weight-normal"><div class="slash"></div> EME</div>
+                        {{item.name}}<div class="text-muted d-inline font-weight-normal"><div class="slash"></div> {{item.name}}</div>
                         <span class="float-right btn btn-round btn-outline-secondary">exchange</span>
                     </div>
                 </div>
@@ -289,92 +289,92 @@
             </a>
         </div>
     </div>
-    <div class="col-12">
-        <div class="card profile-widget">
-            <a href="?Chain&amp;Name=EME">
-                <div class="profile-widget-header">
-                    <img src="https://ohaxa.com/chainLogo/EME.png" class="rounded-circle profile-widget-picture">
-                    <div class="profile-widget-items">
-                        <div class="profile-widget-item">
-                            <div class="profile-widget-item-label text-secondary">price</div>
-                            <div class="profile-widget-item-value price_emeusdt text-danger">82.1940</div>
-                        </div>
-                        <div class="profile-widget-item">
-                            <div class="profile-widget-item-label text-secondary">change</div>
-                            <div class="profile-widget-item-value change_emeusdt text-danger">-0.09%</div>
-                        </div>
-                        <!--                        <div class="profile-widget-item d-none d-lg-block">-->
-                        <!--                            <div class="profile-widget-item-label text-secondary">open</div>-->
-                        <!--                            <div class="profile-widget-item-value open_emeusdt">82.2643</div>-->
-                        <!--                        </div>-->
-                        <!--                        <div class="profile-widget-item d-none d-lg-block">-->
-                        <!--                            <div class="profile-widget-item-label text-secondary">high</div>-->
-                        <!--                            <div class="profile-widget-item-value high_emeusdt">82.2840</div>-->
-                        <!--                        </div>-->
-                        <!--                        <div class="profile-widget-item d-none d-lg-block">-->
-                        <!--                            <div class="profile-widget-item-label text-secondary">low</div>-->
-                        <!--                            <div class="profile-widget-item-value low_emeusdt">81.9176</div>-->
-                        <!--                        </div>-->
-                        <!--                        <div class="profile-widget-item d-none d-lg-block">-->
-                        <!--                            <div class="profile-widget-item-label text-secondary">volume</div>-->
-                        <!--                            <div class="profile-widget-item-value vol_emeusdt">10970205</div>-->
-                        <!--                        </div>-->
-                    </div>
-                </div>
-                <div class="profile-widget-description pb-0">
-                    <div class="profile-widget-name">
-                        EME                            <div class="text-muted d-inline font-weight-normal"><div class="slash"></div> EME</div>
-                        <span class="float-right btn btn-round btn-outline-secondary">exchange</span>
-                    </div>
-                </div>
-                <div class="card-footer text-center pt-0">
-                </div>
-            </a>
-        </div>
-    </div>
-    <div class="col-12">
-        <div class="card profile-widget">
-            <a href="?Chain&amp;Name=EME">
-                <div class="profile-widget-header">
-                    <img src="https://ohaxa.com/chainLogo/EME.png" class="rounded-circle profile-widget-picture">
-                    <div class="profile-widget-items">
-                        <div class="profile-widget-item">
-                            <div class="profile-widget-item-label text-secondary">price</div>
-                            <div class="profile-widget-item-value price_emeusdt text-danger">82.1940</div>
-                        </div>
-                        <div class="profile-widget-item">
-                            <div class="profile-widget-item-label text-secondary">change</div>
-                            <div class="profile-widget-item-value change_emeusdt text-danger">-0.09%</div>
-                        </div>
-                        <!--                        <div class="profile-widget-item d-none d-lg-block">-->
-                        <!--                            <div class="profile-widget-item-label text-secondary">open</div>-->
-                        <!--                            <div class="profile-widget-item-value open_emeusdt">82.2643</div>-->
-                        <!--                        </div>-->
-                        <!--                        <div class="profile-widget-item d-none d-lg-block">-->
-                        <!--                            <div class="profile-widget-item-label text-secondary">high</div>-->
-                        <!--                            <div class="profile-widget-item-value high_emeusdt">82.2840</div>-->
-                        <!--                        </div>-->
-                        <!--                        <div class="profile-widget-item d-none d-lg-block">-->
-                        <!--                            <div class="profile-widget-item-label text-secondary">low</div>-->
-                        <!--                            <div class="profile-widget-item-value low_emeusdt">81.9176</div>-->
-                        <!--                        </div>-->
-                        <!--                        <div class="profile-widget-item d-none d-lg-block">-->
-                        <!--                            <div class="profile-widget-item-label text-secondary">volume</div>-->
-                        <!--                            <div class="profile-widget-item-value vol_emeusdt">10970205</div>-->
-                        <!--                        </div>-->
-                    </div>
-                </div>
-                <div class="profile-widget-description pb-0">
-                    <div class="profile-widget-name">
-                        EME                            <div class="text-muted d-inline font-weight-normal"><div class="slash"></div> EME</div>
-                        <span class="float-right btn btn-round btn-outline-secondary">exchange</span>
-                    </div>
-                </div>
-                <div class="card-footer text-center pt-0">
-                </div>
-            </a>
-        </div>
-    </div>
+<!--    <div class="col-12">-->
+<!--        <div class="card profile-widget">-->
+<!--            <a href="?Chain&amp;Name=EME">-->
+<!--                <div class="profile-widget-header">-->
+<!--                    <img src="https://ohaxa.com/chainLogo/EME.png" class="rounded-circle profile-widget-picture">-->
+<!--                    <div class="profile-widget-items">-->
+<!--                        <div class="profile-widget-item">-->
+<!--                            <div class="profile-widget-item-label text-secondary">price</div>-->
+<!--                            <div class="profile-widget-item-value price_emeusdt text-danger">82.1940</div>-->
+<!--                        </div>-->
+<!--                        <div class="profile-widget-item">-->
+<!--                            <div class="profile-widget-item-label text-secondary">change</div>-->
+<!--                            <div class="profile-widget-item-value change_emeusdt text-danger">-0.09%</div>-->
+<!--                        </div>-->
+<!--                        &lt;!&ndash;                        <div class="profile-widget-item d-none d-lg-block">&ndash;&gt;-->
+<!--                        &lt;!&ndash;                            <div class="profile-widget-item-label text-secondary">open</div>&ndash;&gt;-->
+<!--                        &lt;!&ndash;                            <div class="profile-widget-item-value open_emeusdt">82.2643</div>&ndash;&gt;-->
+<!--                        &lt;!&ndash;                        </div>&ndash;&gt;-->
+<!--                        &lt;!&ndash;                        <div class="profile-widget-item d-none d-lg-block">&ndash;&gt;-->
+<!--                        &lt;!&ndash;                            <div class="profile-widget-item-label text-secondary">high</div>&ndash;&gt;-->
+<!--                        &lt;!&ndash;                            <div class="profile-widget-item-value high_emeusdt">82.2840</div>&ndash;&gt;-->
+<!--                        &lt;!&ndash;                        </div>&ndash;&gt;-->
+<!--                        &lt;!&ndash;                        <div class="profile-widget-item d-none d-lg-block">&ndash;&gt;-->
+<!--                        &lt;!&ndash;                            <div class="profile-widget-item-label text-secondary">low</div>&ndash;&gt;-->
+<!--                        &lt;!&ndash;                            <div class="profile-widget-item-value low_emeusdt">81.9176</div>&ndash;&gt;-->
+<!--                        &lt;!&ndash;                        </div>&ndash;&gt;-->
+<!--                        &lt;!&ndash;                        <div class="profile-widget-item d-none d-lg-block">&ndash;&gt;-->
+<!--                        &lt;!&ndash;                            <div class="profile-widget-item-label text-secondary">volume</div>&ndash;&gt;-->
+<!--                        &lt;!&ndash;                            <div class="profile-widget-item-value vol_emeusdt">10970205</div>&ndash;&gt;-->
+<!--                        &lt;!&ndash;                        </div>&ndash;&gt;-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div class="profile-widget-description pb-0">-->
+<!--                    <div class="profile-widget-name">-->
+<!--                        EME                            <div class="text-muted d-inline font-weight-normal"><div class="slash"></div> EME</div>-->
+<!--                        <span class="float-right btn btn-round btn-outline-secondary">exchange</span>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div class="card-footer text-center pt-0">-->
+<!--                </div>-->
+<!--            </a>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--    <div class="col-12">-->
+<!--        <div class="card profile-widget">-->
+<!--            <a href="?Chain&amp;Name=EME">-->
+<!--                <div class="profile-widget-header">-->
+<!--                    <img src="https://ohaxa.com/chainLogo/EME.png" class="rounded-circle profile-widget-picture">-->
+<!--                    <div class="profile-widget-items">-->
+<!--                        <div class="profile-widget-item">-->
+<!--                            <div class="profile-widget-item-label text-secondary">price</div>-->
+<!--                            <div class="profile-widget-item-value price_emeusdt text-danger">82.1940</div>-->
+<!--                        </div>-->
+<!--                        <div class="profile-widget-item">-->
+<!--                            <div class="profile-widget-item-label text-secondary">change</div>-->
+<!--                            <div class="profile-widget-item-value change_emeusdt text-danger">-0.09%</div>-->
+<!--                        </div>-->
+<!--                        &lt;!&ndash;                        <div class="profile-widget-item d-none d-lg-block">&ndash;&gt;-->
+<!--                        &lt;!&ndash;                            <div class="profile-widget-item-label text-secondary">open</div>&ndash;&gt;-->
+<!--                        &lt;!&ndash;                            <div class="profile-widget-item-value open_emeusdt">82.2643</div>&ndash;&gt;-->
+<!--                        &lt;!&ndash;                        </div>&ndash;&gt;-->
+<!--                        &lt;!&ndash;                        <div class="profile-widget-item d-none d-lg-block">&ndash;&gt;-->
+<!--                        &lt;!&ndash;                            <div class="profile-widget-item-label text-secondary">high</div>&ndash;&gt;-->
+<!--                        &lt;!&ndash;                            <div class="profile-widget-item-value high_emeusdt">82.2840</div>&ndash;&gt;-->
+<!--                        &lt;!&ndash;                        </div>&ndash;&gt;-->
+<!--                        &lt;!&ndash;                        <div class="profile-widget-item d-none d-lg-block">&ndash;&gt;-->
+<!--                        &lt;!&ndash;                            <div class="profile-widget-item-label text-secondary">low</div>&ndash;&gt;-->
+<!--                        &lt;!&ndash;                            <div class="profile-widget-item-value low_emeusdt">81.9176</div>&ndash;&gt;-->
+<!--                        &lt;!&ndash;                        </div>&ndash;&gt;-->
+<!--                        &lt;!&ndash;                        <div class="profile-widget-item d-none d-lg-block">&ndash;&gt;-->
+<!--                        &lt;!&ndash;                            <div class="profile-widget-item-label text-secondary">volume</div>&ndash;&gt;-->
+<!--                        &lt;!&ndash;                            <div class="profile-widget-item-value vol_emeusdt">10970205</div>&ndash;&gt;-->
+<!--                        &lt;!&ndash;                        </div>&ndash;&gt;-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div class="profile-widget-description pb-0">-->
+<!--                    <div class="profile-widget-name">-->
+<!--                        EME                            <div class="text-muted d-inline font-weight-normal"><div class="slash"></div> EME</div>-->
+<!--                        <span class="float-right btn btn-round btn-outline-secondary">exchange</span>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div class="card-footer text-center pt-0">-->
+<!--                </div>-->
+<!--            </a>-->
+<!--        </div>-->
+<!--    </div>-->
 </section>
 <footer>
     <a href="index.html">
@@ -423,6 +423,37 @@
 <script type="text/javascript" src="lib/language_cookie.js"></script>
 <script type="text/javascript" src="javascripts/main.js"></script>
 <script type="text/javascript" src="lib/vue.min.js"></script>
+<script>
+    var token = get_user_login();
+    app = new Vue({
+        el: '#app',
+        data: {
+            products: []
+        },
+        methods: {
+            getProducts: function(e){
+                $.ajax({
+                    url: _API + "getOfferProducts",
+                    type: "GET",
+                    dataType: "json",
+                    async: true,
+                    data: {},
+                    beforeSend: function beforeSend(request) {
+                        request.setRequestHeader("Authorization", token);
+                    },
+                    success: function success(data) {
+                        if (data.type == 'ok') {
+                            app.products = data.message;
+                        }
+                    }
+                })
+            }
+        },
+        created: function () {
+            this.getProducts();
+        }
+    })
+</script>
 </body>
 
 </html>

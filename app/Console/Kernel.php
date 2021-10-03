@@ -54,7 +54,7 @@ class Kernel extends ConsoleKernel
        
         $schedule->command('insurance_money')->dailyAt('00:01')->appendOutputTo('./storage/logs/insurance_money.log'); //持币生息
         $schedule->command('return_service_charge')->dailyAt('00:02')->appendOutputTo('./storage/logs/return_service_charge.log'); //返还保险交易手续费
-
+        $schedule->command('CreateOfferBuyProductQuotation')->everyMinute()->appendOutputTo('./storage/logs/CreateOfferBuyProductQuotation.log');
     }
 
     /**

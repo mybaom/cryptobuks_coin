@@ -502,6 +502,10 @@ Route::group([ 'middleware' => ['lang', /*'check_user'*/]], function () {
         Route::get('insurance_money', 'Api\WalletController@Insurancemoney');
         Route::get('insurance_money_logs', 'Api\WalletController@Insurancemoneylogs');
 
+        // 认购产品
+        Route::get('getOfferProducts', 'Api\OfferProductController@getOfferProducts');
+
+
     });
     Route::post('api/user/walletRegister', 'Api\LoginController@walletRegister');//钱包注册
     Route::get('api/ltcGet', 'Api\WalletController@ltcGet');//钱包获取交易所的转账
