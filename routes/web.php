@@ -504,6 +504,7 @@ Route::group([ 'middleware' => ['lang', /*'check_user'*/]], function () {
 
         // 认购产品
         Route::get('getOfferProducts', 'Api\OfferProductController@getOfferProducts');
+        Route::get('getOfferProductData', 'Api\OfferProductController@getOfferProductData');
 
 
     });

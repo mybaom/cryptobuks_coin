@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="lib/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="fonts/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="css/common.css">
+    <link rel="stylesheet" type="text/css" href="css/dataMap.css?v=123" />
+    <link rel="stylesheet" type="text/css" href="css/LeveragedDeals.css?v=1" />
+    <link rel="stylesheet" type="text/css" href="css/footer.css" />
+    <style>
+        .sell_out{
+            height: 141px;
+            overflow-x: hidden;
+            overflow-y: scroll;
+        }
+        .control{
+            display: block;
+        }
+        .CNY ul{
+            width: 70%;
+        }
+    </style>
+</head>
+
+<body class="bgColor">
+<div id="app" v-cloak>
+<!--    <div class="head">-->
+<!--        <h5 data-localize="zdy.current" style="margin-top: 15px; color: rgb(78, 91, 133);">当前</h5>-->
+<!--        <div class="price">80.12898921</div>-->
+<!--        <div class="bl">-0.0%</div>-->
+<!--    </div>-->
+    <div class="header">
+        <p class="pull-left"></p>
+        <span v-if="info" data-localize="zdy.contractdetails" class="contractdetail">{{ info.name ? info.name : '' }}</span>
+    </div>
+    <div class="CNY bgWhite">
+        <div class="pull-left">
+            <h5 style="margin-top: 15px;" data-localize="zdy.current">当前</h5>
+            <h2 v-if="info" :style="(info.rise_fall_symbol == 1 ? 'color:#00c087;' : '')">{{info.now_price || 0}}</h2>
+            <h4 v-if="info" class="flex alcenter"><span :style="'margin-left:5px;margin-top:5px;' + (info.rise_fall_symbol == 1 ? 'color:#00c087;' : '')">{{info.rise_fall_symbol == 1 ? '+' : '-'}}{{info.rise_fall_probability}}%</span>
+            </h4>
+        </div>
+        <ul class="pull-right ft12 ">
+            <li class="flex">
+                <p data-localize="mk.high">高</p><span v-if="currentData.length" class="max-price">{{currentData[currentData.length - 1][3]}}</span>
+            </li>
+            <li class="flex">
+                <p data-localize="mk.low">低</p><span v-if="currentData.length" class="min-price">{{currentData[currentData.length - 1][2]}}</span>
+            </li>
+            <li class="flex">
+                <p data-localize="mk.open">开盘</p><span v-if="currentData.length" class="min-price">{{currentData[currentData.length - 1][1]}}</span>
+            </li>
+        </ul>
+
+    </div>
+    <div id="echart" style="width:100%; min-height: 375px;">
+
+    </div>
+    <div id="place">
+        <div id="data" class="bgColor pb10">
+        </div>
+        <div id="mask1" @click="close">
+            <div id="Limited">
+                <ul>
+                    <li></li>
+                    <li class="cancel" data-localize="transaction.cancel">取消</li>
+                </ul>
+            </div>
+        </div>
+        <div style="height:10px;background-color:#f4f8fb;"></div>
+        <div id="entrust" style="margin-bottom: 50px;" class="bgColor mt10">
+            <div>
+                <h3 class="pull-left " data-localize="deals.currentPosition">
+                    当前持仓
+                </h3>
+                <p class="pull-right filtrate all">
+
+                </p>
+                <ul class="list_ul" style="margin-top:35px;">
+                    <li class="ft12 clearfix colorGrey bdb">
+                        <span class="width1 tc fl pb5" data-localize="deals.type">类型</span>
+                        <span class="width2 tc fl pb5" data-localize="assets.time">时间</span>
+                        <span class="width2 tc fl pb5" data-localize="transaction.price">价格</span>
+                        <span class="width2 tc fl pb5" data-localize="assets.num">数量</span>
+                        <span class="width11 tc fl pb5" data-localize="transaction.option">操作</span>
+                    </li>
+                    <li>
+                        <ul class="conplete_list colorGrey ft12" style="padding: 10px 0;">
+                            <li class="clearfix" v-for="item in []" :key="item.id" style="padding:5px 0;">
+                                <span class="width1 tc fl">{{item.type == 1 ? getlg('domore'):getlg('doless')}}</span>
+                                <span class="width2 tc fl">{{item.time}}</span>
+                                <span class="width2 tc fl">{{item.price || '0.0000' | toFixed4}}</span>
+                                <span class="width2 tc fl">{{item.number || '0.00' | toFixeds}}</span>
+                                <a class='pingcang white tc width1 fl' @click="sellLoss(item.id)">{{getlg('pcang')}}</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="clickMore tc colorGrey" data-localize="deals.clickLoad">点击加载</li>
+                </ul>
+
+            </div>
+            <div class="no_record" style="display:none;">
+                <p>
+                    <img src="images/anonymous.png" />
+                </p>
+                <p data-localize="transaction.nodata">暂无记录</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 持仓列表  -->
+    <!-- <div class="position" style="display:none;">
+        <h4 class="position-name bgColor"></h4>
+        <p class='fengxian' data-localize="deals.risk">风险率：</p>
+        <ul class="position-list">
+
+        </ul>
+        <button style="text-align:center;background-color: rgba(0, 0, 0, 0);border: none;outline: none;width: 100%;" class="more mt15" data-localize="transaction.getmore">加载更多</button>
+        <div class="no_records" style="display:none;">
+            <p>
+                <img src="images/anonymous.png" />
+            </p>
+            <p data-localize="transaction.nodata">暂无记录</p>
+        </div>
+    </div> -->
+</div>
+<!-- 一键平仓 -->
+<!-- <div class="stop-trade clearfix">
+    <p class="fl"><span data-localize="deals.total">持仓总盈亏：</span> <span class="total-pro"></span></p>
+    <button class="fr total-btn" type="button" data-localize="deals.onekey">一键平仓</button>
+</div> -->
+<!-- 修改弹窗 -->
+<div style="height:50px;"></div>
+<footer>
+    <a href="index.html">
+        <div>
+            <p class="img img0"></p>
+            <span data-localize="footer.home">首页</span>
+        </div>
+    </a>
+
+    <a href="trades.html">
+        <div>
+            <p class="img img1"></p>
+            <span data-localize="footer.quotation">行情</span>
+        </div>
+    </a>
+    <a href="orderList.html" class="select">
+        <div>
+            <p class="img img2"></p>
+            <span data-localize="contract.chicang">持仓</span>
+        </div>
+    </a>
+    <!--       <a href="dataMap1.html?legal_id=3&currency_id=19&symbol=XEM/USDT" class="select">
+             <div>
+                 <p class="img img2"></p>
+                 <span data-localize="footer.transaction">合约</span>
+             </div>
+         </a>-->
+    <a href="assets.html">
+        <div>
+            <p class="img img3"></p>
+            <span data-localize="footer.assets">资产</span>
+        </div>
+    </a>
+    <a href="personal.html"  >
+        <div>
+            <p class="img img4"></p>
+            <span data-localize="footer.personal">我的</span>
+        </div>
+    </a>
+</footer>
+<script type="text/javascript" src="lib/jquery-2.1.1.min.js"></script>
+<script type="text/javascript" src="lib/vue.min.js"></script>
+<script type="text/javascript" src="javascripts/socket.io.js"></script>
+<script type="text/javascript" src="javascripts/jquery.cookie.js"></script>
+<script type="text/javascript" src="lib/layer_mobile/layer.js"></script>
+<script type="text/javascript" src="lib/jquery.localize.min.js"></script>
+<script type="text/javascript" src="lib/language_cookie.js"></script>
+<script type="text/javascript" src="javascripts/main.js"></script>
+<!--<script type="text/javascript" src="javascripts/LeveragedDeal.js"></script>-->
+<script type="text/javascript" src="https://cdn.bootcss.com/echarts/4.6.0/echarts.min.js"></script>
+<script>
+    var token = get_user_login();
+    // 基于准备好的dom，初始化echarts实例
+    // var myChart = echarts.init(document.getElementById('echart'));
+
+    var option;
+
+    const upColor = '#00da3c';
+    const downColor = '#ec0000';
+
+    function splitData(rawData) {
+        let categoryData = [];
+        let values = [];
+        let volumes = [];
+        for (let i = 0; i < rawData.length; i++) {
+            categoryData.push(rawData[i].splice(0, 1)[0]);
+            values.push(rawData[i]);
+            volumes.push([i, rawData[i][4], rawData[i][0] > rawData[i][1] ? 1 : -1]);
+        }
+        console.log(categoryData)
+        return {
+            categoryData: categoryData,
+            values: values,
+            volumes: volumes
+        };
+    }
+    function calculateMA(dayCount, data) {
+        var result = [];
+        for (var i = 0, len = data.values.length; i < len; i++) {
+            if (i < dayCount) {
+                result.push('-');
+                continue;
+            }
+            var sum = 0;
+            for (var j = 0; j < dayCount; j++) {
+                sum += data.values[i - j][1];
+            }
+            result.push(+(sum / dayCount).toFixed(3));
+        }
+        return result;
+    }
+
+     option = {
+            title:{
+                show:false,
+            },
+            animation: false,
+            legend: {
+                bottom: 10,
+                left: 'center',
+                data: ['Dow-Jones index', 'MA5', 'MA10', 'MA20', 'MA30']
+            },
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'cross'
+                },
+                borderWidth: 1,
+                borderColor: '#ccc',
+                padding: 10,
+                textStyle: {
+                    color: '#000'
+                },
+                position: function (pos, params, el, elRect, size) {
+                    const obj = {
+                        top: 10
+                    };
+                    obj[['left', 'right'][+(pos[0] < size.viewSize[0] / 2)]] = 30;
+                    return obj;
+                }
+                // extraCssText: 'width: 170px'
+            },
+            axisPointer: {
+                link: [
+                    {
+                        xAxisIndex: 'all'
+                    }
+                ],
+                label: {
+                    backgroundColor: '#777'
+                }
+            },
+            toolbox: {
+                show: false,
+                feature: {
+                    dataZoom: {
+                        yAxisIndex: false
+                    },
+                    brush: {
+                        type: ['lineX', 'clear']
+                    }
+                }
+            },
+            brush: {
+                xAxisIndex: 'all',
+                brushLink: 'all',
+                outOfBrush: {
+                    colorAlpha: 0.1
+                }
+            },
+            visualMap: {
+                show: false,
+                seriesIndex: 5,
+                dimension: 2,
+                pieces: [
+                    {
+                        value: 1,
+                        color: downColor
+                    },
+                    {
+                        value: -1,
+                        color: upColor
+                    }
+                ]
+            },
+            grid: [
+                {
+                    left: '10%',
+                    right: '5%',
+                    height: '75%',
+                    top: '3%',
+                },
+                {
+                    left: '10%',
+                    right: '8%',
+                    top: '3%',
+                    height: '16%'
+                }
+            ],
+            xAxis: [
+                {
+                    type: 'category',
+                    data: data.categoryData,
+                    scale: true,
+                    boundaryGap: false,
+                    splitLine: { show: false },
+                    min: 'dataMin',
+                    max: 'dataMax',
+                    axisPointer: {
+                        z: 100
+                    },
+                    axisLabel: {    //重点在这一块，其余可以忽略
+                        interval: 10,   // x轴文字间隔，这个一定要有，别忘记了
+                        // rotate: 15,
+                        onZero: false,
+                        textStyle: {
+                            color: '#000',
+                            fontSize: 10
+                        }
+                    },
+                },
+                {
+                    type: 'category',
+                    gridIndex: 1,
+                    data: data.categoryData,
+                    scale: true,
+                    boundaryGap: false,
+                    axisLine: { onZero: false },
+                    axisTick: { show: false },
+                    splitLine: { show: false },
+                    axisLabel: { show: false },
+                    min: 'dataMin',
+                    max: 'dataMax'
+                }
+            ],
+            yAxis: [
+                {
+                    scale: true,
+                    // splitArea: {
+                    //     show: true
+                    // }
+                },
+                {
+                    scale: true,
+                    gridIndex: 1,
+                    splitNumber: 2,
+                    axisLabel: { show: false },
+                    axisLine: { show: false },
+                    axisTick: { show: false },
+                    splitLine: { show: false }
+                }
+            ],
+            dataZoom: [
+                {
+                    type: 'inside',
+                    xAxisIndex: [0, 1],
+                    start: 10,
+                    end: 25,
+                    endValue: 50,
+                    zoomLock: true, // 锁定缩放
+                }
+            ],
+            series: [
+                {
+                    name: 'Dow-Jones index',
+                    type: 'candlestick',
+                    data: [],
+                    zoom: 100,
+                    itemStyle: {
+                        color: upColor,
+                        color0: downColor,
+                        borderColor: undefined,
+                        borderColor0: undefined
+                    },
+                    markLine: {
+                        show: false
+                    },
+                    tooltip: {
+                        formatter: function (param) {
+                            param = param[0];
+                            return [
+                                'Date: ' + param.name + '<hr size=1 style="margin: 3px 0">',
+                                'Open: ' + param.data[0] + '<br/>',
+                                'Close: ' + param.data[1] + '<br/>',
+                                'Lowest: ' + param.data[2] + '<br/>',
+                                'Highest: ' + param.data[3] + '<br/>'
+                            ].join('');
+                        }
+                    }
+                },
+                {
+                    name: 'MA5',
+                    type: 'line',
+                    data: [],
+                    smooth: true,
+                    lineStyle: {
+                        opacity: 0.5
+                    }
+                },
+                {
+                    name: 'MA10',
+                    type: 'line',
+                    data: [],
+                    smooth: true,
+                    lineStyle: {
+                        opacity: 0.5
+                    }
+                },
+                {
+                    name: 'MA20',
+                    type: 'line',
+                    data: [],
+                    smooth: true,
+                    lineStyle: {
+                        opacity: 0.5
+                    }
+                },
+                {
+                    name: 'MA30',
+                    type: 'line',
+                    data: [],
+                    smooth: true,
+                    lineStyle: {
+                        opacity: 0.5
+                    }
+                },
+                // {
+                //     name: 'Volume',
+                //     type: 'bar',
+                //     xAxisIndex: 1,
+                //     yAxisIndex: 1,
+                //     data: data.volumes
+                // }
+            ]
+        }
+
+
+    // option && myChart.setOption(option);
+
+    $(document).ready(function() {
+        var app = new Vue({
+            el: '#app',
+            data: {
+                chart: null,
+                hour: {},
+                info: null,
+                min1: {},
+                min5: {},
+                min15: {},
+                min30: {},
+                currentData: [],
+                currentDate: [],
+                colorList: ['#c23531', '#2f4554', '#61a0a8', '#d48265', '#91c7ae', '#749f83', '#ca8622', '#bda29a', '#6e7074', '#546570', '#c4ccd3'],
+            },
+            mounted() {
+                this.chart = echarts.init(document.getElementById('echart'))
+                this.chart.setOption(option)
+            },
+            created: function () {
+                this.getAllList();
+            },
+            methods: {
+                getAllList: function () {
+                    $.ajax({
+                        url: _API + "getOfferProductData",
+                        type: "GET",
+                        dataType: "json",
+                        async: true,
+                        data: {id: get_param('id')},
+                        beforeSend: function beforeSend(request) {
+                            request.setRequestHeader("Authorization", token);
+                        },
+                        success: function (data) {
+                            if (data.type == 'ok') {
+                                var res = data.message;
+                                app.min1 = res.min1;
+                                app.min5 = res.min5;
+                                app.min15 = res.min15;
+                                app.min30 = res.min30;
+                                app.hour = res.hour;
+                                app.info = res.info;
+                                app.currentData = res.min1.data;
+                                app.currentDate = res.min1.date;
+
+                                //刷新数据
+                                var option = app.chart.getOption();
+                                option.title.text =  res.info.name;
+                                option.title.subtext = res.info.now_price;
+                                option.series[0].data = splitData(res.min1.data).values;
+                                option.series[1].data = calculateMA(5, res.min1.data);
+                                option.series[2].data = calculateMA(10, res.min1.data);
+                                option.series[3].data = calculateMA(20, res.min1.data);
+                                option.series[4].data = calculateMA(30, res.min1.data);
+                                option.xAxis[0].data  = res.min1.date;
+
+                                // myChart.setOption(option);
+                                app.chart.setOption(option)
+
+                            } else if (data.type == '999') {
+                                window.location = 'login.html';
+                            }
+                        },
+                        error: function () {
+
+                        }
+                    })
+                }
+            }
+        });
+    })
+
+
+
+</script>
+<script>
+
+    // prettier-ignore
+    //const rawData = [["2015/1/5", "3258.63", "3350.52", "115.84", "3.58%", "3253.88", "3369.28", "531352384", "54976008", "-"], ["2015/1/6", "3330.8", "3351.45", "0.93", "0.03%", "3303.18", "3394.22", "501661696", "53239848", "-"], ["2015/1/7", "3326.65", "3373.95", "22.51", "0.67%", "3312.21", "3374.9", "391918880", "43641672", "-"], ["2015/1/8", "3371.96", "3293.46", "-80.5", "-2.39%", "3285.09", "3381.57", "371131200", "39923032", "-"], ["2015/1/9", "3276.97", "3285.41", "-8.04", "-0.24%", "3267.51", "3404.83", "410240864", "45864804", "-"], ["2015/1/12", "3258.21", "3229.32", "-56.1", "-1.71%", "3191.58", "3275.19", "322064672", "36627308", "-"], ["2015/1/13", "3223.54", "3235.3", "5.98", "0.19%", "3214.41", "3259.39", "230725760", "27358878", "-"], ["2015/1/14", "3242.34", "3222.44", "-12.86", "-0.40%", "3193.98", "3268.48", "240190752", "26720452", "-"], ["2015/1/15", "3224.07", "3336.46", "114.02", "3.54%", "3207.54", "3337.08", "282546240", "33061054", "-"], ["2015/1/16", "3343.6", "3376.5", "40.04", "1.20%", "3340.49", "3400.32", "339876768", "39225388", "-"], ["2015/1/19", "3189.73", "3116.35", "-260.14", "-7.70%", "3095.07", "3262.21", "401098784", "40988600", "-"], ["2015/1/20", "3114.56", "3173.05", "56.7", "1.82%", "3100.48", "3190.25", "357080800", "41629524", "-"], ["2015/1/21", "3189.08", "3323.61", "150.56", "4.74%", "3178.34", "3337", "410956032", "47375868", "-"], ["2015/1/22", "3327.32", "3343.34", "19.73", "0.59%", "3293.98", "3352.38", "353382976", "40787408", "-"], ["2015/1/23", "3357.1", "3351.76", "8.42", "0.25%", "3328.29", "3406.79", "366249248", "42097952", "-"], ["2015/1/26", "3347.26", "3383.18", "31.42", "0.94%", "3321.31", "3384.8", "317540992", "35842744", "-"], ["2015/1/27", "3389.85", "3352.96", "-30.22", "-0.89%", "3290.22", "3390.22", "374517568", "41829884", "-"], ["2015/1/28", "3325.72", "3305.74", "-47.22", "-1.41%", "3294.66", "3354.8", "301927104", "34156428", "-"], ["2015/1/29", "3259", "3262.3", "-43.43", "-1.31%", "3234.24", "3286.79", "274658624", "29642450", "-"], ["2015/1/30", "3273.75", "3210.36", "-51.94", "-1.59%", "3210.31", "3288.5", "258312544", "28426564", "-"], ["2015/2/2", "3148.14", "3128.3", "-82.06", "-2.56%", "3122.57", "3175.13", "250861632", "26684996", "-"], ["2015/2/3", "3156.09", "3204.91", "76.61", "2.45%", "3129.73", "3207.94", "248192160", "28335594", "-"], ["2015/2/4", "3212.82", "3174.13", "-30.78", "-0.96%", "3171.14", "3238.98", "249098080", "29015516", "-"], ["2015/2/5", "3251.21", "3136.53", "-37.6", "-1.18%", "3135.82", "3251.21", "306139296", "34826696", "-"], ["2015/2/6", "3120.09", "3075.91", "-60.62", "-1.93%", "3052.94", "3129.54", "246749680", "26650278", "-"], ["2015/2/9", "3063.51", "3095.12", "19.22", "0.62%", "3049.11", "3119.03", "206108384", "24071968", "-"], ["2015/2/10", "3090.49", "3141.59", "46.47", "1.50%", "3084.25", "3142.1", "193817136", "22508492", "-"], ["2015/2/11", "3145.76", "3157.7", "16.11", "0.51%", "3139.05", "3166.42", "172840096", "21086256", "-"], ["2015/2/12", "3157.96", "3173.42", "15.71", "0.50%", "3134.24", "3181.77", "194592320", "22969158", "-"], ["2015/2/13", "3186.81", "3203.83", "30.41", "0.96%", "3182.79", "3237.16", "261290432", "29301768", "-"], ["2015/2/16", "3206.14", "3222.36", "18.54", "0.58%", "3195.88", "3228.85", "223797440", "26595070", "-"], ["2015/2/17", "3230.88", "3246.91", "24.54", "0.76%", "3230.77", "3255.73", "228332624", "26334004", "-"], ["2015/2/25", "3256.48", "3228.84", "-18.06", "-0.56%", "3215.55", "3257.22", "233348096", "26514336", "-"], ["2015/2/26", "3222.15", "3298.36", "69.52", "2.15%", "3202.19", "3300.62", "301263872", "33434746", "-"], ["2015/2/27", "3296.83", "3310.3", "11.94", "0.36%", "3291.01", "3324.55", "299163712", "33501958", "-"], ["2015/3/2", "3332.72", "3336.28", "25.98", "0.78%", "3298.67", "3336.76", "346445664", "41025956", "-"], ["2015/3/3", "3317.7", "3263.05", "-73.23", "-2.20%", "3260.43", "3317.7", "382044608", "44159348", "-"], ["2015/3/4", "3264.18", "3279.53", "16.48", "0.51%", "3250.48", "3286.59", "293639520", "34678976", "-"], ["2015/3/5", "3264.08", "3248.48", "-31.06", "-0.95%", "3221.67", "3266.64", "320663584", "37358000", "-"], ["2015/3/6", "3248.04", "3241.19", "-7.29", "-0.22%", "3234.53", "3266.93", "282915808", "32834414", "-"], ["2015/3/9", "3224.31", "3302.41", "61.22", "1.89%", "3198.37", "3307.7", "321495456", "35992752", "-"], ["2015/3/10", "3289.08", "3286.07", "-16.34", "-0.49%", "3277.09", "3309.92", "285817568", "32995596", "-"], ["2015/3/11", "3289.59", "3290.9", "4.83", "0.15%", "3278.47", "3325.05", "282985536", "32757308", "-"], ["2015/3/12", "3314.81", "3349.32", "58.42", "1.78%", "3300.49", "3360.05", "357295104", "40719240", "-"], ["2015/3/13", "3359.49", "3372.91", "23.59", "0.70%", "3352.15", "3391.25", "328410144", "37404140", "-"], ["2015/3/16", "3391.16", "3449.3", "76.39", "2.26%", "3377.09", "3449.3", "399132416", "47935532", "-"], ["2015/3/17", "3469.6", "3502.85", "53.54", "1.55%", "3459.69", "3504.12", "520939520", "60150068", "-"], ["2015/3/18", "3510.5", "3577.3", "74.45", "2.13%", "3503.85", "3577.66", "545217152", "61736700", "-"], ["2015/3/19", "3576.02", "3582.27", "4.97", "0.14%", "3546.84", "3600.68", "537346624", "61224968", "-"], ["2015/3/20", "3587.08", "3617.32", "35.05", "0.98%", "3569.38", "3632.34", "516661664", "65177196", "-"], ["2015/3/23", "3640.1", "3687.73", "70.41", "1.95%", "3635.49", "3688.25", "536062816", "66157464", "-"], ["2015/3/24", "3692.57", "3691.41", "3.68", "0.10%", "3600.7", "3715.87", "639554688", "75488472", "-"], ["2015/3/25", "3680.95", "3660.73", "-30.68", "-0.83%", "3634.56", "3693.15", "521886336", "64549892", "-"], ["2015/3/26", "3641.94", "3682.09", "21.37", "0.58%", "3615.01", "3707.32", "488647200", "61951560", "-"], ["2015/3/27", "3686.13", "3691.1", "9", "0.24%", "3656.83", "3710.48", "408945184", "50929848", "-"], ["2015/3/30", "3710.61", "3786.57", "95.47", "2.59%", "3710.61", "3795.94", "564702400", "69212536", "-"], ["2015/3/31", "3822.99", "3747.9", "-38.67", "-1.02%", "3737.04", "3835.57", "561676032", "72129488", "-"], ["2015/4/1", "3748.34", "3810.29", "62.4", "1.66%", "3742.21", "3817.08", "447458304", "59241832", "-"], ["2015/4/2", "3827.69", "3825.78", "15.49", "0.41%", "3775.89", "3835.45", "479299680", "63202892", "-"], ["2015/4/3", "3803.38", "3863.93", "38.14", "1.00%", "3792.21", "3864.41", "473033312", "63565136", "-"]];
+    // prettier-ignore
+    //const colorList = ['#c23531', '#2f4554', '#61a0a8', '#d48265', '#91c7ae', '#749f83', '#ca8622', '#bda29a', '#6e7074', '#546570', '#c4ccd3'];
+    // const labelFont = 'bold 12px Sans-serif';
+
+
+
+
+</script>
+</body>
+
+</html>
