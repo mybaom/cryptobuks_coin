@@ -637,5 +637,8 @@
     "secondAccountBalance": "Saldo de la cuenta del segundo contrato",
     "leverAccountBalance": "Saldo de la cuenta del contrato",
     "legalAccountBalance": "Saldo de la cuenta en moneda legal"
+  },
+  "offerBuy": {
+    "footerTitle": "Suscripción"
   }
 }

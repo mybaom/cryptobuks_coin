@@ -619,5 +619,8 @@
     "secondAccountBalance":"ยอดคงเหลือในบัญชีสัญญาที่สอง",
     "leverAccountBalance":"ความสมดุลของบัญชีสัญญา",
     "legalAccountBalance":"ยอดคงเหลือในบัญชีสกุลเงินตามกฎหมาย"
+  },
+  "offerBuy": {
+    "footerTitle": "nสมัครสมาชิก"
   }
 }

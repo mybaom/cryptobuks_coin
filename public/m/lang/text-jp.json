@@ -522,7 +522,7 @@
         "noset":"登録後に変更できません",
         "pphone":"お手数でございますが、電話番号ご入力してください",
         "next":"次",
-        "have":"Binance Freeアカウントがありますか？",
+        "have":"CBVCCXアカウントがありますか？",
         "ceil":"取り消す",
         "msgtest":"メール検証",
         "send":"発送",
@@ -617,5 +617,8 @@
     "secondAccountBalance":"勘定残高",
     "leverAccountBalance":"契約勘定残高",
     "legalAccountBalance":"法貨勘定残高"
+  },
+  "offerBuy": {
+    "footerTitle": "注文に応じる"
   }
 }

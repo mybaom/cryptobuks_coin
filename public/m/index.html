@@ -252,7 +252,7 @@
 	<a href="offerToBuy.html">
 		<div>
 			<p class="img img6"></p>
-			<span>cbv</span>
+			<span data-localize="offerBuy.footerTitle">认购</span>
 		</div>
 	</a>
 	<a href="assets.html">
@@ -447,9 +447,8 @@
                                 html +=
                                     `<li class="swiper-slide">
                                         <a href="dataMap1.html?heyueId=${usdtData[i].id}&legal_id=${usdtData[i].legal_id}&currency_id=${usdtData[i].currency_id}&symbol=${usdtData[i].currency_name}/${usdtData[i].legal_name}">
-                                        <small class="usdt">${usdtData[i].currency_name}</small>
+                                        <small class="usdt">${usdtData[i].currency_name}/USDT</small>
                                         <h4 style="color:${usdtData[i].change > 0 ?'#00c087':'#ff3e60'}">${iTofixed(usdtData[i].now_price,4) || '0.00'}<span>${iTofixed(usdtData[i].change,2) || '0.00'}%</span></h4>
-
                                     </li>`
                             }
 
@@ -507,7 +506,7 @@
                                     `
                             		<li><a href="dataMap1.html?heyueId=${phDataTwo[i].id}&legal_id=${phDataTwo[i].legal_id}&currency_id=${phDataTwo[i].currency_id}&symbol=${phDataTwo[i].currency_name}/${phDataTwo[i].legal_name}">
 
-                            		<b>${phDataTwo[i].currency_name}</b>
+                            		<b>${phDataTwo[i].currency_name}/USDT</b>
                             		
                             		<b class="tc" style="color:${(phDataTwo[i].change - 0) >= 0 ? '#00c087' : '#ff3e60'}">${phDataTwo[i].now_price}</b>
                             		
@@ -533,7 +532,7 @@
                                     `
                                     <li><a href="dataMap1.html?heyueId=${usdtData[i].id}&legal_id=${phData[i].legal_id}&currency_id=${phData[i].currency_id}&symbol=${phData[i].currency_name}/${phData[i].legal_name}">
 
-                                        <b>${phData[i].currency_name}</b>
+                                        <b>${phData[i].currency_name}/USDT</b>
                                         <b class="tc" style="color:${(phData[i].change - 0) >= 0 ? '#00c087' : '#ff3e60'}">${iTofixed(phData[i].now_price * 1,4) || '0.00'}</b>
                                         <button class="btn btn-default" style="background:${(phData[i].change - 0) >= 0 ? '#00c087' : '#ff3e60'}">${iTofixed(phData[i].change,2) || '0.00'}%</button>
                                         </a>

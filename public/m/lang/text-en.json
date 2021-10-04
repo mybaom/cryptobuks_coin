@@ -520,7 +520,7 @@
     "pphone": "Cell user name",
     "pemail":"Please enter your mailbox",
     "next": "next step",
-    "have": "You have a binance free account?",
+    "have": "You have a CBVCCX account?",
     "ceil": "Cancel",
     "msgtest": "Short Message Verification",
     "send": "send",
@@ -642,5 +642,8 @@
     "secondAccountBalance":"Second contract account balance",
     "leverAccountBalance":"Contract account balance",
     "legalAccountBalance":"Fiat account balance"
+  },
+  "offerBuy": {
+    "footerTitle": "OfferToBuy"
   }
 }

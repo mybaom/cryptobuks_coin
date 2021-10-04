@@ -636,5 +636,8 @@
     "secondAccountBalance":"Zweiter Vertragskontostand",
     "leverAccountBalance":"Vertragskontostand",
     "legalAccountBalance":"Kontostand in gesetzlicher Währung"
-    }
+    },
+  "offerBuy": {
+      "footerTitle": "Abonnement"
+  }
 }

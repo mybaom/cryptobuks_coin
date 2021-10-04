@@ -516,7 +516,7 @@
     "pphone":"Veuillez saisir votre nom d'utilisateur",
     "pemail": "Veuillez saisir l'adresse e-mail",
     "next":"Suivant",
-    "have":"Avez-vous déjà un compte Binance Free ?",
+    "have":"Avez-vous déjà un compte CBVCCX ?",
     "ceil":"Annuler",
     "msgtest": "Vérification SMS",
     "send":"Envoyer",
@@ -637,5 +637,8 @@
     "secondAccountBalance": "Solde du compte du deuxième contrat",
     "leverAccountBalance": "Solde du compte de contrat",
     "legalAccountBalance": "Solde du compte en devise légale"
-  } 
+  },
+  "offerBuy": {
+    "footerTitle": "Abonnement"
+  }
 }
