@@ -359,11 +359,11 @@ background: #588bf7;
 }
 
 div#bottom button:nth-child(1) {
-	background: #ff3e60;
+	background: #00c087;
 }
 
 #bottom button:nth-child(2) {
-	background: #00c087;
+	background: #ff3e60;
 }
 
 /* 买入卖出弹窗 */

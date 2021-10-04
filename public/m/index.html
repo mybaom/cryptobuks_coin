@@ -509,9 +509,9 @@
 
                             		<b>${phDataTwo[i].currency_name}</b>
                             		
-                            		<b class="tc" style="color:${(phDataTwo[i].change - 0) >= 0 ? '#ff3e60' : '#00c087'}">${phDataTwo[i].now_price}</b>
+                            		<b class="tc" style="color:${(phDataTwo[i].change - 0) >= 0 ? '#00c087' : '#ff3e60'}">${phDataTwo[i].now_price}</b>
                             		
-                            		<button class="btn btn-default" style="background:${(phDataTwo[i].change - 0) >= 0 ? '#ff3e60' : '#00c087'}">${iTofixed(phDataTwo[i].volume/10000,2)}万</button>
+                            		<button class="btn btn-default" style="background:${(phDataTwo[i].change - 0) >= 0 ? '#00c087' : '#ff3e60'}">${iTofixed(phDataTwo[i].volume/10000,2)}万</button>
                             		</a>
                             		</li>
                             		`
@@ -534,8 +534,8 @@
                                     <li><a href="dataMap1.html?heyueId=${usdtData[i].id}&legal_id=${phData[i].legal_id}&currency_id=${phData[i].currency_id}&symbol=${phData[i].currency_name}/${phData[i].legal_name}">
 
                                         <b>${phData[i].currency_name}</b>
-                                        <b class="tc" style="color:${(phData[i].change - 0) >= 0 ? '#ff3e60' : '#00c087'}">${iTofixed(phData[i].now_price * 1,4) || '0.00'}</b>
-                                        <button class="btn btn-default" style="background:${(phData[i].change - 0) >= 0 ? '#ff3e60' : '#00c087'}">${iTofixed(phData[i].change,2) || '0.00'}%</button>
+                                        <b class="tc" style="color:${(phData[i].change - 0) >= 0 ? '#00c087' : '#ff3e60'}">${iTofixed(phData[i].now_price * 1,4) || '0.00'}</b>
+                                        <button class="btn btn-default" style="background:${(phData[i].change - 0) >= 0 ? '#00c087' : '#ff3e60'}">${iTofixed(phData[i].change,2) || '0.00'}%</button>
                                         </a>
                                     </li>
                                 `

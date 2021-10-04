@@ -56,7 +56,7 @@
                                     <!--    {{item.now_price * item.rmb_relation || 0.00 | toFixed2}}CNY</div>-->
                                 </div>
                                 <div class="main-rate">
-                                    <div :class="['rate_green',{'bg2':item.change > 0}]">
+                                    <div :class="['rate_green',{'bg2':item.change < 0}]">
                                         {{item.change|| 0.000}}%
                                     </div>
                                 </div>
@@ -93,7 +93,7 @@
                                     <!--    {{item.now_price * item.rmb_relation || 0.00 | toFixed2}}CNY</div>-->
                                 </div>
                                 <div class="main-rate">
-                                    <div :class="['rate_green',{'bg2':item.change > 0}]">
+                                    <div :class="['rate_green',{'bg2':item.change < 0}]">
                                         {{item.change|| 0.000}}%
                                     </div>
                                 </div>
