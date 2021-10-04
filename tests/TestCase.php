@@ -8,6 +8,13 @@ abstract class TestCase extends BaseTestCase
 {
     use CreatesApplication;
 
+    public function testX(){
+        $dataLen = 943;
+        $z = (100-(10/($dataLen/100)));
+        //echo ($dataLen / 30)*0.9;
+        echo ($dataLen-30)/$dataLen*100;
+    }
+
     public function testKModel(){
         // 起售价
         $startPrice = 10;

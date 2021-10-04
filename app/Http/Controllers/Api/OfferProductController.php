@@ -24,8 +24,11 @@ class OfferProductController extends Controller
     {
         try {
             $id = Input::get("id");
+            $date = Input::get("date");
             $startDate = date('Y-m-d H:i') . ':00';
-            $endDate = date('Y-m-d H:i', time() - (3600 * 24 * 3)) . ':00';
+            // 如果有传日期过来则用传过来的日期
+            $endDate = $date ? $date : date('Y-m-d H:i', time() - (3600 * 24 * 3)) . ':00';
+            $endDateSymbol = $date ? '>' : '>=';
             $info = OfferProduct::select('*', DB::raw('if(rise_fall_probability > 50, "1", "0") as rise_fall_symbol'), DB::raw('format((`max_increase` + `min_increase`)/2 * `rise_fall_probability`/100, 2) as rise_fall_probability'))->find($id);
             $getDbData = DB::table('offer_product_increase_record')
                 ->select(
@@ -39,7 +42,7 @@ class OfferProductController extends Controller
                 ->where('obp_id', $id)
                 ->where('time_type', 1)
                 ->where('minute', '<=', $startDate)
-                ->where('minute', '>=', $endDate)
+                ->where('minute', $endDateSymbol, $endDate)
                 ->get()->toArray();
             $result = new \stdClass();
             $result->info = new \stdClass();
@@ -56,23 +59,23 @@ class OfferProductController extends Controller
                 $simpleMin = substr($v->minute, 5, 11);
 
                 $result->min1->date[] = $simpleMin;
-                $result->min1->data[] = [$simpleMin, $v->open_price, $v->close_price, $v->lowest_price, $v->highest_price];
+                $result->min1->data[] = [$v->minute, $v->open_price, $v->close_price, $v->lowest_price, $v->highest_price];
                 $min = date('i', strtotime($v->minute));
                 if (($min % 5) == 0) {
                     $result->min5->date[] = $simpleMin;
-                    $result->min5->data[] = [$simpleMin, $v->open_price, $v->close_price, $v->lowest_price, $v->highest_price];
+                    $result->min5->data[] = [$v->minute, $v->open_price, $v->close_price, $v->lowest_price, $v->highest_price];
                 }
                 if (($min % 15) == 0) {
                     $result->min15->date[] = $simpleMin;
-                    $result->min15->data[] = [$simpleMin, $v->open_price, $v->close_price, $v->lowest_price, $v->highest_price];
+                    $result->min15->data[] = [$v->minute, $v->open_price, $v->close_price, $v->lowest_price, $v->highest_price];
                 }
                 if (($min % 30) == 0) {
                     $result->min30->date[] = $simpleMin;
-                    $result->min30->data[] = [$simpleMin, $v->open_price, $v->close_price, $v->lowest_price, $v->highest_price];
+                    $result->min30->data[] = [$v->minute, $v->open_price, $v->close_price, $v->lowest_price, $v->highest_price];
                 }
                 if (($min % 60) == 0) {
                     $result->hour->date[] = $simpleMin;
-                    $result->hour->data[] = [$simpleMin, $v->open_price, $v->close_price, $v->lowest_price, $v->highest_price];
+                    $result->hour->data[] = [$v->minute, $v->open_price, $v->close_price, $v->lowest_price, $v->highest_price];
                 }
             }
         }catch (\Exception $e){
