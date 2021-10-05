@@ -583,13 +583,13 @@
             },
             methods: {
                 taderSubmit(){
-                    if( $('#zj').val() > $('#ye').val()){
+                    if((parseFloat($('#zj').val()) > parseFloat($('#ye').val())){
                         alert('余额不足');
                         return false;
                     }
                     var data = {
                         id: get_param('id'),
-                        currency_id: detailList.quotation[this.selectId].currency_id,
+                        currency_id: this.detailList.quotation[this.selectId].currency_id,
                         number: $('[type="number"]').val(),
                         zj: $('#zj').val(),
                         ye: $('#ye').val(),
