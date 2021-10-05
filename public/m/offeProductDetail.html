@@ -641,20 +641,16 @@
                                     // 后端推送来消息时
                                     socket.on('kline', function (msg) {
                                         if (msg.type == 'kline') {
-                                            if (that.selectId && (that.selectId ==
-                                                msg.legal_id)) {
-                                                // now_price
-                                                let lists = that.detailList
-                                                    .quotation;
-                                                for (i in lists) {
-                                                    if (lists[i].currency_id == msg
-                                                        .currency_id) {
-                                                        that.detailList.quotation[i]
-                                                            .volume = msg.volume;
-                                                        that.detailList.quotation[i]
-                                                            .now_price = msg
-                                                            .close;
-                                                    }
+                                            // now_price
+                                            let lists = that.detailList.quotation;
+                                            for (i in lists) {
+                                                if (lists[i].currency_id == msg
+                                                    .currency_id) {
+                                                    that.detailList.quotation[i]
+                                                        .volume = msg.volume;
+                                                    that.detailList.quotation[i]
+                                                        .now_price = msg
+                                                        .close;
                                                 }
                                             }
                                         }
