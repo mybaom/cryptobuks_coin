@@ -134,8 +134,8 @@
             </div>
             <div class="tradeorder-buy tradeorder-bili">
                 <span data-localize="zdy.keyongyue">可用余额</span>：
-                <span v-if="change_wallet.length > 0 && detailList.quotation != 'undefined'" id="ye">{{change_wallet[selectId].change_balance}}</span>
-                <span v-if="change_wallet.length <= 0 || detailList.quotation == 'undefined'" id="ye">0</span>
+                <span v-if="detailList.quotation != 'undefined'" id="ye">{{change_wallet[selectId].change_balance}}</span>
+                <span v-if="detailList.quotation == 'undefined'" id="ye">0</span>
             </div>
             <div class="tradeorder-btn">
                 <span data-localize="fat.sure" @click="taderSubmit()">确认下单</span>
@@ -585,7 +585,8 @@
                 taderSubmit(){
                     var zj = parseFloat($('#zj').html());
                     var ye = parseFloat($('#ye').html())
-                    if(zj > ye){
+                    var hzsl = parseFloat($('#hznum').html());
+                    if(hzsl > ye){
                         alert('余额不足');
                         return false;
                     }
