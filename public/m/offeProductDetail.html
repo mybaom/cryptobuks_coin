@@ -557,6 +557,9 @@
                     name: '',
                     now_price: 0,
                 },
+                detailList: [],
+                selectId: 0,
+                dataList: [],
                 showBuyBox: false,
                 inputValue: 0,
                 currentTime: null, // 当前时间，需要轮询该时间是否有变化，每次到时间则去获取最新数据
@@ -645,6 +648,8 @@
                         var myDate = new Date();
                         var date = myDate.getFullYear() + '-' + (myDate.getMonth()+1) + '-' + myDate.getDate() + ' ' + myDate.getHours() + ':' + myDate.getMinutes() + ':00';
                         var nowTime = (myDate.getMonth()+1) + '-' + myDate.getDate() + ' ' + myDate.getHours() + ':' + myDate.getMinutes();
+                        console.log(app.detailList)
+                        console.log(app.dataList);
                         // 如果当前时间不等于之前记录的时间，并且数据不为空，且最后一个日期不等于当前日期，则去获取数据
                         if(app.currentTime != date && currentDate.length != 0 && currentDate[currentDate.length - 1] != nowTime)
                         {
