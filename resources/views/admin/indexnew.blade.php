@@ -274,7 +274,7 @@
 <script src="https://www.cbvccx.com/winadmin/lib/layui/layui.js"></script>
 <script>
     layui.config({
-        base: 'https://www.cbvccx.com/winadmin/js' //指定 index.js 路径
+        base: 'https://www.cbvccx.com/winadmin/js/' //指定 index.js 路径
         , version: '1.0.0-beta'
     }).use('index');
     
