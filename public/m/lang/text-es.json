@@ -423,7 +423,7 @@
     "about": "Noticias relacionadas"
   },
   "safe":{
-      "account": "Introduzca el número de cuenta",
+    "account": "Introduzca el número de cuenta",
     "center": "Centro de seguridad",
     "qsrymm": "Introduzca la contraseña original",
     "lgpwd": "Contraseña de inicio de sesión",
@@ -444,7 +444,8 @@
     "reppwd": "Vuelva a introducir la contraseña",
     "repwd": "Restablecer contraseña",
     "zpwd": "Contraseña comercial",
-    "bindEmail": "Vincular correo electrónico"
+    "bindEmail": "Vincular correo electrónico",
+    "rename": "Por favor ingrese su nombre real"
   },
   "met":{
     "add": "Agregar método",

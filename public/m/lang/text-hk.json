@@ -432,7 +432,8 @@
       "reppwd":"請再次輸入密碼",
       "repwd":"重置密碼",
       "zpwd":"交易密碼",
-      "bindEmail":"綁定郵箱"
+      "bindEmail":"綁定郵箱",
+      "rename": "请输入真实名"
     },
     "met":{
       "add":"添加方式",

@@ -448,7 +448,8 @@
     "reppwd": "Password again.",
     "repwd": "Reset password",
     "zpwd":"Transaction password",
-    "bindEmail":"Bind mailbox"
+    "bindEmail":"Bind mailbox",
+    "rename": "Please enter your real name"
   },
   "met": {
     "add": "add way",

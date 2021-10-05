@@ -444,7 +444,8 @@
     "reppwd": "Veuillez saisir à nouveau le mot de passe",
     "repwd": "Réinitialiser le mot de passe",
     "zpwd": "Mot de passe de trading",
-    "bindEmail": "Lier l'e-mail"
+    "bindEmail": "Lier l'e-mail",
+    "rename": "Veuillez entrer votre vrai nom"
   },
   "met":{
     "add":"Ajouter une méthode",
