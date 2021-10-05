@@ -124,8 +124,8 @@
                 <input type="number" :placeholder="getlg('pbnum')" v-model="inputValue">
             </div>
             <div class="tradeorder-buy tradeorder-bili">
-                <span data-localize="td.tdtotal" id="zj">总价</span>
-                <span>{{info.now_price * inputValue}}</span>
+                <span data-localize="td.tdtotal">总价</span>
+                <span id="zj">{{info.now_price * inputValue}}</span>
             </div>
             <div class="tradeorder-buy tradeorder-bili">
                 <span data-localize="td.transnum">划转数量</span>
@@ -133,9 +133,9 @@
                 <span id="hznum" v-if="typeof detailList.quotation == 'undefined'">0</span>
             </div>
             <div class="tradeorder-buy tradeorder-bili">
-                <span data-localize="zdy.keyongyue" id="ye">可用余额</span>：
-                <span v-if="change_wallet.length > 0 && detailList.quotation != 'undefined'">{{change_wallet[selectId].change_balance}}</span>
-                <span v-if="change_wallet.length <= 0 || detailList.quotation == 'undefined'">0</span>
+                <span data-localize="zdy.keyongyue">可用余额</span>：
+                <span v-if="change_wallet.length > 0 && detailList.quotation != 'undefined'" id="ye">{{change_wallet[selectId].change_balance}}</span>
+                <span v-if="change_wallet.length <= 0 || detailList.quotation == 'undefined'" id="ye">0</span>
             </div>
             <div class="tradeorder-btn">
                 <span data-localize="fat.sure" @click="taderSubmit()">确认下单</span>
@@ -583,7 +583,9 @@
             },
             methods: {
                 taderSubmit(){
-                    if(parseFloat($('#zj').val()) > parseFloat($('#ye').val())){
+                    var zj = parseFloat($('#zj').html());
+                    var ye = parseFloat($('#ye').html())
+                    if(zj > ye){
                         alert('余额不足');
                         return false;
                     }
@@ -591,9 +593,9 @@
                         id: get_param('id'),
                         currency_id: this.detailList.quotation[this.selectId].currency_id,
                         number: $('[type="number"]').val(),
-                        zj: $('#zj').val(),
-                        ye: $('#ye').val(),
-                        hznum: $('#hznum').val()
+                        zj: zj,
+                        ye: ye,
+                        hznum: $('#hznum').html()
                     };
                     console.log(data)
                 },
