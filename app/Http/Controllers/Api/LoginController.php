@@ -209,13 +209,17 @@ class LoginController extends Controller
 
     public function checkEmailCode()
     {
-        $email_code = Input::get('email_code', '');
-        if (empty($email_code))
-            return $this->error('请输入验证码');
-        $session_code = session('code');
-        if ($email_code != $session_code && $email_code != '9188')
-            return $this->error('验证码错误');
-        return $this->success('验证成功');
+        try {
+            $email_code = Input::get('email_code', '');
+            if (empty($email_code))
+                return $this->error('请输入验证码');
+            $session_code = session('code');
+            if ($email_code != $session_code && $email_code != '9188')
+                return $this->error('验证码错误');
+            return $this->success('验证成功');
+        }catch (\Exception $e){
+            return $this->error($e->getMessage());
+        }
     }
 
     public function checkMobileCode()
