@@ -116,7 +116,7 @@
             <div class="tradeorder-buy tradeorder-bili">
                 <h1 data-localize="zdy.huazhuanbizhong">划转币种</h1>
                 <select @change="quotationChange" style="width: 100%; height: 35px;">
-                    <option v-for="(item, key) in dataList.quotation">{{item.currency_name}}</option>
+                    <option v-for="(item, key) in detailList.quotation">{{item.currency_name}}</option>
                 </select>
             </div>
             <div class="tradeorder-buy tradeorder-bili">
@@ -127,16 +127,16 @@
                 <span data-localize="td.tdtotal">总价</span>
                 <span>{{info.now_price * inputValue}}</span>
             </div>
-<!--            <div class="tradeorder-buy tradeorder-bili">-->
-<!--                <span data-localize="td.transnum">划转数量</span>-->
-<!--                <span v-if="dataList.length > 0">{{info.now_price * inputValue / dataList.quotation[selectId].now_price}}</span>-->
-<!--                <span v-if="dataList.length <= 0">0</span>-->
-<!--            </div>-->
-<!--            <div class="tradeorder-buy tradeorder-bili">-->
-<!--                <span data-localize="zdy.keyongyue">可用余额</span>：-->
-<!--                <span v-if="change_wallet.length > 0 && dataList.length > 0">{{change_wallet[selectId].change_balance}}</span>-->
-<!--                <span v-if="change_wallet.length <= 0 || dataList.length <= 0">0</span>-->
-<!--            </div>-->
+            <div class="tradeorder-buy tradeorder-bili">
+                <span data-localize="td.transnum">划转数量</span>
+                <span v-if="detailList.length > 0">{{info.now_price * inputValue / detailList.quotation[selectId].now_price}}</span>
+                <span v-if="detailList.length <= 0">0</span>
+            </div>
+            <div class="tradeorder-buy tradeorder-bili">
+                <span data-localize="zdy.keyongyue">可用余额</span>：
+                <span v-if="change_wallet.length > 0 && detailList.length > 0">{{change_wallet[selectId].change_balance}}</span>
+                <span v-if="change_wallet.length <= 0 || detailList.length <= 0">0</span>
+            </div>
             <div class="tradeorder-btn">
                 <span data-localize="fat.sure" @click="taderSubmit()">确认下单</span>
             </div>
@@ -658,7 +658,7 @@
                         var date = myDate.getFullYear() + '-' + (myDate.getMonth()+1) + '-' + myDate.getDate() + ' ' + myDate.getHours() + ':' + myDate.getMinutes() + ':00';
                         var nowTime = (myDate.getMonth()+1) + '-' + myDate.getDate() + ' ' + myDate.getHours() + ':' + myDate.getMinutes();
                         // console.log(app.detailList)
-                        console.log(app.dataList);
+                        // console.log(app.dataList);
                         // 如果当前时间不等于之前记录的时间，并且数据不为空，且最后一个日期不等于当前日期，则去获取数据
                         if(app.currentTime != date && currentDate.length != 0 && currentDate[currentDate.length - 1] != nowTime)
                         {
