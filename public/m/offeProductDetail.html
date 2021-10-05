@@ -126,11 +126,11 @@
             </div>
             <div class="tradeorder-buy tradeorder-bili">
                 <span data-localize="td.tdtotal">总价</span>
-                <span id="zj">{{(info.now_price * inputValue).toFixed(8)}}</span>
+                <span id="zj">{{info.now_price * inputValue}}</span>
             </div>
             <div class="tradeorder-buy tradeorder-bili">
                 <span data-localize="td.transnum">划转数量</span>
-                <span id="hznum" v-if="typeof detailList.quotation != 'undefined'">{{(info.now_price * inputValue / detailList.quotation[selectId].now_price).toFixed(8)}}</span>
+                <span id="hznum" v-if="typeof detailList.quotation != 'undefined'">{{info.now_price * inputValue / detailList.quotation[selectId].now_price}}</span>
                 <span id="hznum" v-if="typeof detailList.quotation == 'undefined'">0</span>
             </div>
             <div class="tradeorder-buy tradeorder-bili">
