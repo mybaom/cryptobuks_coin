@@ -117,7 +117,7 @@
                 <h1 data-localize="zdy.huazhuanbizhong">划转币种</h1>
                 <select id="bz" @change="quotationChange" style="width: 100%; height: 35px;">
                     <option value=""></option>
-                    <option v-for="(item, key) in detailList.quotation" :value="key">{{item.currency_name}}———${{item.now_price}}</option>
+                    <option v-for="(item, key) in detailList.quotation" :value="key">{{item.currency_name}}</option>
                 </select>
             </div>
             <div class="tradeorder-buy tradeorder-bili">
