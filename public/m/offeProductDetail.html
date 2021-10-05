@@ -134,8 +134,8 @@
             </div>
             <div class="tradeorder-buy tradeorder-bili">
                 <span data-localize="zdy.keyongyue">可用余额</span>：
-                <span v-if="change_wallet.length > 0 && detailList.length > 0">{{change_wallet[selectId].change_balance}}</span>
-                <span v-if="change_wallet.length <= 0 || detailList.length <= 0">0</span>
+                <span v-if="change_wallet.length > 0 && detailList.quotation != 'undefined'">{{change_wallet[selectId].change_balance}}</span>
+                <span v-if="change_wallet.length <= 0 || detailList.quotation == 'undefined'">0</span>
             </div>
             <div class="tradeorder-btn">
                 <span data-localize="fat.sure" @click="taderSubmit()">确认下单</span>
