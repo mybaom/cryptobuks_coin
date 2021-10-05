@@ -4,15 +4,15 @@
     <meta http-equiv="content-type" content="text/html;charset=utf-8" />
     <meta name="renderer" content="webkit">
     <title>管理系统</title>
-    <link href="https://www.cbvccx.com/winadmin/lib/layui/css/layui.css" rel="stylesheet" />
-    <link href="https://www.cbvccx.com/winadmin/lib/animate/animate.min.css"" rel="stylesheet" />
-    <link href="https://www.cbvccx.com/winadmin/lib/font-awesome-4.7.0/css/font-awesome.css" rel="stylesheet" />
-    <link href="https://www.cbvccx.com/winadmin/lib/winui/css/winui.css" rel="stylesheet" />
+    <link href="{{URL("winadmin/lib/layui/css/layui.css")}}" rel="stylesheet" />
+    <link href="{{URL("winadmin/lib/animate/animate.min.css")}}" rel="stylesheet" />
+    <link href="{{URL("winadmin/lib/font-awesome-4.7.0/css/font-awesome.css")}}" rel="stylesheet" />
+    <link href="{{URL("winadmin/lib/winui/css/winui.css")}}" rel="stylesheet" />
 
     <style>
         body {
             /*在页面顶部加载背景最佳，如有必要这块可以从数据库读取*/
-            background-image: url("https://www.cbvccx.com/winadmin/images/bg_05.jpg");
+            background-image: url({{URL("winadmin/images/bg_05.jpg")}});
         }
     </style>
 </head>
@@ -271,10 +271,10 @@
 
 
 <!--layui.js-->
-<script src="https://www.cbvccx.com/winadmin/lib/layui/layui.js"></script>
+<script src="{{URL("winadmin/lib/layui/layui.js")}}"></script>
 <script>
     layui.config({
-        base: 'https://www.cbvccx.com/winadmin/js/' //指定 index.js 路径
+        base: '{{URL("winadmin/js")}}/' //指定 index.js 路径
         , version: '1.0.0-beta'
     }).use('index');
     
@@ -283,7 +283,7 @@
         
         setInterval(function(){
             $.ajax({
-                url: "https://www.cbvccx.com/admin/trackOrder",
+                url: "{{url('/admin/trackOrder')}}",
                 dataType: "json",
                 success: function(res) {
                     if (res.code == 200) {
