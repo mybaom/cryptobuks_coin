@@ -107,33 +107,34 @@
 <!--                    <span data-localize="zdy.fangxiang">方向</span>-->
 <!--                    <span :style="tradeType==1?'color:#1cad90':'color:#cd4e65'">{{tradeBuy}}</span>-->
 <!--                </div>-->
+
                 <div class="tradeorder-top-list">
                     <span data-localize="zdy.xianjia">现价</span>
                     <span>{{info.now_price | toFixeds}}</span>
                 </div>
             </div>
-<!--            <div class="tradeorder-jymode tradeorder-bili">-->
-<!--                <h1  data-localize="contract.transactionMode">交易模式</h1>-->
-<!--                <div class="tradeorder-jymode-list">-->
-<!--                    <span v-for="item in tradeCurrency" :class="[{'tradeorder-jymode-active':tradeCurrencyId == item.id}]" @click="tradeCurrencyClick(item.id,item.name)" :key="item.id">&lt;!&ndash;{{item.name}} USDT&ndash;&gt;</span>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--            <div class="tradeorder-time tradeorder-bili">-->
-<!--                <h1 data-localize="zdy.selecttime">选择到期时间(左滑更多选择)</h1>-->
-<!--                <div class="tradeorder-time-list">-->
-<!--                    <article v-for="item in timeList" :class="[{'tradeorder-time-list-active':seconds == item.seconds}]" @click="selectTime(item.seconds,item.profit_ratio,item.min)">-->
-<!--                        <span>{{item.seconds_desc}}</span>-->
-<!--                        <em>{{item.profit_ratio}}%</em>-->
-
-<!--                    </article>-->
-<!--                </div>-->
-<!--            </div>-->
+            <div class="tradeorder-buy tradeorder-bili">
+                <h1 data-localize="zdy.huazhuanbizhong">划转币种</h1>
+                <select @change="quotationChange" style="width: 100%; height: 35px;">
+                    <option v-for="(item, key) in dataList.quotation" v-model="key">{{item.currency_name}}</option>
+                </select>
+            </div>
             <div class="tradeorder-buy tradeorder-bili">
                 <h1 data-localize="zdy.buynum" >买入数量</h1>
                 <input type="number" :placeholder="getlg('pbnum')" v-model="inputValue">
             </div>
-            <div class="tradeorder-balance tradeorder-bili">
-                <span data-localize="zdy.keyongyue">可用余额</span>：100
+            <div class="tradeorder-buy tradeorder-bili">
+                <span data-localize="td.tdtotal">总价</span>
+                <span>{{info.now_price * inputValue}}</span>
+            </div>
+            <div class="tradeorder-buy tradeorder-bili">
+                <span data-localize="td.transnum">划转数量</span>
+                <span v-if="dataList.length > 0">{{info.now_price * inputValue / dataList.quotation[selectId].now_price}}</span>
+                <span v-if="dataList.length <= 0">0</span>
+            </div>
+            <div class="tradeorder-buy tradeorder-bili">
+                <span data-localize="zdy.keyongyue">可用余额</span>：
+                <span v-if="change_wallet.length > 0">{{change_wallet[selectId].change_balance}}</span>
             </div>
             <div class="tradeorder-btn">
                 <span data-localize="fat.sure" @click="taderSubmit()">确认下单</span>
@@ -561,6 +562,7 @@
                 selectId: 0,
                 dataList: [],
                 showBuyBox: false,
+                change_wallet: [],
                 inputValue: 0,
                 currentTime: null, // 当前时间，需要轮询该时间是否有变化，每次到时间则去获取最新数据
                 colorList: ['#c23531', '#2f4554', '#61a0a8', '#d48265', '#91c7ae', '#749f83', '#ca8622', '#bda29a', '#6e7074', '#546570', '#c4ccd3'],
@@ -581,6 +583,10 @@
             methods: {
                 closeBuyBox(){
                     this.showBuyBox = false
+                },
+                quotationChange(e)
+                {
+                    this.selectId = e.target.value;
                 },
                 currencyQuotationSuccess(res) {
                     let that = this;
@@ -607,6 +613,7 @@
                         },
                         success: function success(data) {
                             if (data.type == 'ok') {
+                                that.change_wallet = data.message.change_wallet.balance;
                                 var socket = io(socket_api);
                                 socket.on('connect', function (datas) {
                                     socket.emit('login', data.message.id);
@@ -648,8 +655,8 @@
                         var myDate = new Date();
                         var date = myDate.getFullYear() + '-' + (myDate.getMonth()+1) + '-' + myDate.getDate() + ' ' + myDate.getHours() + ':' + myDate.getMinutes() + ':00';
                         var nowTime = (myDate.getMonth()+1) + '-' + myDate.getDate() + ' ' + myDate.getHours() + ':' + myDate.getMinutes();
-                        console.log(app.detailList)
-                        console.log(app.dataList);
+                        // console.log(app.detailList)
+                        // console.log(app.dataList);
                         // 如果当前时间不等于之前记录的时间，并且数据不为空，且最后一个日期不等于当前日期，则去获取数据
                         if(app.currentTime != date && currentDate.length != 0 && currentDate[currentDate.length - 1] != nowTime)
                         {
