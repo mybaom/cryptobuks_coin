@@ -639,7 +639,7 @@
                                 socket.on('connect', function (datas) {
                                     socket.emit('login', data.message.id);
                                     // 后端推送来消息时
-                                    socket.on('daymarket', function (msg) {
+                                    socket.on('kline', function (msg) {
                                         if (msg.type == 'kline') {
                                             if (that.selectId && (that.selectId ==
                                                 msg.legal_id)) {
