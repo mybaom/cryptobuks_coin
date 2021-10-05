@@ -25,94 +25,122 @@
         .CNY ul{
             width: 70%;
         }
+        .card-footer
+        {
+            text-align: center;
+            display: inline-block;
+            width: 80%;
+            margin: auto;
+            margin-left: 10%;
+            padding-bottom: 20px;
+            padding-top: 10px;
+        }
+        .card-footer button
+        {
+            width: 46%;
+            height: 35px;
+            border: 0;
+            color: #FFF;
+            border-radius: 4px;
+        }
+        .card-footer .buy {
+            float: left;
+            background-color: #47c363;
+        }
+        .card-footer .sell
+        {
+            float: right;
+            background-color: #fc544b;
+        }
     </style>
 </head>
 
 <body class="bgColor">
+<div class="header">
+    <p class="pull-left"></p>
+    <span data-localize="zdy.contractdetails" class="contractdetail"></span>
+</div>
+<div class="CNY bgWhite">
+    <div class="pull-left">
+        <h5 style="margin-top: 15px;" data-localize="zdy.current">当前</h5>
+        <h2 style="" class="now_price"></h2>
+        <h4 class="flex alcenter"><span style="margin-left:5px;margin-top:5px;" class="rise_fall_probability"></span>
+        </h4>
+    </div>
+    <ul class="pull-right ft12 ">
+        <li class="flex">
+            <p data-localize="mk.high">高</p><span class="max-price"></span>
+        </li>
+        <li class="flex">
+            <p data-localize="mk.low">低</p><span class="min-price"></span>
+        </li>
+        <li class="flex">
+            <p data-localize="mk.open">开盘</p><span class="open-price"></span>
+        </li>
+    </ul>
+
+</div>
 <div id="app" v-cloak>
 <!--    <div class="head">-->
 <!--        <h5 data-localize="zdy.current" style="margin-top: 15px; color: rgb(78, 91, 133);">当前</h5>-->
 <!--        <div class="price">80.12898921</div>-->
 <!--        <div class="bl">-0.0%</div>-->
 <!--    </div>-->
-    <div class="header">
-        <p class="pull-left"></p>
-        <span data-localize="zdy.contractdetails" class="contractdetail"></span>
-    </div>
-    <div class="CNY bgWhite">
-        <div class="pull-left">
-            <h5 style="margin-top: 15px;" data-localize="zdy.current">当前</h5>
-            <h2 style="" class="now_price"></h2>
-            <h4 class="flex alcenter"><span style="margin-left:5px;margin-top:5px;" class="rise_fall_probability"></span>
-            </h4>
-        </div>
-        <ul class="pull-right ft12 ">
-            <li class="flex">
-                <p data-localize="mk.high">高</p><span class="max-price"></span>
-            </li>
-            <li class="flex">
-                <p data-localize="mk.low">低</p><span class="min-price"></span>
-            </li>
-            <li class="flex">
-                <p data-localize="mk.open">开盘</p><span class="open-price"></span>
-            </li>
-        </ul>
 
-    </div>
     <div id="echart" style="width:100%; min-height: 375px;">
 
     </div>
-    <div id="place">
-        <div id="data" class="bgColor pb10">
-        </div>
-        <div id="mask1" @click="close">
-            <div id="Limited">
-                <ul>
-                    <li></li>
-                    <li class="cancel" data-localize="transaction.cancel">取消</li>
-                </ul>
-            </div>
-        </div>
-        <div style="height:10px;background-color:#f4f8fb;"></div>
-        <div id="entrust" style="margin-bottom: 50px;" class="bgColor mt10">
-            <div>
-                <h3 class="pull-left " data-localize="deals.currentPosition">
-                    当前持仓
-                </h3>
-                <p class="pull-right filtrate all">
 
-                </p>
-                <ul class="list_ul" style="margin-top:35px;">
-                    <li class="ft12 clearfix colorGrey bdb">
-                        <span class="width1 tc fl pb5" data-localize="deals.type">类型</span>
-                        <span class="width2 tc fl pb5" data-localize="assets.time">时间</span>
-                        <span class="width2 tc fl pb5" data-localize="transaction.price">价格</span>
-                        <span class="width2 tc fl pb5" data-localize="assets.num">数量</span>
-                        <span class="width11 tc fl pb5" data-localize="transaction.option">操作</span>
-                    </li>
-                    <li>
-                        <ul class="conplete_list colorGrey ft12" style="padding: 10px 0;">
-                            <li class="clearfix" v-for="item in []" :key="item.id" style="padding:5px 0;">
-                                <span class="width1 tc fl">{{item.type == 1 ? getlg('domore'):getlg('doless')}}</span>
-                                <span class="width2 tc fl">{{item.time}}</span>
-                                <span class="width2 tc fl">{{item.price || '0.0000' | toFixed4}}</span>
-                                <span class="width2 tc fl">{{item.number || '0.00' | toFixeds}}</span>
-                                <a class='pingcang white tc width1 fl' @click="sellLoss(item.id)">{{getlg('pcang')}}</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="clickMore tc colorGrey" data-localize="deals.clickLoad">点击加载</li>
-                </ul>
 
+    <div class="tradeorder-mask" v-show="showBuyBox">
+        <div class="tradeorder">
+            <div class="tradeorder-title">
+                <span data-localize="zdy.orderconfirm">订单确认</span>
+                <img src="images/ia.png" @click="closeBuyBox()">
             </div>
-            <div class="no_record" style="display:none;">
-                <p>
-                    <img src="images/anonymous.png" />
-                </p>
-                <p data-localize="transaction.nodata">暂无记录</p>
+            <div class="tradeorder-top tradeorder-bili">
+                <div class="tradeorder-top-list">
+                    <span data-localize="index.name">名称</span>
+                    <span v-if="info.name">{{info.name}}</span>
+                </div>
+<!--                <div class="tradeorder-top-list">-->
+<!--                    <span data-localize="zdy.fangxiang">方向</span>-->
+<!--                    <span :style="tradeType==1?'color:#1cad90':'color:#cd4e65'">{{tradeBuy}}</span>-->
+<!--                </div>-->
+                <div class="tradeorder-top-list">
+                    <span data-localize="zdy.xianjia">现价</span>
+                    <span>{{info.now_price | toFixeds}}</span>
+                </div>
+            </div>
+<!--            <div class="tradeorder-jymode tradeorder-bili">-->
+<!--                <h1  data-localize="contract.transactionMode">交易模式</h1>-->
+<!--                <div class="tradeorder-jymode-list">-->
+<!--                    <span v-for="item in tradeCurrency" :class="[{'tradeorder-jymode-active':tradeCurrencyId == item.id}]" @click="tradeCurrencyClick(item.id,item.name)" :key="item.id">&lt;!&ndash;{{item.name}} USDT&ndash;&gt;</span>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="tradeorder-time tradeorder-bili">-->
+<!--                <h1 data-localize="zdy.selecttime">选择到期时间(左滑更多选择)</h1>-->
+<!--                <div class="tradeorder-time-list">-->
+<!--                    <article v-for="item in timeList" :class="[{'tradeorder-time-list-active':seconds == item.seconds}]" @click="selectTime(item.seconds,item.profit_ratio,item.min)">-->
+<!--                        <span>{{item.seconds_desc}}</span>-->
+<!--                        <em>{{item.profit_ratio}}%</em>-->
+
+<!--                    </article>-->
+<!--                </div>-->
+<!--            </div>-->
+            <div class="tradeorder-buy tradeorder-bili">
+                <h1 data-localize="zdy.buynum" >买入数量</h1>
+                <input type="number" :placeholder="getlg('pbnum')" v-model="inputValue">
+            </div>
+            <div class="tradeorder-balance tradeorder-bili">
+                <span data-localize="zdy.keyongyue">可用余额</span>：100
+            </div>
+            <div class="tradeorder-btn">
+                <span data-localize="fat.sure" @click="taderSubmit()">确认下单</span>
             </div>
         </div>
     </div>
+
 
     <!-- 持仓列表  -->
     <!-- <div class="position" style="display:none;">
@@ -130,6 +158,62 @@
         </div>
     </div> -->
 </div>
+<div class="card-footer">
+    <button class="buy" data-localize="td.buy" onclick="showBuyBoxFun()">买入</button>
+    <button class="sell" data-localize="td.sell">卖出</button>
+</div>
+<div id="place">
+    <div id="data" class="bgColor pb10">
+    </div>
+    <div id="mask1" @click="close">
+        <div id="Limited">
+            <ul>
+                <li></li>
+                <li class="cancel" data-localize="transaction.cancel">取消</li>
+            </ul>
+        </div>
+    </div>
+    <div style="height:10px;background-color:#f4f8fb;"></div>
+    <div id="entrust" style="margin-bottom: 50px;" class="bgColor mt10">
+        <div>
+            <h3 class="pull-left " data-localize="deals.currentPosition">
+                当前持仓
+            </h3>
+            <p class="pull-right filtrate all">
+
+            </p>
+            <ul class="list_ul" style="margin-top:35px;">
+                <li class="ft12 clearfix colorGrey bdb">
+                    <span class="width1 tc fl pb5" data-localize="deals.type">类型</span>
+                    <span class="width2 tc fl pb5" data-localize="assets.time">时间</span>
+                    <span class="width2 tc fl pb5" data-localize="transaction.price">价格</span>
+                    <span class="width2 tc fl pb5" data-localize="assets.num">数量</span>
+                    <span class="width11 tc fl pb5" data-localize="transaction.option">操作</span>
+                </li>
+                <li>
+                    <ul class="conplete_list colorGrey ft12" style="padding: 10px 0;">
+<!--                        <li class="clearfix" v-for="item in []" :key="item.id" style="padding:5px 0;">-->
+<!--                            <span class="width1 tc fl">{{item.type == 1 ? getlg('domore'):getlg('doless')}}</span>-->
+<!--                            <span class="width2 tc fl">{{item.time}}</span>-->
+<!--                            <span class="width2 tc fl">{{item.price || '0.0000' | toFixed4}}</span>-->
+<!--                            <span class="width2 tc fl">{{item.number || '0.00' | toFixeds}}</span>-->
+<!--                            <a class='pingcang white tc width1 fl' @click="sellLoss(item.id)">{{getlg('pcang')}}</a>-->
+<!--                        </li>-->
+                    </ul>
+                </li>
+                <li class="clickMore tc colorGrey" data-localize="deals.clickLoad">点击加载</li>
+            </ul>
+
+        </div>
+        <div class="no_record" style="display:none;">
+            <p>
+                <img src="images/anonymous.png" />
+            </p>
+            <p data-localize="transaction.nodata">暂无记录</p>
+        </div>
+    </div>
+</div>
+
 <!-- 一键平仓 -->
 <!-- <div class="stop-trade clearfix">
     <p class="fl"><span data-localize="deals.total">持仓总盈亏：</span> <span class="total-pro"></span></p>
@@ -454,7 +538,7 @@
 
 
     // option && myChart.setOption(option);
-
+    var app;
     $(document).ready(function() {
         var dataLastDate;
         var chart = null;
@@ -466,37 +550,93 @@
         var currentDate = [];
         var currentData = [];
 
-        var app = new Vue({
+        app = new Vue({
             el: '#app',
             data: {
-                info: null,
+                info: {
+                    name: '',
+                    now_price: 0,
+                },
+                showBuyBox: false,
+                inputValue: 0,
                 currentTime: null, // 当前时间，需要轮询该时间是否有变化，每次到时间则去获取最新数据
                 colorList: ['#c23531', '#2f4554', '#61a0a8', '#d48265', '#91c7ae', '#749f83', '#ca8622', '#bda29a', '#6e7074', '#546570', '#c4ccd3'],
             },
             mounted() {
                 chart = echarts.init(document.getElementById('echart'))
-                chart.setOption(option)
+                chart.setOption(option);
+                let that = this;
+                get_user_login();
+                initDataTokens({
+                    url: 'currency/quotation_new'
+                }, that.currencyQuotationSuccess);
             },
             created: function () {
                 this.getAllList();
                 this.getSystemDate();
             },
             methods: {
+                closeBuyBox(){
+                    this.showBuyBox = false
+                },
+                currencyQuotationSuccess(res) {
+                    let that = this;
+                    if (res.type == 'ok') {
+                        that.socket(token);
+                        that.tabList = res.message;
+                        if (res.message.length > 0) {
+                            that.selectId = res.message[0].id;
+                            that.detailList = res.message[0];
+                            that.dataList = res.message;
+                        }
+                    }
+                },
+                //socket连接封装
+                socket(token) {
+                    let that = this;
+                    $.ajax({
+                        url: _API + "user/info",
+                        type: "GET",
+                        dataType: "json",
+                        async: true,
+                        beforeSend: function beforeSend(request) {
+                            request.setRequestHeader("Authorization", token);
+                        },
+                        success: function success(data) {
+                            if (data.type == 'ok') {
+                                var socket = io(socket_api);
+                                socket.on('connect', function (datas) {
+                                    socket.emit('login', data.message.id);
+                                    // 后端推送来消息时
+                                    socket.on('daymarket', function (msg) {
+                                        if (msg.type == 'daymarket') {
+                                            if (that.selectId && (that.selectId ==
+                                                msg.legal_id)) {
+                                                // now_price
+                                                let lists = that.detailList
+                                                    .quotation;
+                                                for (i in lists) {
+                                                    if (lists[i].currency_id == msg
+                                                        .currency_id) {
+                                                        that.detailList.quotation[i]
+                                                            .volume = msg.volume;
+                                                        that.detailList.quotation[i]
+                                                            .now_price = msg
+                                                            .now_price;
+                                                        that.detailList.quotation[i]
+                                                            .change = msg.change;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    });
+                                });
+                            }
+                        }
+                    });
+                },
                 getSystemDate(){
                     var myDate = new Date();
-                    // myDate.getYear();        //获取当前年份(2位)
-                    // myDate.getFullYear();    //获取完整的年份(4位,1970-????)
-                    // myDate.getMonth();       //获取当前月份(0-11,0代表1月)
-                    // myDate.getDate();        //获取当前日(1-31)
-                    // myDate.getDay();         //获取当前星期X(0-6,0代表星期天)
-                    // myDate.getTime();        //获取当前时间(从1970.1.1开始的毫秒数)
-                    // myDate.getHours();       //获取当前小时数(0-23)
-                    // myDate.getMinutes();     //获取当前分钟数(0-59)
-                    // myDate.getSeconds();     //获取当前秒数(0-59)
-                    // myDate.getMilliseconds();    //获取当前毫秒数(0-999)
-                    // myDate.toLocaleDateString();     //获取当前日期
-                    // var mytime=myDate.toLocaleTimeString();     //获取当前时间
-                    // myDate.toLocaleString();        //获取日期与时间
                     this.currentTime = myDate.getFullYear() + '-' + (myDate.getMonth()+1) + '-' + myDate.getDate() + ' ' + myDate.getHours() + ':' + myDate.getMinutes() + ':00';
                     this.getSettimeOutData(myDate);
                 },
@@ -557,6 +697,7 @@
                                 currentData = min1.data;
                                 currentDate = min1.date;
                                 dataLastDate = min1.data[min1.data.length - 1][0];
+                                app.info = res.info;
 
                                 $('.max-price').html(currentData[currentData.length - 1][3]);
                                 $('.min-price').html(currentData[currentData.length - 1][2]);
@@ -651,6 +792,7 @@
                                 currentData = min1.data;
                                 currentDate = min1.date;
                                 dataLastDate = min1.data[min1.data.length - 1][0];
+                                app.info = res.info;
 
                                 $('.max-price').html(currentData[currentData.length - 1][3]);
                                 $('.min-price').html(currentData[currentData.length - 1][2]);
@@ -691,7 +833,13 @@
                 }
             }
         });
+
+
     })
+
+    function showBuyBoxFun() {
+        app.showBuyBox = true
+    }
 
 
 
