@@ -129,8 +129,8 @@
             </div>
             <div class="tradeorder-buy tradeorder-bili">
                 <span data-localize="td.transnum">划转数量</span>
-                <span v-if="detailList.quotation.length > 0">{{info.now_price * inputValue / detailList.quotation[selectId].now_price}}</span>
-                <span v-if="detailList.quotation.length <= 0">0</span>
+                <span v-if="typeof detailList.quotation != 'undefined'">{{info.now_price * inputValue / detailList.quotation[selectId].now_price}}</span>
+                <span v-if="typeof detailList.quotation == 'undefined'">0</span>
             </div>
             <div class="tradeorder-buy tradeorder-bili">
                 <span data-localize="zdy.keyongyue">可用余额</span>：
