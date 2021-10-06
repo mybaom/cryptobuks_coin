@@ -180,28 +180,29 @@
     <div id="entrust" style="margin-bottom: 50px;" class="bgColor mt10">
         <div>
             <h3 class="pull-left " data-localize="deals.currentPosition">
-                当前持仓
+                {{getlg('balance')}}
             </h3>
-            <p class="pull-right filtrate all">
-
+            <p v-if="typeof buyInfo.balance != 'undefined'" class="pull-right filtrate all">
+                {{buyInfo.balance}}
+            </p>
+            <p v-if="typeof buyInfo.balance == 'undefined'" class="pull-right filtrate all">
+                0
             </p>
             <ul class="list_ul" style="margin-top:35px;">
                 <li class="ft12 clearfix colorGrey bdb">
-                    <span class="width1 tc fl pb5" data-localize="deals.type">类型</span>
-                    <span class="width2 tc fl pb5" data-localize="assets.time">时间</span>
-                    <span class="width2 tc fl pb5" data-localize="transaction.price">价格</span>
-                    <span class="width2 tc fl pb5" data-localize="assets.num">数量</span>
-                    <span class="width11 tc fl pb5" data-localize="transaction.option">操作</span>
+                    <span class="width2 tc fl pb5" data-localize="assets.time">{{getlg('time')}}</span>
+                    <span class="width2 tc fl pb5" data-localize="transaction.price">{{getlg('tprice')}}</span>
+                    <span class="width2 tc fl pb5" data-localize="assets.num">{{getlg('tnum')}}</span>
+                    <span class="width11 tc fl pb5" data-localize="transaction.option">{{getlg('ttotal')}}</span>
                 </li>
                 <li>
                     <ul class="conplete_list colorGrey ft12" style="padding: 10px 0;">
-<!--                        <li class="clearfix" v-for="item in []" :key="item.id" style="padding:5px 0;">-->
-<!--                            <span class="width1 tc fl">{{item.type == 1 ? getlg('domore'):getlg('doless')}}</span>-->
-<!--                            <span class="width2 tc fl">{{item.time}}</span>-->
-<!--                            <span class="width2 tc fl">{{item.price || '0.0000' | toFixed4}}</span>-->
-<!--                            <span class="width2 tc fl">{{item.number || '0.00' | toFixeds}}</span>-->
-<!--                            <a class='pingcang white tc width1 fl' @click="sellLoss(item.id)">{{getlg('pcang')}}</a>-->
-<!--                        </li>-->
+                        <li class="clearfix" v-for="item in buyRecodes" :key="item.id" style="padding:5px 0;">
+                            <span class="width2 tc fl">{{item.create_time}}</span>
+                            <span class="width2 tc fl">{{item.price || '0.0000' | toFixed4}}</span>
+                            <span class="width2 tc fl">{{item.number || '0.00' | toFixeds}}</span>
+                            <a class='pingcang white tc width1 fl'>{{item.total_price || '0.0000' | toFixed4}}</a>
+                        </li>
                     </ul>
                 </li>
                 <li class="clickMore tc colorGrey" data-localize="deals.clickLoad">点击加载</li>
@@ -542,6 +543,7 @@
 
     // option && myChart.setOption(option);
     var app;
+    var entrust;
     $(document).ready(function() {
         var dataLastDate;
         var chart = null;
@@ -613,6 +615,7 @@
                         success: function success(data) {
                             if (data.type == 'ok') {
                                 alert('success');
+                                app.showBuyBox = true;
                                 setTimeout(function(){
                                     window.location.reload();
                                 }, 1500);
@@ -694,7 +697,7 @@
                         var myDate = new Date();
                         var date = myDate.getFullYear() + '-' + (myDate.getMonth()+1) + '-' + myDate.getDate() + ' ' + myDate.getHours() + ':' + myDate.getMinutes() + ':00';
                         var nowTime = (myDate.getMonth()+1) + '-' + myDate.getDate() + ' ' + myDate.getHours() + ':' + myDate.getMinutes();
-                        console.log(app.detailList)
+                        // console.log(app.detailList)
                         // console.log(app.dataList);
                         // 如果当前时间不等于之前记录的时间，并且数据不为空，且最后一个日期不等于当前日期，则去获取数据
                         if(app.currentTime != date && currentDate.length != 0 && currentDate[currentDate.length - 1] != nowTime)
@@ -885,6 +888,35 @@
             }
         });
 
+        entrust = new Vue({
+            el: '#entrust',
+            data: {
+                buyInfo: {},
+                buyRecodes: [],
+            },
+            created: function () {
+                this.buyInfoFun();
+            },
+            methods: {
+                buyInfoFun(){
+                    $.ajax({
+                        url: _API + "getMyOfferInfo",
+                        type: "GET",
+                        dataType: "json",
+                        async: true,
+                        beforeSend: function beforeSend(request) {
+                            request.setRequestHeader("Authorization", token);
+                        },
+                        success: function success(data) {
+                            if (data.type == 'ok') {
+                                entrust.buyInfo = data.message.info;
+                                entrust.buyRecodes = data.message.list;
+                            }
+                        }
+                    });
+                },
+            }
+        })
 
     })
 

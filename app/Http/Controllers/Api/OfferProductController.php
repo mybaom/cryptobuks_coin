@@ -172,4 +172,21 @@ class OfferProductController extends Controller
             return $this->error($e->getMessage());
         }
     }
+
+    public function getMyOfferInfo()
+    {
+        try{
+            $id     = Input::get('id', 0);
+            $userId = Users::getUserId();
+            $info   = DB::table('offer_product_wallet')->where('user_id', $userId)->where('obp_id', $id)->first();
+            $list   = DB::table('offer_product_order')->where('obp_id', $id)->where('user_id', $userId)->get()->toArray();
+            $std    = new \stdClass();
+            $std->info = $info;
+            $std->list = $list;
+        }catch (\Exception $e){
+            return $this->error($e->getMessage());
+        }
+
+        return $this->success($std);
+    }
 }
