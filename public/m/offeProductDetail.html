@@ -593,13 +593,37 @@
                     }
                     var data = {
                         id: get_param('id'),
+                        now_price: this.info.now_price,
                         currency_id: this.detailList.quotation[this.selectId].currency_id,
                         number: $('[type="number"]').val(),
                         zj: zj,
                         ye: ye,
                         hznum: $('#hznum').html()
                     };
-                    console.log(data)
+
+                    $.ajax({
+                        url: _API + "postOfferOrder",
+                        type: "POST",
+                        dataType: "json",
+                        async: true,
+                        data: data,
+                        beforeSend: function beforeSend(request) {
+                            request.setRequestHeader("Authorization", token);
+                        },
+                        success: function success(data) {
+                            if (data.type == 'ok') {
+                                alert('success');
+                                setTimeout(function(){
+                                    window.location.reload();
+                                }, 1500);
+                            } else if (data.type == '999') {
+                                window.location = 'login.html';
+                            } else if (data.type == 'error') {
+                                alert(data.message);
+                            }
+                        }
+                    })
+
                 },
                 closeBuyBox(){
                     this.showBuyBox = false

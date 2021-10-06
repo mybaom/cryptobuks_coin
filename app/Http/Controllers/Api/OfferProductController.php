@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\OfferProduct;
+use App\Transaction;
+use App\Users;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
 
@@ -83,5 +85,91 @@ class OfferProductController extends Controller
         }
 
         return $this->success($result);
+    }
+
+    public function postOfferOrder()
+    {
+        try {
+            $id = Input::get('id', 0);
+            $currencyId = Input::get('currency_id', 0);
+            $number = Input::get('number', 0);
+            $totalPrice = Input::get('zj', 0);
+            $balance = Input::get('ye', 0);
+            $hznum = Input::get('hznum', 0);
+            $nowPrice = Input::get('now_price', 0);
+            $productInfo = DB::table('offer_buy_product')->where('id', $id)->where('status', 1)->first();
+            if (!$productInfo) {
+                throw new \Exception('product not found.');
+            }
+            $currencyInfo = DB::table('currency')->where('id', $currencyId)->first();
+            if (!$currencyInfo) {
+                throw new \Exception('currency not found.');
+            }
+            $user_id = Users::getUserId();
+            $usersWalletInfo = DB::table('users_wallet')->where('user_id', $user_id)->where('currency', $currencyId)->first();
+            if (!$usersWalletInfo) {
+                throw new \Exception('wallet not found.');
+            }
+            if ($usersWalletInfo->change_balance < $hznum) {
+                throw new \Exception('Sorry, your credit is running low.');
+            }
+            // 查询认购钱包是否存在
+            $offerProductWallet = DB::table('offer_product_wallet')->where('user_id', $user_id)->where('obp_id', $id)->first();
+            if (!$offerProductWallet) {
+                $createWalletResult = DB::table('offer_product_wallet')->insert([
+                    'obp_id' => $id,
+                    'user_id' => $user_id,
+                ]);
+                if (! $createWalletResult) {
+                    throw new \Exception('create wallet fail.');
+                }
+            }
+        }catch (\Exception $e) {
+            return $this->error($e->getMessage());
+        }
+
+        try {
+            DB::beginTransaction();
+            // 扣除币币账户内的余额
+            $walletDecrement = DB::table('users_wallet')
+                ->where('user_id', $user_id)
+                ->where('currency', $currencyId)
+                ->where('change_balance', '>=', $hznum)
+                ->decrement('change_balance',$hznum);
+            if(! $walletDecrement)
+            {
+                throw new \Exception('Account transfer failed.');
+            }
+
+            // 增加认购账户余额
+            $offerWalletIncrement = DB::table('offer_product_wallet')
+                ->where('user_id', $user_id)
+                ->where('obp_id', $id)
+                ->increment('balance', $number);
+            if(! $offerWalletIncrement)
+            {
+                throw new \Exception('offer wallet Account transfer failed.');
+            }
+            // 增加认购记录
+            $addRecordResult = DB::table('offer_product_order')->insert([
+                'obp_id' => $id,
+                'user_id' => $user_id,
+                'price' => $nowPrice,
+                'number' => $number,
+                'total_price' => $totalPrice,
+                'status' => '2'
+            ]);
+            if(! $addRecordResult)
+            {
+                throw new \Exception('create order failed.');
+            }
+
+            DB::commit();
+
+            return $this->success('success');
+        }catch (\Exception $e){
+            DB::rollBack();
+            return $this->error($e->getMessage());
+        }
     }
 }

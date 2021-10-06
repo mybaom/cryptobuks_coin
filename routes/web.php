@@ -505,7 +505,7 @@ Route::group([ 'middleware' => ['lang', /*'check_user'*/]], function () {
         // 认购产品
         Route::get('getOfferProducts', 'Api\OfferProductController@getOfferProducts');
         Route::get('getOfferProductData', 'Api\OfferProductController@getOfferProductData');
-
+        Route::post('postOfferOrder', 'Api\OfferProductController@postOfferOrder');
 
     });
     Route::post('api/user/walletRegister', 'Api\LoginController@walletRegister');//钱包注册
