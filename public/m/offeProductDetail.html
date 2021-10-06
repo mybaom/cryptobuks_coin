@@ -904,6 +904,7 @@
                         type: "GET",
                         dataType: "json",
                         async: true,
+                        data: {id: get_param('id')},
                         beforeSend: function beforeSend(request) {
                             request.setRequestHeader("Authorization", token);
                         },
