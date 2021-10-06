@@ -283,34 +283,33 @@
 
     const upColor = '#00da3c';
     const downColor = '#ec0000';
+    const colorList = ['#c23531', '#2f4554', '#61a0a8', '#d48265', '#91c7ae', '#749f83', '#ca8622', '#bda29a', '#6e7074', '#546570', '#c4ccd3'];
+    const labelFont = 'bold 12px Sans-serif';
 
     function splitData(rawData) {
-        let categoryData = [];
-        let values = [];
-        let volumes = [];
-        for (let i = 0; i < rawData.length; i++) {
+        const categoryData = [];
+        const values = [];
+        for (var i = 0; i < rawData.length; i++) {
             categoryData.push(rawData[i].splice(0, 1)[0]);
             values.push(rawData[i]);
-            volumes.push([i, rawData[i][4], rawData[i][0] > rawData[i][1] ? 1 : -1]);
         }
         return {
             categoryData: categoryData,
-            values: values,
-            volumes: volumes
+            values: values
         };
     }
     function calculateMA(dayCount, data) {
         var result = [];
-        for (var i = 0, len = data.values.length; i < len; i++) {
+        for (var i = 0, len = data.length; i < len; i++) {
             if (i < dayCount) {
                 result.push('-');
                 continue;
             }
             var sum = 0;
             for (var j = 0; j < dayCount; j++) {
-                sum += data.values[i - j][1];
+                sum += +data[i - j][1];
             }
-            result.push(+(sum / dayCount).toFixed(3));
+            result.push(sum / dayCount);
         }
         return result;
     }
@@ -473,13 +472,16 @@
                     data: [],
                     zoom: 100,
                     itemStyle: {
+
+
                         color: upColor,
                         color0: downColor,
-                        borderColor: undefined,
-                        borderColor0: undefined
+                        borderColor: upColor,
+                        borderColor0: downColor
                     },
                     markLine: {
-                        show: false
+                        show: true,
+                        silent:true
                     },
                     tooltip: {
                         formatter: function (param) {
@@ -766,12 +768,14 @@
                                 var option = chart.getOption();
                                 option.title.text =  res.info.name;
                                 option.title.subtext = res.info.now_price;
-                                option.series[0].data = option.series[0].data.concat(splitData(res.min1.data).values);
-                                option.series[1].data = calculateMA(5, min1.data);
-                                option.series[2].data = calculateMA(10, min1.data);
-                                option.series[3].data = calculateMA(20, min1.data);
-                                option.series[4].data = calculateMA(30, min1.data);
+                                var nowData = option.series[0].data.concat(splitData(res.min1.data).values);
+                                option.series[0].data = nowData;
+                                option.series[1].data = calculateMA(5, nowData);
+                                option.series[2].data = calculateMA(10, nowData);
+                                option.series[3].data = calculateMA(20, nowData);
+                                option.series[4].data = calculateMA(30, nowData);
                                 option.xAxis[0].data  = min1.date;
+                                option.xAxis[1].data  = min1.date;
                                 option.dataZoom[0].start = (100-(10/(currentData.length/100)));
                                 // 这个的意思是页面只展示30条数据，然后用数据总长度-30再除以总长度可以得到最后一栏数据的初始位置
                                 option.dataZoom[0].start = (currentData.length-30)/currentData.length * 100;
@@ -819,24 +823,24 @@
                                 var res = data.message;
 
                                 var min1Data = {
-                                    data: that.dataMerge(min1.data, res.min1.data),
-                                    date: that.dataMerge(min1.date, res.min1.date)
+                                    data: $.extend(true, min1.data, res.min1.data),
+                                    date: $.extend(true, min1.date, res.min1.date)
                                 }
                                 var min5Data = {
-                                    data: that.dataMerge(min5.data, res.min5.data),
-                                    date: that.dataMerge(min5.date, res.min5.date)
+                                    data: $.extend(true, min5.data, res.min5.data),
+                                    date: $.extend(true, min5.date, res.min5.date)
                                 }
                                 var min15Data = {
-                                    data: that.dataMerge(min15.data, res.min15.data),
-                                    date: that.dataMerge(min15.date, res.min15.date)
+                                    data: $.extend(true, min15.data, res.min15.data),
+                                    date: $.extend(true, min15.date, res.min15.date)
                                 }
                                 var min30Data = {
-                                    data: that.dataMerge(min30.data, res.min30.data),
-                                    date: that.dataMerge(min30.date, res.min30.date)
+                                    data: $.extend(true, min30.data, res.min30.data),
+                                    date: $.extend(true, min30.date, res.min30.date)
                                 }
                                 var hourData = {
-                                    data: that.dataMerge(hour.data, res.hour.data),
-                                    date: that.dataMerge(hour.date, res.hour.date)
+                                    data: $.extend(true, hour.data, res.hour.data),
+                                    date: $.extend(true, hour.date, res.hour.date)
                                 }
                                 min1 = min1Data;
                                 min5 = min5Data;
@@ -861,12 +865,14 @@
                                 var option = chart.getOption();
                                 option.title.text =  res.info.name;
                                 option.title.subtext = res.info.now_price;
-                                option.series[0].data = splitData(res.min1.data).values;
-                                option.series[1].data = calculateMA(5, res.min1.data);
-                                option.series[2].data = calculateMA(10, res.min1.data);
-                                option.series[3].data = calculateMA(20, res.min1.data);
-                                option.series[4].data = calculateMA(30, res.min1.data);
+                                var NowData = splitData(res.min1.data);
+                                option.series[0].data = NowData.values;
+                                option.series[1].data = calculateMA(5, NowData.values);
+                                option.series[2].data = calculateMA(10, NowData.values);
+                                option.series[3].data = calculateMA(20, NowData.values);
+                                option.series[4].data = calculateMA(30, NowData.values);
                                 option.xAxis[0].data  = res.min1.date;
+                                option.xAxis[1].data  = res.min1.date;
                                 option.dataZoom[0].start = (100-(10/(currentData.length/100)));
                                 // 这个的意思是页面只展示30条数据，然后用数据总长度-30再除以总长度可以得到最后一栏数据的初始位置
                                 option.dataZoom[0].start = (currentData.length-30)/currentData.length * 100;
