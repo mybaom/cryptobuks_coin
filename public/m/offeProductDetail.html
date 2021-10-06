@@ -182,12 +182,12 @@
             <h3 class="pull-left " data-localize="deals.currentPosition">
                 {{getlg('balance')}}
             </h3>
-            <p v-if="typeof buyInfo.balance != 'undefined'" class="pull-right filtrate all">
+            <span v-if="typeof buyInfo.balance != 'undefined'" class="pull-right filtrate all">
                 {{buyInfo.balance}}
-            </p>
-            <p v-if="typeof buyInfo.balance == 'undefined'" class="pull-right filtrate all">
+            </span>
+            <span v-if="typeof buyInfo.balance == 'undefined'" class="pull-right filtrate all">
                 0
-            </p>
+            </span>
             <ul class="list_ul" style="margin-top:35px;">
                 <li class="ft12 clearfix colorGrey bdb">
                     <span class="width2 tc fl pb5" style="width:30%;" data-localize="assets.time">{{getlg('time')}}</span>
