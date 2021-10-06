@@ -190,7 +190,7 @@
             </p>
             <ul class="list_ul" style="margin-top:35px;">
                 <li class="ft12 clearfix colorGrey bdb">
-                    <span class="width2 tc fl pb5" style="30%;" data-localize="assets.time">{{getlg('time')}}</span>
+                    <span class="width2 tc fl pb5" style="width:30%;" data-localize="assets.time">{{getlg('time')}}</span>
                     <span class="width2 tc fl pb5" data-localize="transaction.price">{{getlg('tprice')}}</span>
                     <span class="width1 tc fl pb5" data-localize="assets.num">{{getlg('tnum')}}</span>
                     <span class="tc fl pb5" data-localize="transaction.option">{{getlg('ttotal')}}</span>
@@ -198,14 +198,14 @@
                 <li>
                     <ul class="conplete_list colorGrey ft12" style="padding: 10px 0;">
                         <li class="clearfix" v-for="item in buyRecodes" :key="item.id" style="padding:5px 0;">
-                            <span class="width2 tc fl" style="30%;">{{item.create_time}}</span>
+                            <span class="width2 tc fl" style="width:30%;">{{item.create_time}}</span>
                             <span class="width2 tc fl">{{item.price || '0.0000' | toFixed4}}</span>
                             <span class="width1 tc fl">{{item.number || '0.00' | toFixeds}}</span>
                             <a class='tc width1 fl'>{{item.total_price || '0.0000' | toFixed4}}</a>
                         </li>
                     </ul>
                 </li>
-                <li class="clickMore tc colorGrey" data-localize="deals.clickLoad">点击加载</li>
+<!--                <li class="clickMore tc colorGrey" data-localize="deals.clickLoad">点击加载</li>-->
             </ul>
 
         </div>
