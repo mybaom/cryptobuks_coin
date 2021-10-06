@@ -193,7 +193,7 @@
                     <span class="width2 tc fl pb5" style="width:30%;" data-localize="assets.time">{{getlg('time')}}</span>
                     <span class="width2 tc fl pb5" data-localize="transaction.price">{{getlg('tprice')}}</span>
                     <span class="width1 tc fl pb5" data-localize="assets.num">{{getlg('tnum')}}</span>
-                    <span class="tc fl pb5" data-localize="transaction.option">{{getlg('ttotal')}}</span>
+                    <span class="tc width1 fl" data-localize="transaction.option">{{getlg('ttotal')}}</span>
                 </li>
                 <li>
                     <ul class="conplete_list colorGrey ft12" style="padding: 10px 0;">
@@ -201,7 +201,7 @@
                             <span class="width2 tc fl" style="width:30%;">{{item.create_time}}</span>
                             <span class="width2 tc fl">{{item.price || '0.0000' | toFixed4}}</span>
                             <span class="width1 tc fl">{{item.number || '0.00' | toFixeds}}</span>
-                            <a class='tc width1 fl'>{{item.total_price || '0.0000' | toFixed4}}</a>
+                            <span class='tc width1 fl'>{{item.total_price || '0.0000' | toFixed4}}</span>
                         </li>
                     </ul>
                 </li>
