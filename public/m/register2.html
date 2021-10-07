@@ -405,6 +405,11 @@
         function regismail() {
             var email = $("#emails").val();
             var emverify = $("#emailverifi").val();
+            var extension_code = get_param('code');
+            if(extension_code == ''){
+                layer_msg(getlg('inviteCode'));
+                return false;
+            }
 
             $.ajax({
                 type: "post",
@@ -417,7 +422,7 @@
                     if (data.type == "ok") {
                         layer_msg(data.message);
                         window.location.href = "setpass.html?user_string=" + email + "&" + "code=" +
-                            emverify;
+                            emverify + '&cod=' + extension_code;
                     } else {
                         layer_msg(data.message);
                     }

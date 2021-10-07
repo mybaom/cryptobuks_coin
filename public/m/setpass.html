@@ -38,12 +38,12 @@
 						placeholder="请再次输入密码" name="password" value="" />
 					<!-- <p id="mes2" style="color:#cc704b;font-size:12px;margin:5px 0 0 10px;"></p> -->
 				</div>
-<!--				<div class="form-group">-->
-<!--					<input type="text" class="form-control focu" id="invite"-->
-<!--						data-localize="contract.invitationCode" placeholder="邀请码(必填)"-->
-<!--						name="invite" value="" />-->
-<!--					&lt;!&ndash; <p id="mes3" style="color:#cc704b;font-size: 12px;margin:5px 0 0 10px;"></p> &ndash;&gt;-->
-<!--				</div>-->
+				<div class="form-group">
+					<input type="text" class="form-control focu" id="invite"
+						data-localize="contract.invitationCode" placeholder="邀请码(必填)"
+						name="invite" value="" />
+					<!-- <p id="mes3" style="color:#cc704b;font-size: 12px;margin:5px 0 0 10px;"></p> -->
+				</div>
 				<div class="checkbox">
 					<label> <input type="checkbox" checked id="agree" /> <span
 						data-localize="contract.agree">我同意</span> <a href="policy.html"
@@ -63,13 +63,13 @@
 	<script type="text/javascript" src="lib/language_cookie.js"></script>
 	<script type="text/javascript" src="javascripts/main.js"></script>
 	<script type="text/javascript">
-			// $(function() {
-			// 	// FastClick.attach(document.body);
-			// 	if(get_param('cod') && get_param('cod') != 'null') {
-			// 		$('#invite').val(get_param('cod'));
-          	// 		$('#invite').attr("disabled",true);
-			// 	}
-			// })
+			$(function() {
+				// FastClick.attach(document.body);
+				if(get_param('cod') && get_param('cod') != 'null') {
+					$('#invite').val(get_param('cod'));
+          			$('#invite').attr("disabled",true);
+				}
+			})
 			$("#agree").click(function() {
 				$("#sendSet").toggleClass("agree");
 				var st = $("#sendSet").attr("disabled");
@@ -167,16 +167,16 @@
 				var pass = $('#setpassword').val();
 				var repass = $("#verifypassword").val();
 				var rename = $("#real_name").val();
-				// var extensionCode = $("#invite").val();
+				var extensionCode = $("#invite").val();
 				var reg = /^1[3456789]\d{9}$/;
 				var emreg = /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/;
-			/*	if (!extensionCode) {
+			    if (!extensionCode) {
 					layer_msg(getlg('inviteCode'));
 					return false;
-				} */
+				}
 				if (s() == true && ss() == true && sss() == true) {
-            if (1==1) {
-                if(registerStatus){
+                if (1==1) {
+                    if(registerStatus){
                     registerStatus = false;
                     $('#sendSet').css('background-color',"#7d818a");
                     layer_loading();
@@ -186,7 +186,7 @@
                         data: {
                             "user_string": name,
                             "password": pass,
-                            // "extension_code": extensionCode,
+                            "extension_code": extensionCode,
 							"real_name": rename,
                             "re_password": repass,
                             "type": "mobile",
@@ -217,45 +217,40 @@
                             }
                         }
                     });
-                }else{
-                    layer_msg('数据提交中，请不要重复提交')
-                }
-
-            } else if (emreg.test(name)) {
-
-                if(registerStatus){
-                    registerStatus = false;
-                    $.ajax({
-                        type: "post",
-                        url: _API + "user/register",
-                        data: {
-                            "user_string": name,
-                            "password": pass,
-                            // "extension_code": extensionCode,
-							"real_name": rename,
-                            "re_password": repass,
-                            "type": "email",
-                            "code": verify
-                        },
-                        datatype: "json",
-                        success: function(data) {
-                            registerStatus = true;
-                            if (data.type == "ok") {
-                                layer_msg(data.message);
-                                $("#sendSet").attr("disabled", "true");
-                                setTimeout(function() {
-                                    $("#sendSet").removeAttr("disabled");
-                                    if(get_param('cod') && get_param('cod') != 'null') {
-                                        window.location.href = "https://www.coinbott.com/";
-                                    } else {
-                                        window.location.href = "login.html";
-                                    }
-                                }, 3000);
+                }else{layer_msg('数据提交中，请不要重复提交')}
+                } else if (emreg.test(name)) {
+                    if(registerStatus){
+                        registerStatus = false;
+                        $.ajax({
+                            type: "post",
+                            url: _API + "user/register",
+                            data: {
+                                "user_string": name,
+                                "password": pass,
+                                "extension_code": extensionCode,
+                                "real_name": rename,
+                                "re_password": repass,
+                                "type": "email",
+                                "code": verify
+                            },
+                            datatype: "json",
+                            success: function(data) {
+                                registerStatus = true;
+                                if (data.type == "ok") {
+                                    layer_msg(data.message);
+                                    $("#sendSet").attr("disabled", "true");
+                                    setTimeout(function() {
+                                        $("#sendSet").removeAttr("disabled");
+                                        if(get_param('cod') && get_param('cod') != 'null') {
+                                            window.location.href = "https://www.coinbott.com/";
+                                        } else {
+                                            window.location.href = "login.html";
+                                        }
+                                    }, 3000);
+                                }
                             }
-                        }
-                    });
-                }
-
+                        });
+                    }
             }
 
         } else {

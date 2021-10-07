@@ -61,10 +61,10 @@
             margin-left: 10px;
             cursor: pointer;
             color: #007bff;
-            text-decoration: #fff !important;
+            user-select:none;
         }
-        a:active{
-            text-decoration: #007bff !important;
+        .active{
+            text-decoration: underline !important;
         }
     </style>
 </head>
@@ -95,11 +95,11 @@
 
 </div>
 <div class="CNY bgWhite filter-time">
-    <a href="javascript:setDataMinType(1);">1min</a>
-    <a href="javascript:setDataMinType(1);">5min</a>
-    <a href="javascript:setDataMinType(1);">15min</a>
-    <a href="javascript:setDataMinType(1);">30min</a>
-    <a href="javascript:setDataMinType(1);">1hour</a>
+    <a class="setDataMin" data-type="1">1min</a>
+    <a class="setDataMin" data-type="5">5min</a>
+    <a class="setDataMin" data-type="15">15min</a>
+    <a class="setDataMin" data-type="30">30min</a>
+    <a class="setDataMin" data-type="60">1hour</a>
 </div>
 <div id="app" v-cloak>
 <!--    <div class="head">-->
@@ -306,6 +306,11 @@
     const downColor = '#ec0000';
     const colorList = ['#c23531', '#2f4554', '#61a0a8', '#d48265', '#91c7ae', '#749f83', '#ca8622', '#bda29a', '#6e7074', '#546570', '#c4ccd3'];
     const labelFont = 'bold 12px Sans-serif';
+
+    $('.setDataMin').click(function() {
+        $('.setDataMin').removeClass('active');
+        $(this).addClass('active');
+    })
 
     function splitData(rawData) {
         const categoryData = [];
