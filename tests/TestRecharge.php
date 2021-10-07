@@ -11,6 +11,51 @@ class TestRecharge extends BaseTestCase
 {
     use CreatesApplication;
 
+    public function testGetDays()
+    {
+        $current_date = date('Y-m-d', time()).' 00:00:00';
+        $days = [];
+        $months = [];
+        for ($i = 30; $i >= 0; $i--)
+        {
+            $days[] = date('Y-m-d H:i:s' , strtotime("$current_date - $i day"));
+        }
+        for ($i = 12; $i >= 0; $i--)
+        {
+            $months[] = date('Y-m-d H:i:s' , strtotime("$current_date - $i month"));
+        }
+        $datas = [
+            'days'  => $days,
+            'weeks' => [
+                date('Y-m-d H:i:s' , strtotime("$current_date - 5 week")),
+                date('Y-m-d H:i:s' , strtotime("$current_date - 4 week")),
+                date('Y-m-d H:i:s' , strtotime("$current_date - 3 week")),
+                date('Y-m-d H:i:s' , strtotime("$current_date - 2 week")),
+                date('Y-m-d H:i:s' , strtotime("$current_date - 1 week")),
+                date('Y-m-d H:i:s' , strtotime("$current_date - 0 week")),
+            ],
+            'months' => $months
+        ];
+
+        var_dump($datas['days']);
+        $getDbData = DB::table('offer_product_increase_record')
+            ->select(
+                'minute',
+                DB::raw('FORMAT(open_price, 8) as open_price'),
+                DB::raw('FORMAT(close_price, 8) as close_price'),
+                DB::raw('FORMAT(lowest_price, 8) as lowest_price'),
+                DB::raw('FORMAT(highest_price, 8) as highest_price')
+            )
+
+            ->where('obp_id', 1)
+            ->where('time_type', 1)
+            ->whereIn('minute', $datas['days'])
+            ->get()
+            ->toArray();
+
+        var_dump($getDbData);
+    }
+
     public function testRechange(){
         $getRechargeAddress = [
             'btc' => Setting::getValueByKey('recharge_btc_address', ''),

@@ -46,6 +46,7 @@ class OfferProductController extends Controller
                 ->where('minute', '<=', $startDate)
                 ->where('minute', $endDateSymbol, $endDate)
                 ->get()->toArray();
+
             $result = new \stdClass();
             $result->info = new \stdClass();
             $result->info->name = $info->name ?? '';
@@ -57,6 +58,10 @@ class OfferProductController extends Controller
             $result->min15 = new \stdClass();
             $result->min30 = new \stdClass();
             $result->hour = new \stdClass();
+            $days = $this->getDates();
+            $result->day = $this->getOfferProductDataByDays($id, $days['days']);
+            $result->week = $this->getOfferProductDataByDays($id, $days['weeks']);
+            $result->month = $this->getOfferProductDataByDays($id, $days['months']);
             foreach ($getDbData as $k => $v) {
                 $simpleMin = substr($v->minute, 5, 11);
 
@@ -85,6 +90,34 @@ class OfferProductController extends Controller
         }
 
         return $this->success($result);
+    }
+
+    public function getOfferProductDataByDays($id, $days)
+    {
+        $getDbData = DB::table('offer_product_increase_record')
+            ->select(
+                'minute',
+                DB::raw('FORMAT(open_price, 8) as open_price'),
+                DB::raw('FORMAT(close_price, 8) as close_price'),
+                DB::raw('FORMAT(lowest_price, 8) as lowest_price'),
+                DB::raw('FORMAT(highest_price, 8) as highest_price')
+            )
+
+            ->where('obp_id', $id)
+            ->where('time_type', 1)
+            ->whereIn('minute', $days)
+            ->get()
+            ->toArray();
+
+        $result = new \stdClass();
+        foreach ($getDbData as $k => $v) {
+            $simpleMin = substr($v->minute, 5, 11);
+            $result->date[] = $simpleMin;
+            $result->data[] = [$v->minute, $v->open_price, $v->close_price, $v->lowest_price, $v->highest_price];
+        }
+
+        return $result;
+
     }
 
     public function postOfferOrder()
@@ -188,5 +221,34 @@ class OfferProductController extends Controller
         }
 
         return $this->success($std);
+    }
+
+    public function getDates()
+    {
+        $current_date = date('Y-m-d', time()).' 00:00:00';
+        $days = [];
+        $months = [];
+        for ($i = 30; $i >= 0; $i--)
+        {
+            $days[] = date('Y-m-d H:i:s' , strtotime("$current_date - $i day"));
+        }
+        for ($i = 12; $i >= 0; $i--)
+        {
+            $months[] = date('Y-m-d H:i:s' , strtotime("$current_date - $i month"));
+        }
+        $datas = [
+            'days'  => $days,
+            'weeks' => [
+                date('Y-m-d H:i:s' , strtotime("$current_date - 5 week")),
+                date('Y-m-d H:i:s' , strtotime("$current_date - 4 week")),
+                date('Y-m-d H:i:s' , strtotime("$current_date - 3 week")),
+                date('Y-m-d H:i:s' , strtotime("$current_date - 2 week")),
+                date('Y-m-d H:i:s' , strtotime("$current_date - 1 week")),
+                date('Y-m-d H:i:s' , strtotime("$current_date - 0 week")),
+            ],
+            'months' => $months
+        ];
+
+        return $datas;
     }
 }
