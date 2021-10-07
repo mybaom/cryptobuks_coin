@@ -310,10 +310,7 @@
     const colorList = ['#c23531', '#2f4554', '#61a0a8', '#d48265', '#91c7ae', '#749f83', '#ca8622', '#bda29a', '#6e7074', '#546570', '#c4ccd3'];
     const labelFont = 'bold 12px Sans-serif';
 
-    $('.setDataMin').click(function() {
-        $('.setDataMin').removeClass('active');
-        $(this).addClass('active');
-    })
+
 
     function splitData(rawData) {
         const categoryData = [];
@@ -491,7 +488,7 @@
                     end: 25, // 百分比来着
                     startValue: 9999,
                     endValue: 10000,
-                    zoomLock: true, // 锁定缩放
+                    //zoomLock: true, // 锁定缩放
                 }
             ],
             series: [
@@ -599,13 +596,6 @@
         var daysDate = new Array();
         var weeksDate = new Array();
         var monthsDate = new Array();
-
-
-        var a = {data:[], date:[]};
-        var b = {data:[["2021-10-04 21:06:00", "11.96319189", "11.95462137", "11.95450921", "11.95470362"]], date:["10-04 21:06", "10-04 21:07", "10-04 21:08", "10-04 21:09", "10-04 21:10"]}
-        // console.log(a.data.concat(b.data));
-        // app.
-
         var currentDate = new Array();
         var currentData = new Array();
 
@@ -822,32 +812,32 @@
                             if (data.type == 'ok') {
                                 var res = data.message;
 
-                                min1Data = min1Data.concat(res.min1.data);
-                                min1Date = min1Date.concat(res.min1.date);
-                                min5Data = min5Data.concat(res.min5.data);
-                                min5Date = min5Date.concat(res.min5.date);
-                                min15Data = min15Data.concat(res.min15.data);
-                                min15Date = min15Date.concat(res.min15.date);
-                                min30Data = min30Data.concat(res.min30.data);
-                                min30Date = min30Date.concat(res.min30.date);
-                                hourData = hourData.concat(res.hour.data);
-                                hourDate = hourDate.concat(res.hour.date);
-                                daysData = daysData.concat(res.day.data);
-                                daysDate = daysDate.concat(res.day.date);
-                                weeksData = weeksData.concat(res.week.data);
-                                weeksDate = weeksDate.concat(res.week.date);
-                                monthsData = monthsData.concat(res.month.data);
-                                monthsDate = monthsDate.concat(res.month.date);
+                                min1Data = min1Data.concat(typeof res.min1.data == 'undefined' ? [] : res.min1.data);
+                                min1Date = min1Date.concat(typeof res.min1.date == 'undefined' ? [] : res.min1.date);
+                                min5Data = min5Data.concat(typeof res.min5.data == 'undefined' ? [] : res.min5.data);
+                                min5Date = min5Date.concat(typeof res.min5.date == 'undefined' ? [] : res.min5.date);
+                                min15Data = min15Data.concat(typeof res.min15.data == 'undefined' ? [] : res.min15.data);
+                                min15Date = min15Date.concat(typeof res.min15.date == 'undefined' ? [] : res.min15.date);
+                                min30Data = min30Data.concat(typeof res.min30.data == 'undefined' ? [] : res.min30.data);
+                                min30Date = min30Date.concat(typeof res.min30.date == 'undefined' ? [] : res.min30.date);
+                                hourData = hourData.concat(typeof res.hour.data == 'undefined' ? [] : res.hour.data);
+                                hourDate = hourDate.concat(typeof res.hour.date == 'undefined' ? [] : res.hour.date);
+                                daysData = typeof res.day.data == 'undefined' ? [] : res.day.data;
+                                daysDate = typeof res.day.date == 'undefined' ? [] : res.day.date;
+                                weeksData = typeof res.week.data == 'undefined' ? [] : res.week.data;
+                                weeksDate = typeof res.week.date == 'undefined' ? [] : res.week.date;
+                                monthsData = typeof res.month.data == 'undefined' ? [] : res.month.data;
+                                monthsDate = typeof res.month.date == 'undefined' ? [] : res.month.date;
 
                                 currentData = that.returnDataByType(checkDataType, min1Data, min5Data, min15Data, min30Data, hourData, daysData, weeksData, monthsData);
                                 currentDate = that.returnDataByType(checkDataType, min1Date, min5Date, min15Date, min30Date, hourDate, daysDate, weeksDate, monthsDate);
 
-                                dataLastDate = currentData[currentData.length - 1][0];
+                                dataLastDate = min1Data[min1Data.length - 1][0];
                                 app.info = res.info;
 
-                                $('.max-price').html(currentData[currentData.length - 1][3]);
-                                $('.min-price').html(currentData[currentData.length - 1][2]);
-                                $('.open-price').html(currentData[currentData.length - 1][1]);
+                                $('.max-price').html(min1Data[min1Data.length - 1][3]);
+                                $('.min-price').html(min1Data[min1Data.length - 1][2]);
+                                $('.open-price').html(min1Data[min1Data.length - 1][1]);
                                 $('.contractdetail').html(res.info.name);
                                 $('.now_price').html(res.info.now_price);
                                 $('.now_price').css('color', '#00c087');
@@ -916,27 +906,28 @@
                         success: function (data) {
                             if (data.type == 'ok') {
                                 var res = data.message;
-                                min1Data = min1Data.concat(res.min1.data);
-                                min1Date = min1Date.concat(res.min1.date);
-                                min5Data = min5Data.concat(res.min5.data);
-                                min5Date = min5Date.concat(res.min5.date);
-                                min15Data = min15Data.concat(res.min15.data);
-                                min15Date = min15Date.concat(res.min15.date);
-                                min30Data = min30Data.concat(res.min30.data);
-                                min30Date = min30Date.concat(res.min30.date);
-                                hourData = hourData.concat(res.hour.data);
-                                hourDate = hourDate.concat(res.hour.date);
+                                min1Data = min1Data.concat(typeof res.min1.data == 'undefined' ? [] : res.min1.data);
+                                min1Date = min1Date.concat(typeof res.min1.date == 'undefined' ? [] : res.min1.date);
+                                min5Data = min5Data.concat(typeof res.min5.data == 'undefined' ? [] : res.min5.data);
+                                min5Date = min5Date.concat(typeof res.min5.date == 'undefined' ? [] : res.min5.date);
+                                min15Data = min15Data.concat(typeof res.min15.data == 'undefined' ? [] : res.min15.data);
+                                min15Date = min15Date.concat(typeof res.min15.date == 'undefined' ? [] : res.min15.date);
+                                min30Data = min30Data.concat(typeof res.min30.data == 'undefined' ? [] : res.min30.data);
+                                min30Date = min30Date.concat(typeof res.min30.date == 'undefined' ? [] : res.min30.date);
+                                hourData = hourData.concat(typeof res.hour.data == 'undefined' ? [] : res.hour.data);
+                                hourDate = hourDate.concat(typeof res.hour.date == 'undefined' ? [] : res.hour.date);
+                                daysData = typeof res.day.data == 'undefined' ? [] : res.day.data;
+                                daysDate = typeof res.day.date == 'undefined' ? [] : res.day.date;
+                                weeksData = typeof res.week.data == 'undefined' ? [] : res.week.data;
+                                weeksDate = typeof res.week.date == 'undefined' ? [] : res.week.date;
+                                monthsData = typeof res.month.data == 'undefined' ? [] : res.month.data;
+                                monthsDate = typeof res.month.date == 'undefined' ? [] : res.month.date;
 
-                                days = res.day;
-                                weeks = res.week;
-                                months = res.month;
-                                currentData = min1Data;
-                                currentDate = min1Date;
+                                currentData = that.returnDataByType(checkDataType, min1Data, min5Data, min15Data, min30Data, hourData, daysData, weeksData, monthsData);
+                                currentDate = that.returnDataByType(checkDataType, min1Date, min5Date, min15Date, min30Date, hourDate, daysDate, weeksDate, monthsDate);
+
                                 dataLastDate = min1Data[min1Data.length - 1][0];
                                 app.info = res.info;
-
-                                console.log(currentData)
-                                console.log(min1Data)
 
                                 $('.max-price').html(currentData[currentData.length - 1][3]);
                                 $('.min-price').html(currentData[currentData.length - 1][2]);
@@ -1009,6 +1000,37 @@
                     });
                 },
             }
+        });
+
+        $('.setDataMin').click(function() {
+            $('.setDataMin').removeClass('active');
+            $(this).addClass('active');
+            checkDataType = $(this).attr('data-type');
+
+            currentData = app.returnDataByType(checkDataType, min1Data, min5Data, min15Data, min30Data, hourData, daysData, weeksData, monthsData);
+            currentDate = app.returnDataByType(checkDataType, min1Date, min5Date, min15Date, min30Date, hourDate, daysDate, weeksDate, monthsDate);
+            console.log(currentData)
+            //刷新数据
+            var option = chart.getOption();
+            var nowData = splitData(currentData);
+
+
+            option.series[0].data = nowData.values;
+            option.series[1].data = calculateMA(5, nowData.values);
+            option.series[2].data = calculateMA(10, nowData.values);
+            option.series[3].data = calculateMA(20, nowData.values);
+            option.series[4].data = calculateMA(30, nowData.values);
+            option.xAxis[0].data  = currentDate;
+            option.xAxis[1].data  = currentDate;
+            option.dataZoom[0].start = (100-(10/(currentData.length/100)));
+            // 这个的意思是页面只展示30条数据，然后用数据总长度-30再除以总长度可以得到最后一栏数据的初始位置
+            option.dataZoom[0].start = (currentData.length-30)/currentData.length * 100;
+            option.dataZoom[0].end   = 100;
+            option.dataZoom[0].endValue = 100-(50/(currentData.length/100));
+
+            // myChart.setOption(option);
+            chart.clear();//消除当前实例
+            chart.setOption(option, true);
         })
 
     })
