@@ -795,30 +795,30 @@
                                 var res = data.message;
 
                                 var min1Data = {
-                                    data: Object.assign(min1.data, res.min1.data),
-                                    date: Object.assign(min1.date, res.min1.date)
+                                    data: that.dataMerge(min1.data, res.min1.data),
+                                    date: that.dataMerge(min1.date, res.min1.date)
                                 }
                                 var min5Data = {
-                                    data: Object.assign(min5.data, res.min5.data),
-                                    date: Object.assign(min5.date, res.min5.date)
+                                    data: that.dataMerge(min5.data, res.min5.data),
+                                    date: that.dataMerge(min5.date, res.min5.date)
                                 }
                                 var min15Data = {
-                                    data: Object.assign(min15.data, res.min15.data),
-                                    date: Object.assign(min15.date, res.min15.date)
+                                    data: that.dataMerge(min15.data, res.min15.data),
+                                    date: that.dataMerge(min15.date, res.min15.date)
                                 }
                                 var min30Data = {
-                                    data: Object.assign(min30.data, res.min30.data),
-                                    date: Object.assign(min30.date, res.min30.date)
+                                    data: that.dataMerge(min30.data, res.min30.data),
+                                    date: that.dataMerge(min30.date, res.min30.date)
                                 }
                                 var hourData = {
-                                    data: Object.assign(hour.data, res.hour.data),
-                                    date: Object.assign(hour.date, res.hour.date)
+                                    data: that.dataMerge(hour.data, res.hour.data),
+                                    date: that.dataMerge(hour.date, res.hour.date)
                                 }
-                                min1 = $.extend(true, min1, res.min1);
-                                min5 = $.extend(true, min1, res.min5);
-                                min15 = $.extend(true, min1, res.min15);
-                                min30 = $.extend(true, min1, res.min30);
-                                hour = $.extend(true, min1, res.hour);
+                                min1 = min1Data;
+                                min5 = min5Data;
+                                min15 = min15Data;
+                                min30 = min30Data;
+                                hour = hourData;
                                 days = res.day;
                                 weeks = res.week;
                                 months = res.month;
@@ -826,8 +826,6 @@
                                 currentDate = that.returnDataByType(checkDataType, min1, min5, min15, min30, hour, days, weeks, months).date;
                                 dataLastDate = min1.data[min1.data.length - 1][0];
                                 app.info = res.info;
-
-                                console.log(currentData)
 
                                 $('.max-price').html(currentData[currentData.length - 1][3]);
                                 $('.min-price').html(currentData[currentData.length - 1][2]);
@@ -843,6 +841,7 @@
                                 option.title.text =  res.info.name;
                                 option.title.subtext = res.info.now_price;
                                 var nowData = splitData(currentData);
+                                console.log(currentData)
                                 option.series[0].data = nowData.values;
                                 option.series[1].data = calculateMA(5, nowData);
                                 option.series[2].data = calculateMA(10, nowData);
@@ -875,11 +874,15 @@
                 {
                     if(typeof data2 == 'undefined') return data1;
                     if(typeof data1 == 'undefined') return data2;
+                    var result = [];
+                    data1.forEach((item) => {
+                        result.push(item);
+                    });
                     data2.forEach((item) => {
-                        data1.push(item);
+                        result.push(item);
                     });
 
-                    return data1;
+                    return result;
                 },
                 getAllList: function () {
                     var that = this;
@@ -916,11 +919,11 @@
                                     data: Object.assign(hour.data, res.hour.data),
                                     date: Object.assign(hour.date, res.hour.date)
                                 }
-                                min1 = $.extend(true, min1, res.min1);
-                                min5 = $.extend(true, min1, res.min5);
-                                min15 = $.extend(true, min1, res.min15);
-                                min30 = $.extend(true, min1, res.min30);
-                                hour = $.extend(true, min1, res.hour);
+                                min1 = $.extend(false, min1, res.min1);
+                                min5 = $.extend(false, min1, res.min5);
+                                min15 = $.extend(false, min1, res.min15);
+                                min30 = $.extend(false, min1, res.min30);
+                                hour = $.extend(false, min1, res.hour);
                                 days = res.day;
                                 weeks = res.week;
                                 months = res.month;
