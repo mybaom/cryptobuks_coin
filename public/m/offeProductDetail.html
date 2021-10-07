@@ -52,6 +52,20 @@
             float: right;
             background-color: #fc544b;
         }
+        .filter-time
+        {
+            text-align: right;
+            padding-right: 20px;
+        }
+        .filter-time a, a:link{
+            margin-left: 10px;
+            cursor: pointer;
+            color: #007bff;
+            text-decoration: #fff !important;
+        }
+        a:active{
+            text-decoration: #007bff !important;
+        }
     </style>
 </head>
 
@@ -79,6 +93,13 @@
         </li>
     </ul>
 
+</div>
+<div class="CNY bgWhite filter-time">
+    <a href="javascript:setDataMinType(1);">1min</a>
+    <a href="javascript:setDataMinType(1);">5min</a>
+    <a href="javascript:setDataMinType(1);">15min</a>
+    <a href="javascript:setDataMinType(1);">30min</a>
+    <a href="javascript:setDataMinType(1);">1hour</a>
 </div>
 <div id="app" v-cloak>
 <!--    <div class="head">-->
