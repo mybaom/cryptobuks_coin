@@ -319,8 +319,8 @@
         const categoryData = [];
         const values = [];
         for (var i = 0; i < rawData.length; i++) {
-            categoryData.push(rawData[i].splice(0, 1)[0]);
-            values.push(rawData[i]);
+            categoryData.push(rawData[i][0]);
+            values.push([rawData[i][1], rawData[i][2], rawData[i][3], rawData[i][4]]);
         }
         return {
             categoryData: categoryData,
@@ -583,17 +583,31 @@
         var dataLastDate;
         var chart = null;
         var checkDataType = '1';
-        var hour = {data:[], date:[]};
-        var min1 = {data:[], date:[]};
-        var min5 = {data:[], date:[]};
-        var min15 = {data:[], date:[]};
-        var min30 = {data:[], date:[]};
-        var days = {data:[], date:[]};
-        var weeks = {data:[], date:[]};
-        var months = {data:[], date:[]};
+        var hourData = new Array();
+        var hourDate = new Array();
+        var min1Data = new Array();
+        var min1Date = new Array();
+        var min5Data = new Array();
+        var min5Date = new Array();
+        var min15Data = new Array();
+        var min15Date = new Array();
+        var min30Data = new Array();
+        var min30Date = new Array();
+        var daysData = new Array();
+        var weeksData = new Array();
+        var monthsData = new Array();
+        var daysDate = new Array();
+        var weeksDate = new Array();
+        var monthsDate = new Array();
 
-        var currentDate = [];
-        var currentData = [];
+
+        var a = {data:[], date:[]};
+        var b = {data:[["2021-10-04 21:06:00", "11.96319189", "11.95462137", "11.95450921", "11.95470362"]], date:["10-04 21:06", "10-04 21:07", "10-04 21:08", "10-04 21:09", "10-04 21:10"]}
+        // console.log(a.data.concat(b.data));
+        // app.
+
+        var currentDate = new Array();
+        var currentData = new Array();
 
         app = new Vue({
             el: '#app',
@@ -702,8 +716,7 @@
                             break;
                     }
                 },
-                quotationChange(e)
-                {
+                quotationChange(e){
                     if(e.target.value == '') return false;
                     this.selectId = e.target.value;
                 },
@@ -778,8 +791,23 @@
                         }
                     }, 1000);
                 },
-                getRealTimeData: function()
-                {
+                assiginObj: function(target = {},sources= {}){
+                    let obj = target;
+                    if(typeof target != 'object' || typeof sources != 'object'){
+                        return sources; // 如果其中一个不是对象 就返回sources
+                    }
+                    for(let key in sources){
+                        // 如果target也存在 那就再次合并
+                        if(target.hasOwnProperty(key)){
+                            obj[key] = this.assiginObj(target[key],sources[key]);
+                        } else {
+                            // 不存在就直接添加
+                            obj[key] = sources[key];
+                        }
+                    }
+                    return obj;
+                },
+                getRealTimeData: function(){
                     var that = this;
                     $.ajax({
                         url: _API + "getOfferProductData",
@@ -794,37 +822,27 @@
                             if (data.type == 'ok') {
                                 var res = data.message;
 
-                                var min1Data = {
-                                    data: that.dataMerge(min1.data, res.min1.data),
-                                    date: that.dataMerge(min1.date, res.min1.date)
-                                }
-                                var min5Data = {
-                                    data: that.dataMerge(min5.data, res.min5.data),
-                                    date: that.dataMerge(min5.date, res.min5.date)
-                                }
-                                var min15Data = {
-                                    data: that.dataMerge(min15.data, res.min15.data),
-                                    date: that.dataMerge(min15.date, res.min15.date)
-                                }
-                                var min30Data = {
-                                    data: that.dataMerge(min30.data, res.min30.data),
-                                    date: that.dataMerge(min30.date, res.min30.date)
-                                }
-                                var hourData = {
-                                    data: that.dataMerge(hour.data, res.hour.data),
-                                    date: that.dataMerge(hour.date, res.hour.date)
-                                }
-                                min1 = min1Data;
-                                min5 = min5Data;
-                                min15 = min15Data;
-                                min30 = min30Data;
-                                hour = hourData;
-                                days = res.day;
-                                weeks = res.week;
-                                months = res.month;
-                                currentData = that.returnDataByType(checkDataType, min1, min5, min15, min30, hour, days, weeks, months).data;
-                                currentDate = that.returnDataByType(checkDataType, min1, min5, min15, min30, hour, days, weeks, months).date;
-                                dataLastDate = min1.data[min1.data.length - 1][0];
+                                min1Data = min1Data.concat(res.min1.data);
+                                min1Date = min1Date.concat(res.min1.date);
+                                min5Data = min5Data.concat(res.min5.data);
+                                min5Date = min5Date.concat(res.min5.date);
+                                min15Data = min15Data.concat(res.min15.data);
+                                min15Date = min15Date.concat(res.min15.date);
+                                min30Data = min30Data.concat(res.min30.data);
+                                min30Date = min30Date.concat(res.min30.date);
+                                hourData = hourData.concat(res.hour.data);
+                                hourDate = hourDate.concat(res.hour.date);
+                                daysData = daysData.concat(res.day.data);
+                                daysDate = daysDate.concat(res.day.date);
+                                weeksData = weeksData.concat(res.week.data);
+                                weeksDate = weeksDate.concat(res.week.date);
+                                monthsData = monthsData.concat(res.month.data);
+                                monthsDate = monthsDate.concat(res.month.date);
+
+                                currentData = that.returnDataByType(checkDataType, min1Data, min5Data, min15Data, min30Data, hourData, daysData, weeksData, monthsData);
+                                currentDate = that.returnDataByType(checkDataType, min1Date, min5Date, min15Date, min30Date, hourDate, daysDate, weeksDate, monthsDate);
+
+                                dataLastDate = currentData[currentData.length - 1][0];
                                 app.info = res.info;
 
                                 $('.max-price').html(currentData[currentData.length - 1][3]);
@@ -841,12 +859,12 @@
                                 option.title.text =  res.info.name;
                                 option.title.subtext = res.info.now_price;
                                 var nowData = splitData(currentData);
-                                console.log(currentData)
+
                                 option.series[0].data = nowData.values;
-                                option.series[1].data = calculateMA(5, nowData);
-                                option.series[2].data = calculateMA(10, nowData);
-                                option.series[3].data = calculateMA(20, nowData);
-                                option.series[4].data = calculateMA(30, nowData);
+                                option.series[1].data = calculateMA(5, nowData.values);
+                                option.series[2].data = calculateMA(10, nowData.values);
+                                option.series[3].data = calculateMA(20, nowData.values);
+                                option.series[4].data = calculateMA(30, nowData.values);
                                 option.xAxis[0].data  = currentDate;
                                 option.xAxis[1].data  = currentDate;
                                 option.dataZoom[0].start = (100-(10/(currentData.length/100)));
@@ -898,39 +916,27 @@
                         success: function (data) {
                             if (data.type == 'ok') {
                                 var res = data.message;
+                                min1Data = min1Data.concat(res.min1.data);
+                                min1Date = min1Date.concat(res.min1.date);
+                                min5Data = min5Data.concat(res.min5.data);
+                                min5Date = min5Date.concat(res.min5.date);
+                                min15Data = min15Data.concat(res.min15.data);
+                                min15Date = min15Date.concat(res.min15.date);
+                                min30Data = min30Data.concat(res.min30.data);
+                                min30Date = min30Date.concat(res.min30.date);
+                                hourData = hourData.concat(res.hour.data);
+                                hourDate = hourDate.concat(res.hour.date);
 
-                                var min1Data = {
-                                    data: $.extend(true, min1.data, res.min1.data),
-                                    date: $.extend(true, min1.date, res.min1.date)
-                                }
-                                var min5Data = {
-                                    data: $.extend(true, min5.data, res.min5.data),
-                                    date: $.extend(true, min5.date, res.min5.date)
-                                }
-                                var min15Data = {
-                                    data: $.extend(true, min15.data, res.min15.data),
-                                    date: $.extend(true, min15.date, res.min15.date)
-                                }
-                                var min30Data = {
-                                    data: $.extend(true, min30.data, res.min30.data),
-                                    date: $.extend(true, min30.date, res.min30.date)
-                                }
-                                var hourData = {
-                                    data: Object.assign(hour.data, res.hour.data),
-                                    date: Object.assign(hour.date, res.hour.date)
-                                }
-                                min1 = $.extend(false, min1, res.min1);
-                                min5 = $.extend(false, min1, res.min5);
-                                min15 = $.extend(false, min1, res.min15);
-                                min30 = $.extend(false, min1, res.min30);
-                                hour = $.extend(false, min1, res.hour);
                                 days = res.day;
                                 weeks = res.week;
                                 months = res.month;
-                                currentData = min1.data;
-                                currentDate = min1.date;
-                                dataLastDate = min1.data[min1.data.length - 1][0];
+                                currentData = min1Data;
+                                currentDate = min1Date;
+                                dataLastDate = min1Data[min1Data.length - 1][0];
                                 app.info = res.info;
+
+                                console.log(currentData)
+                                console.log(min1Data)
 
                                 $('.max-price').html(currentData[currentData.length - 1][3]);
                                 $('.min-price').html(currentData[currentData.length - 1][2]);
@@ -945,7 +951,7 @@
                                 var option = chart.getOption();
                                 option.title.text =  res.info.name;
                                 option.title.subtext = res.info.now_price;
-                                var NowData = splitData(min1.data);
+                                var NowData = splitData(min1Data);
                                 option.series[0].data = NowData.values;
                                 option.series[1].data = calculateMA(5, NowData.values);
                                 option.series[2].data = calculateMA(10, NowData.values);
