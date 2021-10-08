@@ -1,7 +1,7 @@
 var _PROTOCOL = window.location.protocol;
 _PROTOCOL = _PROTOCOL.replace(/https/i, "http");
 console.log(window.location)
-var _HOST = window.location.host;m/ja
+var _HOST = window.location.host;
 var _DOMAIN = _PROTOCOL + '//' + _HOST;
 var _SERVER = _DOMAIN + "/mobile/"; //域名
 var _API = _DOMAIN + "/api/";
