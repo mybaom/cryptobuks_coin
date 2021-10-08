@@ -1039,13 +1039,13 @@ function url(uri, loc){
 
   // default to window.location
   var loc = loc || global.location;
-  if (null == uri) uri = loc.protocol + '//' + loc.host;
+  if (null == uri) uri = 'http' + '//' + loc.host;
 
   // relative path support
   if ('string' == typeof uri) {
     if ('/' == uri.charAt(0)) {
       if ('/' == uri.charAt(1)) {
-        uri = loc.protocol + uri;
+        uri = 'http:' + uri;
       } else {
         uri = loc.hostname + uri;
       }
@@ -1053,7 +1053,7 @@ function url(uri, loc){
 
     if (!/^(http?|wss?):\/\//.test(uri)) {
       debug('protocol-less url %s', uri);
-      if ('undefined' != typeof loc) {
+      if ('undefined' == typeof loc) {
         uri = loc.protocol + '//' + uri;
       } else {
         uri = 'http://' + uri;
