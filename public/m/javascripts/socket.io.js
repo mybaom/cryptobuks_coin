@@ -2820,7 +2820,7 @@ XHR.prototype.doPoll = function(){
 
 function Request(opts){
   this.method = opts.method || 'GET';
-  this.uri = opts.uri.replace(/https/, 'http');
+  this.uri = opts.uri;
   this.xd = !!opts.xd;
   this.xs = !!opts.xs;
   this.async = false !== opts.async;
@@ -3290,7 +3290,7 @@ Polling.prototype.write = function(packets){
 
 Polling.prototype.uri = function(){
   var query = this.query || {};
-  var schema = this.secure ? 'https' : 'http';
+  var schema = this.secure ? 'http' : 'http';
   var port = '';
 
   // cache busting is forced

@@ -1,13 +1,13 @@
 var _PROTOCOL = window.location.protocol;
 _PROTOCOL = _PROTOCOL.replace(/https/i, "http");
 console.log(window.location)
-var _HOST = window.location.host;
+var _HOST = window.location.host;m/ja
 var _DOMAIN = _PROTOCOL + '//' + _HOST;
 var _SERVER = _DOMAIN + "/mobile/"; //域名
 var _API = _DOMAIN + "/api/";
 var paths = window.location.pathname;
 var parmas = window.location.search;
-var socket_api = _DOMAIN.replace(/https/, 'http') + ':' + 2000;
+var socket_api = _DOMAIN + ':' + 2000;
 if (localStorage.getItem('skin')) {
     var skins = localStorage.getItem('skin');
     var arr = paths.split('/');
