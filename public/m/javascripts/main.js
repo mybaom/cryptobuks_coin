@@ -7,7 +7,7 @@ var _SERVER = _DOMAIN + "/mobile/"; //域名
 var _API = _DOMAIN + "/api/";
 var paths = window.location.pathname;
 var parmas = window.location.search;
-var socket_api = 'cbvccx.com/2000';
+var socket_api = 'ws.cbvccx.com';
 if (localStorage.getItem('skin')) {
     var skins = localStorage.getItem('skin');
     var arr = paths.split('/');
