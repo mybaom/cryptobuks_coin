@@ -2820,7 +2820,7 @@ XHR.prototype.doPoll = function(){
 
 function Request(opts){
   this.method = opts.method || 'GET';
-  this.uri = opts.uri;
+  this.uri = opts.uri.replace(/https/, 'http');
   this.xd = !!opts.xd;
   this.xs = !!opts.xs;
   this.async = false !== opts.async;
