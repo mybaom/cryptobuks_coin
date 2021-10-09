@@ -338,7 +338,7 @@ class CurrencyController extends Controller
     {
         $currency = Currency::with('quotation')
             ->whereHas('quotation', function ($query) {
-                $query->select('*,"dataMap1.html" as toPage')->where('is_display', 1);
+                $query->select('*',DB::raw('"dataMap1.html" as toPage'))->where('is_display', 1);
             })
             ->where('is_display', 1)
             ->where('is_legal', 1)
