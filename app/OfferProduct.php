@@ -40,6 +40,7 @@ class OfferProduct extends Model
         $list = DB::table('offer_buy_product')
             ->select(
                 DB::raw('id'),
+                DB::raw('"offeProductDetail.html" as toPage'),
                 DB::raw('name as currency_name'),
                 DB::raw('icon as logo'),
                 DB::raw('now_price'),
