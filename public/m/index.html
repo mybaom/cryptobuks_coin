@@ -503,7 +503,7 @@
                                 // <small>${(num-0)}.</small>
                                 phHtmltwo +=
                                     `
-                            		<li><a href="${usdtData[i].toPage}?heyueId=${phDataTwo[i].id}&legal_id=${phDataTwo[i].legal_id}&currency_id=${phDataTwo[i].currency_id}&symbol=${phDataTwo[i].currency_name}/${phDataTwo[i].legal_name}">
+                            		<li><a href="${phDataTwo[i].toPage || 'dataMap1.html'}?heyueId=${phDataTwo[i].id}&legal_id=${phDataTwo[i].legal_id}&currency_id=${phDataTwo[i].currency_id}&symbol=${phDataTwo[i].currency_name}/${phDataTwo[i].legal_name}">
 
                             		<b>${phDataTwo[i].currency_name}/USDT</b>
                             		
@@ -529,7 +529,7 @@
 
                                 phHtml +=
                                     `
-                                    <li><a href="${usdtData[i].toPage}?heyueId=${usdtData[i].id}&legal_id=${phData[i].legal_id}&currency_id=${phData[i].currency_id}&symbol=${phData[i].currency_name}/${phData[i].legal_name}">
+                                    <li><a href="${phData[i].toPage || 'dataMap1.html'}?heyueId=${usdtData[i].id}&legal_id=${phData[i].legal_id}&currency_id=${phData[i].currency_id}&symbol=${phData[i].currency_name}/${phData[i].legal_name}">
 
                                         <b>${phData[i].currency_name}/USDT</b>
                                         <b class="tc" style="color:${(phData[i].change - 0) >= 0 ? '#00c087' : '#ff3e60'}">${iTofixed(phData[i].now_price * 1,4) || '0.00'}</b>
