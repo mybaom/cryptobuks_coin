@@ -31,14 +31,15 @@ class OfferProductController extends Controller
             // 如果有传日期过来则用传过来的日期
             $endDate = $date ? $date : date('Y-m-d H:i', time() - (3600 * 24 * 3)) . ':00';
             $endDateSymbol = $date ? '>' : '>=';
-            $info = OfferProduct::select('*', DB::raw('if(rise_fall_probability > 50, "1", "0") as rise_fall_symbol'), DB::raw('format((`max_increase` + `min_increase`)/2 * `rise_fall_probability`/100, 2) as rise_fall_probability'))->find($id);
+            $info = OfferProduct::select('*', DB::raw('FORMAT(now_price, 8) as now_price'), DB::raw('if(rise_fall_probability > 50, "1", "0") as rise_fall_symbol'), DB::raw('format((`max_increase` + `min_increase`)/2 * `rise_fall_probability`/100, 2) as rise_fall_probability'))->find($id);
             $getDbData = DB::table('offer_product_increase_record')
                 ->select(
                     'minute',
                     DB::raw('FORMAT(open_price, 8) as open_price'),
                     DB::raw('FORMAT(close_price, 8) as close_price'),
                     DB::raw('FORMAT(lowest_price, 8) as lowest_price'),
-                    DB::raw('FORMAT(highest_price, 8) as highest_price')
+                    DB::raw('FORMAT(highest_price, 8) as highest_price'),
+                    'volume'
                 )
 
                 ->where('obp_id', $id)
@@ -66,23 +67,23 @@ class OfferProductController extends Controller
                 $simpleMin = substr($v->minute, 5, 11);
 
                 $result->min1->date[] = $simpleMin;
-                $result->min1->data[] = [$v->minute, $v->open_price, $v->close_price, $v->lowest_price, $v->highest_price];
+                $result->min1->data[] = [$v->minute, $v->open_price, $v->close_price, $v->lowest_price, $v->highest_price, $v->volume];
                 $min = date('i', strtotime($v->minute));
                 if (($min % 5) == 0) {
                     $result->min5->date[] = $simpleMin;
-                    $result->min5->data[] = [$v->minute, $v->open_price, $v->close_price, $v->lowest_price, $v->highest_price];
+                    $result->min5->data[] = [$v->minute, $v->open_price, $v->close_price, $v->lowest_price, $v->highest_price, $v->volume];
                 }
                 if (($min % 15) == 0) {
                     $result->min15->date[] = $simpleMin;
-                    $result->min15->data[] = [$v->minute, $v->open_price, $v->close_price, $v->lowest_price, $v->highest_price];
+                    $result->min15->data[] = [$v->minute, $v->open_price, $v->close_price, $v->lowest_price, $v->highest_price, $v->volume];
                 }
                 if (($min % 30) == 0) {
                     $result->min30->date[] = $simpleMin;
-                    $result->min30->data[] = [$v->minute, $v->open_price, $v->close_price, $v->lowest_price, $v->highest_price];
+                    $result->min30->data[] = [$v->minute, $v->open_price, $v->close_price, $v->lowest_price, $v->highest_price, $v->volume];
                 }
                 if (($min % 60) == 0) {
                     $result->hour->date[] = $simpleMin;
-                    $result->hour->data[] = [$v->minute, $v->open_price, $v->close_price, $v->lowest_price, $v->highest_price];
+                    $result->hour->data[] = [$v->minute, $v->open_price, $v->close_price, $v->lowest_price, $v->highest_price, $v->volume];
                 }
             }
         }catch (\Exception $e){
@@ -100,7 +101,8 @@ class OfferProductController extends Controller
                 DB::raw('FORMAT(open_price, 8) as open_price'),
                 DB::raw('FORMAT(close_price, 8) as close_price'),
                 DB::raw('FORMAT(lowest_price, 8) as lowest_price'),
-                DB::raw('FORMAT(highest_price, 8) as highest_price')
+                DB::raw('FORMAT(highest_price, 8) as highest_price'),
+                'volume'
             )
 
             ->where('obp_id', $id)
@@ -113,7 +115,7 @@ class OfferProductController extends Controller
         foreach ($getDbData as $k => $v) {
             $simpleMin = substr($v->minute, 5, 11);
             $result->date[] = $simpleMin;
-            $result->data[] = [$v->minute, $v->open_price, $v->close_price, $v->lowest_price, $v->highest_price];
+            $result->data[] = [$v->minute, $v->open_price, $v->close_price, $v->lowest_price, $v->highest_price, $v->volume];
         }
 
         return $result;

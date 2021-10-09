@@ -111,7 +111,7 @@
 <!--        <div class="bl">-0.0%</div>-->
 <!--    </div>-->
 
-    <div id="echart" style="width:100%; min-height: 375px;">
+    <div id="echart" style="width:100%; min-height: 450px;">
 
     </div>
 
@@ -315,14 +315,28 @@
     function splitData(rawData) {
         const categoryData = [];
         const values = [];
+        const volumes = [];
         for (var i = 0; i < rawData.length; i++) {
             categoryData.push(rawData[i][0]);
             values.push([rawData[i][1], rawData[i][2], rawData[i][3], rawData[i][4]]);
+            volumes.push(Number(rawData[i][5]));
         }
         return {
             categoryData: categoryData,
-            values: values
+            values: values,
+            volumes: volumes
         };
+    }
+    function setVolumeData(volumes, times, datas) {
+        const volumeData = [];
+        for (var i = 0; i < datas.length; i++) {
+            //console.log("开盘价"+dataMes[i][0])
+            //console.log("收盘价"+dataMes[i][1])
+            volumeData.push([times[i], volumes[i], datas[i][2] > datas[i][1] ? -1 : 1]);
+            //第一个代表时间，第二个代表成交量的值，第三个判断颜色1为绿色-1为红色
+        }
+
+        return volumeData;
     }
     function calculateMA(dayCount, data) {
         var result = [];
@@ -417,14 +431,14 @@
                 {
                     left: '10%',
                     right: '5%',
-                    height: '75%',
+                    height: '60%',
                     top: '3%',
                 },
                 {
                     left: '10%',
                     right: '5%',
-                    top: '3%',
-                    height: '0%'
+                    top: '68%',
+                    height: '15%'
                 }
             ],
             xAxis: [
@@ -488,7 +502,7 @@
                     end: 25, // 百分比来着
                     startValue: 9999,
                     endValue: 10000,
-                    //zoomLock: true, // 锁定缩放
+                    zoomLock: true, // 锁定缩放
                 }
             ],
             series: [
@@ -562,13 +576,13 @@
                         opacity: 0.5
                     }
                 },
-                // {
-                //     name: 'Volume',
-                //     type: 'bar',
-                //     xAxisIndex: 1,
-                //     yAxisIndex: 1,
-                //     data: data.volumes
-                // }
+                {
+                    name: 'Volume',
+                    type: 'bar',
+                    xAxisIndex: 1,
+                    yAxisIndex: 1,
+                    data: []
+                }
             ]
         }
 
@@ -855,6 +869,7 @@
                                 option.series[2].data = calculateMA(10, nowData.values);
                                 option.series[3].data = calculateMA(20, nowData.values);
                                 option.series[4].data = calculateMA(30, nowData.values);
+                                option.series[5].data = setVolumeData(nowData.volumes, currentDate, currentData);
                                 option.xAxis[0].data  = currentDate;
                                 option.xAxis[1].data  = currentDate;
                                 option.dataZoom[0].start = (100-(10/(currentData.length/100)));
@@ -948,6 +963,7 @@
                                 option.series[2].data = calculateMA(10, NowData.values);
                                 option.series[3].data = calculateMA(20, NowData.values);
                                 option.series[4].data = calculateMA(30, NowData.values);
+                                option.series[5].data = setVolumeData(NowData.volumes, currentDate, currentData);
                                 option.xAxis[0].data  = currentDate;
                                 option.xAxis[1].data  = currentDate;
                                 option.dataZoom[0].start = (100-(10/(currentData.length/100)));
@@ -1020,6 +1036,7 @@
             option.series[2].data = calculateMA(10, nowData.values);
             option.series[3].data = calculateMA(20, nowData.values);
             option.series[4].data = calculateMA(30, nowData.values);
+            option.series[5].data = setVolumeData(nowData.volumes, currentDate, currentData);
             option.xAxis[0].data  = currentDate;
             option.xAxis[1].data  = currentDate;
             option.dataZoom[0].start = (100-(10/(currentData.length/100)));
