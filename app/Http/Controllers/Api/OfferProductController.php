@@ -251,4 +251,29 @@ class OfferProductController extends Controller
 
         return $datas;
     }
+
+    public function getDateTime()
+    {
+        $startDate = date('Y-m-d H:i').':00';
+        $endDate = date('Y-m-d H:i:s', strtotime($startDate)+60);
+        $recordList = DB::table('offer_product_increase_record')
+            ->select(
+                'offer_product_increase_record.*',
+                'today_price'
+            )
+            ->leftJoin('offer_buy_product', 'offer_buy_product.id', '=', 'offer_product_increase_record.obp_id')
+            ->where('obp_id', 1)
+            ->where('time_type', 1)
+            ->where('minute', '>=', $startDate)
+            ->where('minute', '<=', $endDate)
+            ->get()->toArray();
+        if(count($recordList) < 2){
+            return $this->error('data error');
+        }
+        $now_price = rand($recordList[0]->open_price * 10000000000, $recordList[1]->open_price * 10000000000) / 10000000000;
+        $res['now_price'] = $now_price;
+        $res['change'] = $recordList[1]->today_price > $recordList[0]->open_price ? '-' : '+' . round(abs(($recordList[0]->open_price - $recordList[1]->today_price) / $recordList[1]->today_price), 2);
+
+        return $this->success($res);
+    }
 }

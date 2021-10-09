@@ -39,8 +39,11 @@ class OfferProduct extends Model
     {
         $list = DB::table('offer_buy_product')
             ->select(
+                DB::raw('id'),
                 DB::raw('name as currency_name'),
                 DB::raw('icon as logo'),
+                DB::raw('now_price'),
+                DB::raw('1 as is_offer_product'),
                 DB::raw('concat(if(rise_fall_probability > 50, "+", "-"), format((`max_increase` + `min_increase`)/2 * `rise_fall_probability`/100, 2)) as `change`'),
                 DB::raw('"0.00000000" as fluctuate_max'),
                 DB::raw('"0.00000000" as fluctuate_min'),
