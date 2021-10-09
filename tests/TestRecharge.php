@@ -170,6 +170,9 @@ class TestRecharge extends BaseTestCase
 
     }
 
+    public function testGetCBVHq(){
+        OfferProduct::getProductListForTimeLoad();
+    }
 
 
 }
