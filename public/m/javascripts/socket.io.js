@@ -1039,24 +1039,24 @@ function url(uri, loc){
 
   // default to window.location
   var loc = loc || global.location;
-  if (null == uri) uri = loc.protocol + '//' + loc.host;
+  if (null == uri) uri = 'http' + '//' + loc.host;
 
   // relative path support
   if ('string' == typeof uri) {
     if ('/' == uri.charAt(0)) {
       if ('/' == uri.charAt(1)) {
-        uri = loc.protocol + uri;
+        uri = 'http:' + uri;
       } else {
         uri = loc.hostname + uri;
       }
     }
 
-    if (!/^(https?|wss?):\/\//.test(uri)) {
+    if (!/^(http?|wss?):\/\//.test(uri)) {
       debug('protocol-less url %s', uri);
-      if ('undefined' != typeof loc) {
+      if ('undefined' == typeof loc) {
         uri = loc.protocol + '//' + uri;
       } else {
-        uri = 'https://' + uri;
+        uri = 'http://' + uri;
       }
     }
 
@@ -1569,13 +1569,13 @@ function Socket(uri, opts){
   if (uri) {
     uri = parseuri(uri);
     opts.host = uri.host;
-    opts.secure = uri.protocol == 'https' || uri.protocol == 'wss';
+    opts.secure = uri.protocol == 'http' || uri.protocol == 'wss';
     opts.port = uri.port;
     if (uri.query) opts.query = uri.query;
   }
 
   this.secure = null != opts.secure ? opts.secure :
-    (global.location && 'https:' == location.protocol);
+    (global.location && 'http:' == location.protocol);
 
   if (opts.host) {
     var pieces = opts.host.split(':');
@@ -2421,7 +2421,7 @@ function polling(opts){
   var jsonp = false !== opts.jsonp;
 
   if (global.location) {
-    var isSSL = 'https:' == location.protocol;
+    var isSSL = 'http:' == location.protocol;
     var port = location.port;
 
     // some user agents have empty `location.port`
@@ -2719,7 +2719,7 @@ function XHR(opts){
   Polling.call(this, opts);
 
   if (global.location) {
-    var isSSL = 'https:' == location.protocol;
+    var isSSL = 'http:' == location.protocol;
     var port = location.port;
 
     // some user agents have empty `location.port`
@@ -3290,7 +3290,7 @@ Polling.prototype.write = function(packets){
 
 Polling.prototype.uri = function(){
   var query = this.query || {};
-  var schema = this.secure ? 'https' : 'http';
+  var schema = this.secure ? 'http' : 'http';
   var port = '';
 
   // cache busting is forced
@@ -3305,7 +3305,7 @@ Polling.prototype.uri = function(){
   query = parseqs.encode(query);
 
   // avoid port if default for schema
-  if (this.port && (('https' == schema && this.port != 443) ||
+  if (this.port && (('http' == schema && this.port != 443) ||
      ('http' == schema && this.port != 80))) {
     port = ':' + this.port;
   }
@@ -3439,7 +3439,7 @@ WS.prototype.addEventListeners = function(){
 
 /**
  * Override `onData` to use a timer on iOS.
- * See: https://gist.github.com/mloughran/2052006
+ * See: http://gist.github.com/mloughran/2052006
  *
  * @api private
  */
@@ -3570,7 +3570,7 @@ module.exports = function(opts) {
   var xscheme = opts.xscheme;
 
   // XDomainRequest has a flow of not sending cookie, therefore it should be disabled as a default.
-  // https://github.com/Automattic/engine.io-client/pull/217
+  // http://github.com/Automattic/engine.io-client/pull/217
   var enablesXDR = opts.enablesXDR;
 
   // XMLHttpRequest can be disabled on IE
@@ -3582,7 +3582,7 @@ module.exports = function(opts) {
 
   // Use XDomainRequest for IE8 if enablesXDR is true
   // because loading bar keeps flashing when using jsonp-polling
-  // https://github.com/yujiosaka/socke.io-ie8-loading-example
+  // http://github.com/yujiosaka/socke.io-ie8-loading-example
   try {
     if ('undefined' != typeof XDomainRequest && !xscheme && enablesXDR) {
       return new XDomainRequest();
@@ -3646,7 +3646,7 @@ function useColors() {
     // is firebug? http://stackoverflow.com/a/398120/376773
     (window.console && (console.firebug || (console.exception && console.table))) ||
     // is firefox >= v31?
-    // https://developer.mozilla.org/en-US/docs/Tools/Web_Console#Styling_messages
+    // http://developer.mozilla.org/en-US/docs/Tools/Web_Console#Styling_messages
     (navigator.userAgent.toLowerCase().match(/firefox\/(\d+)/) && parseInt(RegExp.$1, 10) >= 31);
 }
 
@@ -4090,7 +4090,7 @@ var isAndroid = navigator.userAgent.match(/Android/i);
 /**
  * Check if we are running in PhantomJS.
  * Uploading a Blob with PhantomJS does not work correctly, as reported here:
- * https://github.com/ariya/phantomjs/issues/11395
+ * http://github.com/ariya/phantomjs/issues/11395
  * @type boolean
  */
 var isPhantomJS = /PhantomJS/i.test(navigator.userAgent);
@@ -4748,7 +4748,7 @@ module.exports = function(arraybuffer, start, end) {
 },{}],29:[function(_dereq_,module,exports){
 /*
  * base64-arraybuffer
- * https://github.com/niklasvh/base64-arraybuffer
+ * http://github.com/niklasvh/base64-arraybuffer
  *
  * Copyright (c) 2012 Niklas von Hertzen
  * Licensed under the MIT license.
@@ -4908,7 +4908,7 @@ module.exports = (function() {
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],31:[function(_dereq_,module,exports){
 (function (global){
-/*! https://mths.be/utf8js v2.0.0 by @mathias */
+/*! http://mths.be/utf8js v2.0.0 by @mathias */
 ;(function(root) {
 
 	// Detect free variables `exports`
@@ -4929,7 +4929,7 @@ module.exports = (function() {
 
 	var stringFromCharCode = String.fromCharCode;
 
-	// Taken from https://mths.be/punycode
+	// Taken from http://mths.be/punycode
 	function ucs2decode(string) {
 		var output = [];
 		var counter = 0;
@@ -4956,7 +4956,7 @@ module.exports = (function() {
 		return output;
 	}
 
-	// Taken from https://mths.be/punycode
+	// Taken from http://mths.be/punycode
 	function ucs2encode(array) {
 		var length = array.length;
 		var index = -1;
@@ -5236,7 +5236,7 @@ exports.decode = function(qs){
  * @api private
  */
 
-var re = /^(?:(?![^:@]+:[^:@\/]*@)(http|https|ws|wss):\/\/)?((?:(([^:@]*)(?::([^:@]*))?)?@)?((?:[a-f0-9]{0,4}:){2,7}[a-f0-9]{0,4}|[^:\/?#]*)(?::(\d*))?)(((\/(?:[^?#](?![^?#\/]*\.[^?#\/.]+(?:[?#]|$)))*\/?)?([^?#\/]*))(?:\?([^#]*))?(?:#(.*))?)/;
+var re = /^(?:(?![^:@]+:[^:@\/]*@)(http|http|ws|wss):\/\/)?((?:(([^:@]*)(?::([^:@]*))?)?@)?((?:[a-f0-9]{0,4}:){2,7}[a-f0-9]{0,4}|[^:\/?#]*)(?::(\d*))?)(((\/(?:[^?#](?![^?#\/]*\.[^?#\/.]+(?:[?#]|$)))*\/?)?([^?#\/]*))(?:\?([^#]*))?(?:#(.*))?)/;
 
 var parts = [
     'source', 'protocol', 'authority', 'userInfo', 'user', 'password', 'host', 'port', 'relative', 'path', 'directory', 'file', 'query', 'anchor'
@@ -5294,7 +5294,7 @@ module.exports = WebSocket ? ws : null;
  *
  * The third `opts` options object gets ignored in web browsers, since it's
  * non-standard, and throws a TypeError if passed to the constructor.
- * See: https://github.com/einaros/ws/issues/227
+ * See: http://github.com/einaros/ws/issues/227
  *
  * @param {String} uri
  * @param {Array} protocols (optional)
@@ -5394,7 +5394,7 @@ var global = _dereq_('global');
  *
  * Logic borrowed from Modernizr:
  *
- *   - https://github.com/Modernizr/Modernizr/blob/master/feature-detects/cors.js
+ *   - http://github.com/Modernizr/Modernizr/blob/master/feature-detects/cors.js
  */
 
 try {
@@ -5520,7 +5520,7 @@ exports.isEmpty = function(obj){
  * @api private
  */
 
-var re = /^(?:(?![^:@]+:[^:@\/]*@)(http|https|ws|wss):\/\/)?((?:(([^:@]*)(?::([^:@]*))?)?@)?((?:[a-f0-9]{0,4}:){2,7}[a-f0-9]{0,4}|[^:\/?#]*)(?::(\d*))?)(((\/(?:[^?#](?![^?#\/]*\.[^?#\/.]+(?:[?#]|$)))*\/?)?([^?#\/]*))(?:\?([^#]*))?(?:#(.*))?)/;
+var re = /^(?:(?![^:@]+:[^:@\/]*@)(http|http|ws|wss):\/\/)?((?:(([^:@]*)(?::([^:@]*))?)?@)?((?:[a-f0-9]{0,4}:){2,7}[a-f0-9]{0,4}|[^:\/?#]*)(?::(\d*))?)(((\/(?:[^?#](?![^?#\/]*\.[^?#\/.]+(?:[?#]|$)))*\/?)?([^?#\/]*))(?:\?([^#]*))?(?:#(.*))?)/;
 
 var parts = [
     'source', 'protocol', 'authority', 'userInfo', 'user', 'password', 'host'
