@@ -65,7 +65,7 @@ class CreateOfferBuyProductQuotation extends Command{
                 list($highestPrice, $closePrice, $lowestPrice) = $this->getSortList([$price1, $price2, $price3]);
                 $openPrice = (float)$v->now_price;
 
-                $data = ['obp_id' => $v->id, 'highest_price' => $highestPrice, 'close_price' => $closePrice, 'lowest_price' => $lowestPrice, 'open_price' => $openPrice, 'minute' => $currentDate, 'time' => $time];
+                $data = ['obp_id' => $v->id, 'highest_price' => $highestPrice, 'close_price' => $closePrice, 'lowest_price' => $lowestPrice, 'open_price' => $openPrice, 'minute' => $currentDate, 'time' => $time, 'volume' => rand($v->min_volume, $v->max_volume)];
                 $insertData[] = array_merge($data, ['time_type' => 1]);
                 if ($isFiveMin) {
                     $insertData[] = array_merge($data, ['time_type' => 2]);

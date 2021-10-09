@@ -177,6 +177,7 @@ class TestRecharge extends BaseTestCase
 
     public function testGetRandHQ()
     {
+        echo rand(20, 200);die;
         $startDate = date('Y-m-d H:i').':00';
         $endDate = date('Y-m-d H:i:s', strtotime($startDate)+60);
         $recordList = DB::table('offer_product_increase_record')
