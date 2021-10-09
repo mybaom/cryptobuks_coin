@@ -529,7 +529,7 @@
 
                                 phHtml +=
                                     `
-                                    <li><a href="${phData[i].toPage || 'dataMap1.html'}?id=${usdtData[i].id}&heyueId=${usdtData[i].id}&legal_id=${phData[i].legal_id}&currency_id=${phData[i].currency_id}&symbol=${phData[i].currency_name}/${phData[i].legal_name}">
+                                    <li><a href="${phData[i].toPage || 'dataMap1.html'}?id=${phData[i].id}&heyueId=${usdtData[i].id}&legal_id=${phData[i].legal_id}&currency_id=${phData[i].currency_id}&symbol=${phData[i].currency_name}/${phData[i].legal_name}">
 
                                         <b>${phData[i].currency_name}/USDT</b>
                                         <b class="tc" style="color:${(phData[i].change - 0) >= 0 ? '#00c087' : '#ff3e60'}">${iTofixed(phData[i].now_price * 1,4) || '0.00'}</b>
