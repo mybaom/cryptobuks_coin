@@ -2,6 +2,8 @@
 namespace Tests;
 
 use App\Agent;
+use App\Currency;
+use App\OfferProduct;
 use App\Setting;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Illuminate\Support\Facades\DB;
@@ -133,6 +135,39 @@ class TestRecharge extends BaseTestCase
         }
 
         var_dump($result);
+    }
+
+
+    public function testGetHq(){
+        $currency = Currency::with('quotation')
+            ->whereHas('quotation', function ($query) {
+                $query->where('is_display', 1);
+            })
+            ->where('is_display', 1)
+            ->where('is_legal', 1)
+            ->get();
+
+        $currency = json_decode(json_encode($currency, JSON_UNESCAPED_UNICODE),true);
+
+        $cbv = OfferProduct::getProductById(1);
+
+        if($cbv) {
+            if (count($currency[0]['quotation']) < 3){
+                $currency[0]['quotation'][] = $cbv;
+            }else{
+                $result = [];
+                foreach ($currency[0]['quotation'] as $k => $v) {
+                    if($k == 2){
+                        $result[] = $cbv;
+                    }
+                    $result[] = $v;
+                }
+
+                $currency[0]['quotation'] = $result;
+            }
+        }
+        var_dump(json_decode(json_encode($currency, JSON_UNESCAPED_UNICODE), true));
+
     }
 
 
