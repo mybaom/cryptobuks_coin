@@ -111,6 +111,7 @@ var vue = new Vue({
 					transitionEnd: function () {
 						$('.search_text').val('');
 						current = that.swiperSlide.snapIndex;
+						current = 2; // 2021-10-10强行修改
 						i = current;
 						if (current == 0) {
 							that.types = 0;
