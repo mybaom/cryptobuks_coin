@@ -2,7 +2,7 @@ var vue = new Vue({
 	el: '#app',
 	data: {
 		Lists: [],
-		type: 'micro',
+		type: 'match',
 		swiperSlide: function () { },
 		datas: {},
 		types: 1,
