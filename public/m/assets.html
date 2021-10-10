@@ -266,18 +266,18 @@
     </div> -->
 
     <!-- ================交易=============== -->
- <!--  <section class="level_con">
+   <section class="level_con">
       <section>
 
-        &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; 充值备注：
+<!--        &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; 充值备注：-->
         <ul class="deal_lists" v-show="type == 'micro'" >
           <li v-for="item in Lists" :key="item.id" v-if="item.is_micro == 1">
-            <a href="http://www.baidu.com">
-              <p class="flex between">
-                <span class="f16">充值问题请联系在线客服处理</span>
-                <img src="images/arrrowr.png" alt="" style="width:12px;height:12px;">
-              </p>-->
-          <!--    <div class="flex">
+            <a href="javascript:void(0)">
+<!--              <p class="flex between">-->
+<!--                <span class="f16">充值问题请联系在线客服处理</span>-->
+<!--                <img src="images/arrrowr.png" alt="" style="width:12px;height:12px;">-->
+<!--              </p>-->
+              <div class="flex">
                 <div class="flex1 mr5">
                   <span class="ft12 blue2" data-localize="assets.avaiable">{{getlg('canuse')}}</span>
                   <p>{{show ? item.micro_balance || '0.00' : hideit}}</p>
@@ -290,7 +290,7 @@
                   <span class="ft12 blue2" data-localize="assets.conversion">{{getlg('conversion')}}(CNY)</span>
                   <p class="white_gray">{{show ? iTofixed((item.usdt_price * item.micro_balance),4) || '0.00' : hideit}}
                   </p>
-                </div>-->
+                </div>
               </div>
             </a>
           </li>
