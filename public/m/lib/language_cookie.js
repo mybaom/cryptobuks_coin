@@ -882,7 +882,7 @@ var ts = {
       ljsy:"cumulative revenue",
       mr:"buy",
       renamerequired: "Real name cannot be empty",
-      currencyName: "貨幣種類",
+      currencyName: "Currency Name",
     },
     jp: {
               juzudz:"住所を入力してください。",
@@ -1150,7 +1150,7 @@ var ts = {
       ljsy:"収益を累計する",
       mr:"買い入れる",
       renamerequired: "実名は空ではいけません。",
-      currencyName: "Currency Name",
+      currencyName: "貨幣種類",
     },
     kor: {
              juzudz:"거주 지 를 입력 하 세 요",
