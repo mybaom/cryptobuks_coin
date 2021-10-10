@@ -111,25 +111,27 @@ var vue = new Vue({
 					transitionEnd: function () {
 						$('.search_text').val('');
 						current = that.swiperSlide.snapIndex;
-						current = 2; // 2021-10-10强行修改
-						i = current;
-						if (current == 0) {
-							that.types = 0;
-							that.type = 'lever';
-							that.Lists = that.datas.lever_wallet.balance;
-						} else if (current == 1) {
-							that.types = 1;
-							that.Lists = that.datas.micro_wallet.balance;
-							that.type = 'micro';
-						} else if (current == 2) {
-							that.types = 2;
-							that.Lists = that.datas.change_wallet.balance;
-							that.type = 'match';
-						}else if (current == 3) {
-							that.types = 3;
-							that.Lists = that.datas.legal_wallet.balance;
-							that.type = 'legal';
-						}
+						// i = current;
+						// if (current == 0) {
+						// 	that.types = 0;
+						// 	that.type = 'lever';
+						// 	that.Lists = that.datas.lever_wallet.balance;
+						// } else if (current == 1) {
+						// 	that.types = 1;
+						// 	that.Lists = that.datas.micro_wallet.balance;
+						// 	that.type = 'micro';
+						// } else if (current == 2) {
+						// 	that.types = 2;
+						// 	that.Lists = that.datas.change_wallet.balance;
+						// 	that.type = 'match';
+						// }else if (current == 3) {
+						// 	that.types = 3;
+						// 	that.Lists = that.datas.legal_wallet.balance;
+						// 	that.type = 'legal';
+						// }
+						// 2021-10-10强行修改
+						that.Lists = that.datas.change_wallet.balance;
+						that.type = 'match';
 
 
 					},
