@@ -508,6 +508,8 @@ Route::group([ 'middleware' => ['lang', /*'check_user'*/]], function () {
         Route::post('postOfferOrder', 'Api\OfferProductController@postOfferOrder');
         Route::get('getMyOfferInfo', 'Api\OfferProductController@getMyOfferInfo');
         Route::get('getDateTime', 'Api\OfferProductController@getDateTime');
+        Route::get('getNewTimeData', 'Api\OfferProductController@getNewTimeData');
+
 
     });
     Route::post('api/user/walletRegister', 'Api\LoginController@walletRegister');//钱包注册

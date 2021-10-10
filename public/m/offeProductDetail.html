@@ -973,7 +973,40 @@
                                 option.dataZoom[0].endValue = 100-(50/(currentData.length/100));
 
                                 // myChart.setOption(option);
-                                chart.setOption(option)
+                                chart.setOption(option);
+
+                                setInterval(that.getNowData(), 3000);
+
+                            } else if (data.type == '999') {
+                                window.location = 'login.html';
+                            }
+                        },
+                        error: function () {
+
+                        }
+                    })
+                },
+                getNowData: function () {
+                    var that = this;
+                    $.ajax({
+                        url: _API + "getNewTimeData",
+                        type: "GET",
+                        dataType: "json",
+                        async: true,
+                        data: {id: get_param('id')},
+                        beforeSend: function beforeSend(request) {
+                            request.setRequestHeader("Authorization", token);
+                        },
+                        success: function (data) {
+                            if (data.type == 'ok') {
+                                var res = data.message;
+
+                                $('.max-price').html(res.highest_price);
+                                $('.min-price').html(res.lowest_price);
+                                $('.now_price').html(res.now_price);
+                                $('.now_price').css('color', '#00c087');
+                                $('.rise_fall_probability').html((res.rise_fall_symbol == 1 ? '+' : '-') + res.proportion + '%');
+                                $('.rise_fall_probability').css('color', '#00c087');
 
                             } else if (data.type == '999') {
                                 window.location = 'login.html';
