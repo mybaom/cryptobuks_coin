@@ -279,6 +279,10 @@
 <!--              </p>-->
               <div class="flex">
                 <div class="flex1 mr5">
+                  <span class="ft12 blue2" data-localize="transaction.currency">{{getlg('currencyName')}}</span>
+                  <p>{{show ? item.currency_name || '0.00' : hideit}}</p>
+                </div>
+                <div class="flex1 mr5">
                   <span class="ft12 blue2" data-localize="assets.avaiable">{{getlg('canuse')}}</span>
                   <p>{{show ? item.change_balance || '0.00' : hideit}}</p>
                 </div>

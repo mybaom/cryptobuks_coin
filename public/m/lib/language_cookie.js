@@ -349,7 +349,8 @@ var ts = {
           cunrunum:"请输入转入数量",
           ljsy:"累计收益",
           mr:"买入",
-        renamerequired:"真实姓名不能为空"
+        renamerequired:"真实姓名不能为空",
+        currencyName: "币种",
 
     },
     hk: {
@@ -614,8 +615,8 @@ var ts = {
       cunrunum:"請輸入轉入數量",
       ljsy:"累計收益",
       mr:"買入",
-      renamerequired: "真實姓名不能為空"
-
+      renamerequired: "真實姓名不能為空",
+      currencyName: "幣種",
 
 
     },
@@ -880,7 +881,8 @@ var ts = {
       cunrunum:"please enter the transfer in quantity",
       ljsy:"cumulative revenue",
       mr:"buy",
-      renamerequired: "Real name cannot be empty"
+      renamerequired: "Real name cannot be empty",
+      currencyName: "貨幣種類",
     },
     jp: {
               juzudz:"住所を入力してください。",
@@ -1147,7 +1149,8 @@ var ts = {
       cunrunum:"繰越数量を入力してください。",
       ljsy:"収益を累計する",
       mr:"買い入れる",
-      renamerequired: "実名は空ではいけません。"
+      renamerequired: "実名は空ではいけません。",
+      currencyName: "Currency Name",
     },
     kor: {
              juzudz:"거주 지 를 입력 하 세 요",
@@ -1414,7 +1417,8 @@ var ts = {
       cunrunum:"전입 수량 을 입력 하 세 요",
       ljsy:"누적 수익",
       mr:"매입 하 다.",
-      renamerequired: "실명 은 비어 있 으 면 안 됩 니 다."
+      renamerequired: "실명 은 비어 있 으 면 안 됩 니 다.",
+      currencyName: "화폐종류",
     },
     th: {
         juzudz:"กรุณาระบุที่อยู่",
@@ -1680,7 +1684,8 @@ var ts = {
       cunrunum:"กรุณาระบุหมายเลขการโอน",
        ljsy:"กำไรสะสม",
       mr:"ซื้อ",
-      renamerequired: "ชื่อจริงไม่สามารถว่างเปล่า"
+      renamerequired: "ชื่อจริงไม่สามารถว่างเปล่า",
+      currencyName: "สกุลเงิน",
     },
 
 
