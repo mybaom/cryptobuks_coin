@@ -5,7 +5,7 @@ var vue = new Vue({
 		type: 'micro',
 		swiperSlide: function () { },
 		datas: {},
-		types: 0,
+		types: 1,
 		url: 'tradeAccount.html?id=',
 		changeCount: 0,
 		leverCount: 0,
