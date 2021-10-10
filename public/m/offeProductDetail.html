@@ -634,6 +634,7 @@
                 chart.setOption(option);
                 let that = this;
                 get_user_login();
+                setInterval(this.getNowData, 3000);
                 initDataTokens({
                     url: 'currency/quotation_new'
                 }, that.currencyQuotationSuccess);
@@ -641,7 +642,6 @@
             created: function () {
                 this.getAllList();
                 this.getSystemDate();
-                setInterval(this.getNowData(), 3000);
             },
             methods: {
                 taderSubmit(){
