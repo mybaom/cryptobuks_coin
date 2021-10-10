@@ -384,28 +384,28 @@
                                 that.value3 = arr[0].name;
                                 that.currency = arr[0].id;
                                 var arr2 = [];
-                                // if (arr[0].is_legal == 1) {
-                                //     var obj = {
-                                //         type: 'legal',
-                                //         texts: getlg('c2cAccount')
-                                //     }
-                                //     arr2.push(obj);
-                                // }
-                                // if (arr[0].is_micro == 1) {
-                                //     var obj = {
-                                //         type: 'micro',
-                                //         texts: getlg('secondContractAccount')
-                                //     }
-                                //     arr2.push(obj);
-                                // }
-                                // if (arr[0].is_lever == 1) {
-                                //     var obj = {
-                                //         type: 'lever',
-                                //         texts: getlg('contractAccount')
-                                //     }
-                                //     arr2.push(obj);
-                                // }
-                                //
+                                if (arr[0].is_legal == 1) {
+                                    var obj = {
+                                        type: 'legal',
+                                        texts: getlg('c2cAccount')
+                                    }
+                                    arr2.push(obj);
+                                }
+                                if (arr[0].is_micro == 1) {
+                                    var obj = {
+                                        type: 'micro',
+                                        texts: getlg('secondContractAccount')
+                                    }
+                                    arr2.push(obj);
+                                }
+                                if (arr[0].is_lever == 1) {
+                                    var obj = {
+                                        type: 'lever',
+                                        texts: getlg('contractAccount')
+                                    }
+                                    arr2.push(obj);
+                                }
+
                                 if (arr[0].is_match == 1) {
                                     var obj = {
                                         type: 'match',
