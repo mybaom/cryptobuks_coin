@@ -850,14 +850,14 @@
                                 dataLastDate = min1Data[min1Data.length - 1][0];
                                 app.info = res.info;
 
-                                $('.max-price').html(min1Data[min1Data.length - 1][3]);
-                                $('.min-price').html(min1Data[min1Data.length - 1][2]);
-                                $('.open-price').html(min1Data[min1Data.length - 1][1]);
-                                $('.contractdetail').html(res.info.name);
-                                $('.now_price').html(res.info.now_price);
-                                $('.now_price').css('color', '#00c087');
-                                $('.rise_fall_probability').html((res.info.rise_fall_symbol == 1 ? '+' : '-') + res.info.rise_fall_probability + '%');
-                                $('.rise_fall_probability').css('color', '#00c087');
+                                // $('.max-price').html(min1Data[min1Data.length - 1][3]);
+                                // $('.min-price').html(min1Data[min1Data.length - 1][2]);
+                                // $('.open-price').html(min1Data[min1Data.length - 1][1]);
+                                // $('.contractdetail').html(res.info.name);
+                                // $('.now_price').html(res.info.now_price);
+                                // $('.now_price').css('color', '#00c087');
+                                // $('.rise_fall_probability').html((res.info.rise_fall_symbol == 1 ? '+' : '-') + res.info.rise_fall_probability + '%');
+                                // $('.rise_fall_probability').css('color', '#00c087');
 
                                 //刷新数据
                                 var option = chart.getOption();
@@ -945,14 +945,14 @@
                                 dataLastDate = min1Data[min1Data.length - 1][0];
                                 app.info = res.info;
 
-                                $('.max-price').html(currentData[currentData.length - 1][3]);
-                                $('.min-price').html(currentData[currentData.length - 1][2]);
-                                $('.open-price').html(currentData[currentData.length - 1][1]);
-                                $('.contractdetail').html(res.info.name);
-                                $('.now_price').html(res.info.now_price);
-                                $('.now_price').css('color', '#00c087');
-                                $('.rise_fall_probability').html((res.info.rise_fall_symbol == 1 ? '+' : '-') + res.info.rise_fall_probability + '%');
-                                $('.rise_fall_probability').css('color', '#00c087');
+                                // $('.max-price').html(currentData[currentData.length - 1][3]);
+                                // $('.min-price').html(currentData[currentData.length - 1][2]);
+                                // $('.open-price').html(currentData[currentData.length - 1][1]);
+                                // $('.contractdetail').html(res.info.name);
+                                // $('.now_price').html(res.info.now_price);
+                                // $('.now_price').css('color', '#00c087');
+                                // $('.rise_fall_probability').html((res.info.rise_fall_symbol == 1 ? '+' : '-') + res.info.rise_fall_probability + '%');
+                                // $('.rise_fall_probability').css('color', '#00c087');
 
                                 //刷新数据
                                 var option = chart.getOption();
@@ -1003,9 +1003,15 @@
                                 $('.max-price').html(res.highest_price);
                                 $('.min-price').html(res.lowest_price);
                                 $('.now_price').html(res.now_price);
-                                $('.now_price').css('color', '#00c087');
+
                                 $('.rise_fall_probability').html((res.rise_fall_symbol == 1 ? '+' : '-') + res.proportion + '%');
-                                $('.rise_fall_probability').css('color', '#00c087');
+                                if(res.rise_fall_symbol == 1) {
+                                    $('.now_price').css('color', '#00c087');
+                                    $('.rise_fall_probability').css('color', '#00c087');
+                                }else{
+                                    $('.now_price').css('color', '#e3046f');
+                                    $('.rise_fall_probability').css('color', '#e3046f');
+                                }
 
                             } else if (data.type == '999') {
                                 window.location = 'login.html';

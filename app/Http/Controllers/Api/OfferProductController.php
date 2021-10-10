@@ -419,9 +419,9 @@ class OfferProductController extends Controller
                 , $currentData['highest_price'] * 10000000000) / 10000000000);
         $nowPrice = $this->numberAddSubRand($nowPrice, $currentData['open_price'] < $currentData['close_price'] ? true : false);
         // 涨幅百分比
-        $proportion = $this->numberAddSubRand(round(abs(($currentData['open_price'] - $yesteDayData['close_price']) / $yesteDayData['close_price']) * 100, 2), $nowPrice > $yesteDayData['close_price']);
-        $price1 = $this->numberAddSubRand($this->subPrice( rand($currentData['lowest_price'] * 10000000000, $currentData['highest_price'] * 10000000000) / 10000000000), $nowPrice > $yesteDayData['close_price']);
-        $price3 = $this->numberAddSubRand($this->subPrice(rand($currentData['lowest_price'] * 10000000000, $currentData['highest_price'] * 10000000000) / 10000000000), $nowPrice > $yesteDayData['close_price']);
+        $proportion = substr($this->numberAddSubRand(round(abs(($currentData['open_price'] - $yesteDayData['close_price']) / $yesteDayData['close_price']) * 100, 2), $nowPrice > $yesteDayData['close_price']), 0, 5);
+        $price1 = $this->subPrice($this->numberAddSubRand($this->subPrice( rand($currentData['lowest_price'] * 10000000000, $currentData['highest_price'] * 10000000000) / 10000000000), $nowPrice > $yesteDayData['close_price']));
+        $price3 = $this->subPrice($this->numberAddSubRand($this->subPrice(rand($currentData['lowest_price'] * 10000000000, $currentData['highest_price'] * 10000000000) / 10000000000), $nowPrice > $yesteDayData['close_price']));
         list($highestPrice, $nowPrice, $lowestPrice) = $this->getSortList([$price1, $nowPrice, $price3]);
 
         $result = [
