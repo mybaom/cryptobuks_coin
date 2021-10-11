@@ -40,7 +40,7 @@ class RepairKlineData extends Command
         $cacheKey = 'repairKlineData';
         $currencyListString = $redis->get($cacheKey);
         if(! $currencyListString) {
-            $currencyList = DB::table('currency')->get()->toArray();
+            $currencyList = DB::table('currency')->where('id', '<>', 3)->get()->toArray();
             if(! $currencyList)
             {
                 throw new \Exception('get currency list failed on db.');
