@@ -349,6 +349,15 @@ class CurrencyController extends Controller
         $cbv = OfferProduct::getProductById(1);
 
         if($cbv) {
+            try {
+                $newData = $this->getNewTimeData(1);
+                $cbv->change = $newData['proportion'] ? $newData['proportion'] : $cbv->change;
+                $cbv->now_price = $newData['now_price'] ? $newData['now_price'] : $cbv->now_price;
+            }catch (\Exception $e)
+            {
+
+            }
+
             if (count($currency[0]['quotation']) < 3){
                 $currency[0]['quotation'][] = $cbv;
             }else{
@@ -365,6 +374,145 @@ class CurrencyController extends Controller
         }
 
         return $this->success($currency);
+    }
+
+    public function getNewTimeData($id)
+    {
+        $redis = \Illuminate\Support\Facades\Redis::connection();
+        $time = time();
+        $minute = date('YmdHi', $time);
+        $yesteDayMinute = date('YmdHi', ($time - 3600 * 24));
+        $searchMinute = date('Y-m-d H:i', $time) . ':00';
+        $yestedaySearchMinute = date('Y-m-d H:i:s', strtotime($searchMinute) - 3600*24);
+
+        $todayCacheKey = 'offer_product_data_' . $minute . '_' . $id;
+        $yestedayCacheKey = 'offer_product_data_' . $yesteDayMinute . '_' . $id;
+        $currentDataString = $redis->get($todayCacheKey);
+        $yesteDayDataString = $redis->get($yestedayCacheKey);
+
+        if(empty($currentDataString)){
+            $getCurrentMinuteData = DB::table('offer_product_increase_record')
+                ->where('obp_id', $id)
+                ->where('minute', '=', $searchMinute)->get()->first();
+            if(! $getCurrentMinuteData){
+                throw new \Exception('current data not found.');
+            }
+            $setCacheResult = $redis->set($todayCacheKey, json_encode($getCurrentMinuteData, JSON_UNESCAPED_UNICODE));
+            $redis->expire($todayCacheKey, 90000);
+            if(! $setCacheResult)
+            {
+                throw new \Exception('set redis fail.');
+            }
+            $currentDataString = json_encode($getCurrentMinuteData, JSON_UNESCAPED_UNICODE);
+        }
+        if(empty($yesteDayDataString)){
+            $getYesteDayMinuteData = DB::table('offer_product_increase_record')
+                ->where('obp_id', $id)
+                ->where('minute', '=', $yestedaySearchMinute)->get()->first();
+            if(! $getYesteDayMinuteData){
+                throw new \Exception('yesteday data not found.');
+            }
+            $setCacheResult = $redis->set($yestedayCacheKey, json_encode($getYesteDayMinuteData, JSON_UNESCAPED_UNICODE));
+            $redis->expire($yestedayCacheKey, 3600);
+            if(! $setCacheResult)
+            {
+                throw new \Exception('set redis fail.');
+            }
+            $yesteDayDataString = json_encode($getYesteDayMinuteData, JSON_UNESCAPED_UNICODE);
+        }
+
+        $currentData = json_decode($currentDataString, true);
+        $yesteDayData = json_decode($yesteDayDataString, true);
+
+
+
+        $nowPrice = $this->subPrice(rand($currentData['lowest_price'] * 10000000000
+                , $currentData['highest_price'] * 10000000000) / 10000000000);
+        $nowPrice = $this->subPrice($this->numberAddSubRand($nowPrice, $currentData['open_price'] < $currentData['close_price'] ? true : false));
+        // 涨幅百分比
+        $proportion = substr($this->numberAddSubRand(round(abs(($currentData['open_price'] - $yesteDayData['close_price']) / $yesteDayData['close_price']) * 100, 2), $nowPrice > $yesteDayData['close_price']), 0, 5);
+        $rise_fall_symbol = $nowPrice > $yesteDayData['close_price'] ? '+' : '-';
+        $result = [
+            'now_price' => $nowPrice,
+            'proportion' => $rise_fall_symbol.$proportion,
+        ];
+
+        return $result;
+    }
+
+    private function getSortList($arr)
+    {
+        rsort($arr);
+        return $arr;
+    }
+
+
+    /**
+     * 剪切价格字段到理想的位数
+     * @param $number
+     * @return false|string
+     */
+    public function subPrice($number)
+    {
+        //$number = "10.0000234100100";
+        $beforeInt = substr($number,0, strrpos($number,"."));
+        if($beforeInt > 0){
+            return substr($number, 0, 9);
+        }else{
+            $afterNumber = substr($number,strripos($number,".")+1);
+            $afterInt = 0;
+            for ($i = 0; $i < strlen($afterNumber); $i++){
+                if($afterNumber[$i] != 0){
+                    $afterInt = $i;
+                    break;
+                }
+            }
+            $subLength = 8;
+            switch ($afterInt){
+                case 8:
+                    $subLength = 8;
+                    break;
+                case 7:
+                    $subLength = 8;
+                    break;
+                case 6:
+                    $subLength = 8;
+                    break;
+                case 5:
+                    $subLength = 8;
+                    break;
+                case 4:
+                    $subLength = 8;
+                    break;
+                case 3:
+                    $subLength = 7;
+                    break;
+                case 2:
+                    $subLength = 7;
+                    break;
+                case 1:
+                    $subLength = 6;
+                    break;
+            }
+            return substr($number, 0, $subLength + 2);
+        }
+    }
+
+    /**
+     * 随机在最尾数涨幅
+     * @param $number
+     */
+    public function numberAddSubRand($number, $zf){
+        //$number = "10.000023";
+        //$number = 10.01;
+//        $zf = true;
+        $randNum = rand(0, 3);
+        $afterNumber = substr($number,strripos($number,".")+1);
+        if($zf) {
+            return $this->convert_scientific_number_to_normal($number + pow(10, strlen($afterNumber) * -1) * $randNum);
+        }else{
+            return $this->convert_scientific_number_to_normal($number - pow(10, strlen($afterNumber) * -1) * $randNum);
+        }
     }
 
     public function getChargeCoinAddress()

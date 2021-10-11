@@ -15,6 +15,17 @@ class OfferProductController extends Controller
     {
         try {
             $result = OfferProduct::getProductList();
+            foreach ($result as $k => $v)
+            {
+                try{
+                    $info = $this->getNewTimeData2($v['id']);
+                    $result[$k]['rise_fall_symbol'] = $info['rise_fall_symbol'];
+                    $result[$k]['rise_fall_probability_today'] = $info['proportion'];
+                }catch (\Exception $e){
+
+                }
+
+            }
             return $this->success($result);
         }catch (\Exception $e)
         {
@@ -435,6 +446,75 @@ class OfferProductController extends Controller
         ];
 
         return $this->success($result);
+
+    }
+
+    public function getNewTimeData2($id)
+    {
+        $redis = \Illuminate\Support\Facades\Redis::connection();
+        $time = time();
+        $minute = date('YmdHi', $time);
+        $yesteDayMinute = date('YmdHi', ($time - 3600 * 24));
+        $searchMinute = date('Y-m-d H:i', $time) . ':00';
+        $yestedaySearchMinute = date('Y-m-d H:i:s', strtotime($searchMinute) - 3600*24);
+
+        $todayCacheKey = 'offer_product_data_' . $minute . '_' . $id;
+        $yestedayCacheKey = 'offer_product_data_' . $yesteDayMinute . '_' . $id;
+        $currentDataString = $redis->get($todayCacheKey);
+        $yesteDayDataString = $redis->get($yestedayCacheKey);
+
+        if(empty($currentDataString)){
+            $getCurrentMinuteData = DB::table('offer_product_increase_record')
+                ->where('obp_id', $id)
+                ->where('minute', '=', $searchMinute)->get()->first();
+            if(! $getCurrentMinuteData){
+                throw new \Exception('current data not found.');
+            }
+            $setCacheResult = $redis->set($todayCacheKey, json_encode($getCurrentMinuteData, JSON_UNESCAPED_UNICODE));
+            $redis->expire($todayCacheKey, 90000);
+            if(! $setCacheResult)
+            {
+                throw new \Exception('set redis fail.');
+            }
+            $currentDataString = json_encode($getCurrentMinuteData, JSON_UNESCAPED_UNICODE);
+        }
+        if(empty($yesteDayDataString)){
+            $getYesteDayMinuteData = DB::table('offer_product_increase_record')
+                ->where('obp_id', $id)
+                ->where('minute', '=', $yestedaySearchMinute)->get()->first();
+            if(! $getYesteDayMinuteData){
+                throw new \Exception('yesteday data not found.');
+            }
+            $setCacheResult = $redis->set($yestedayCacheKey, json_encode($getYesteDayMinuteData, JSON_UNESCAPED_UNICODE));
+            $redis->expire($yestedayCacheKey, 3600);
+            if(! $setCacheResult)
+            {
+                throw new \Exception('set redis fail.');
+            }
+            $yesteDayDataString = json_encode($getYesteDayMinuteData, JSON_UNESCAPED_UNICODE);
+        }
+
+        $currentData = json_decode($currentDataString, true);
+        $yesteDayData = json_decode($yesteDayDataString, true);
+
+
+
+        $nowPrice = $this->subPrice(rand($currentData['lowest_price'] * 10000000000
+                , $currentData['highest_price'] * 10000000000) / 10000000000);
+        $nowPrice = $this->subPrice($this->numberAddSubRand($nowPrice, $currentData['open_price'] < $currentData['close_price'] ? true : false));
+        // 涨幅百分比
+        $proportion = substr($this->numberAddSubRand(round(abs(($currentData['open_price'] - $yesteDayData['close_price']) / $yesteDayData['close_price']) * 100, 2), $nowPrice > $yesteDayData['close_price']), 0, 5);
+
+
+        $result = [
+            'now_price' => $nowPrice,
+            'proportion' => $proportion,
+            'rise_fall_symbol' => $nowPrice > $yesteDayData['close_price'] ? '1' : '0',
+            'currentData' => $currentData,
+            'yesteDayData' => $yesteDayData
+        ];
+
+        return $result;
 
     }
 
