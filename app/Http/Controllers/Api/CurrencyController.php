@@ -350,10 +350,15 @@ class CurrencyController extends Controller
         $cbv = OfferProduct::getProductById(1);
 
         if($cbv) {
-            $cbv = json_decode(json_encode($cbv, JSON_UNESCAPED_UNICODE), true);
-            $newData = $this->getNewTimeData(1);
-            $cbv['change'] = $newData['proportion'];
-            $cbv['now_price'] = $newData['now_price'];
+            try{
+                $cbv = json_decode(json_encode($cbv, JSON_UNESCAPED_UNICODE), true);
+                $newData = $this->getNewTimeData(1);
+                $cbv['change'] = $newData['proportion'];
+                $cbv['now_price'] = $newData['now_price'];
+            }catch (\Exception $e){
+
+            }
+
 
             if (count($currency[0]['quotation']) < 3){
                 $currency[0]['quotation'][] = $cbv;
