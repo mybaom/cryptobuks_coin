@@ -30,9 +30,6 @@ var vue = new Vue({
 		let text = '';
 		that.listAjax(text);
 		that.swipers();
-		initDataTokens({
-			url: 'currency/quotation_new'
-		}, that.currencyQuotationSuccess);
 	},
 	filters: {
 		toFixedTwo: function (value) {
@@ -85,7 +82,7 @@ var vue = new Vue({
 						that.datas = res.message;
 					}
 					// socket实时更新数据
-					that.socket(token);
+					that.socket();
 					
 					that.ulipaiList=res.message.ulipaigoods;
 					that.trusteeship_funds=res.message.trusteeship_funds;
