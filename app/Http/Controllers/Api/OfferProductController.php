@@ -429,7 +429,9 @@ class OfferProductController extends Controller
             'proportion' => $proportion,
             'highest_price' => $highestPrice,
             'lowest_price' => $lowestPrice,
-            'rise_fall_symbol' => $nowPrice > $yesteDayData['close_price'] ? '1' : '0'
+            'rise_fall_symbol' => $nowPrice > $yesteDayData['close_price'] ? '1' : '0',
+            'currentData' => $currentData,
+            'yesteDayData' => $yesteDayData
         ];
 
         return $this->success($result);

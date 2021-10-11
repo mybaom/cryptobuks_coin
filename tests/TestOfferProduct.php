@@ -84,6 +84,10 @@ class TestOfferProduct extends BaseTestCase
 
     }
 
+    public function testProportion(){
+        echo substr($this->numberAddSubRand(round(abs((0.0002251520 - 0.0001663320) / 0.0001663320) * 100, 2), 0.0002251520 > 0.0001663320), 0, 5);
+    }
+
     private function getSortList($arr)
     {
         rsort($arr);
