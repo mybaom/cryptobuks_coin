@@ -1,6 +1,8 @@
 <?php
 namespace Tests;
 
+use App\Currency;
+use App\OfferProduct;
 use App\Service\RedisService;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Illuminate\Support\Facades\DB;
@@ -82,6 +84,22 @@ class TestOfferProduct extends BaseTestCase
 
         var_dump($result);
 
+    }
+
+    public function testProportion(){
+        $cbv = OfferProduct::getProductById(1);
+        $cbv->change = 1;
+        var_dump($cbv->change);
+        die;
+        $time = time();
+        $minute = date('YmdHi', $time);
+        $yesteDayMinute = date('YmdHi', $time - 3600 * 24);
+        $searchMinute = date('Y-m-d H:i', $time) . ':00';
+        $yestedaySearchMinute = date('Y-m-d H:i:s', strtotime($searchMinute) - 3600*24);
+        echo $searchMinute;
+        echo $yestedaySearchMinute;die;
+
+        echo substr($this->numberAddSubRand(round(abs((0.0002251520 - 0.0001663320) / 0.0001663320) * 100, 2), 0.0002251520 > 0.0001663320), 0, 5);
     }
 
     private function getSortList($arr)
