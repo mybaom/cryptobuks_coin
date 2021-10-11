@@ -283,15 +283,15 @@
                   <p>{{show ? item.currency_name || '0.00' : hideit}}</p>
                 </div>
                 <div class="flex1 mr5">
-                  <span class="ft12 blue2" data-localize="assets.avaiable">{{getlg('canuse')}}</span>
+                  <span class="ft12 blue2" data-localize="assets.avaiable">{{getlg('tnum')}}</span>
                   <p>{{show ? item.change_balance || '0.00' : hideit}}</p>
                 </div>
                 <div class="flex1 mr5">
-                  <span class="ft12 blue2" data-localize="assets.lock">{{getlg('frezz')}}</span>
-                  <p>{{show ? item.lock_change_balance || '0.00' : hideit}}</p>
+                  <span class="ft12 blue2" data-localize="assets.lock">{{getlg('tprice')}}</span>
+                  <p>{{show ? iTofixed(item.usdt_price, 4) || '0.00' : hideit}}</p>
                 </div>
                 <div class="flex1 tr">
-                  <span class="ft12 blue2" data-localize="assets.conversion">{{getlg('conversion')}}(CNY)</span>
+                  <span class="ft12 blue2" data-localize="assets.conversion">{{getlg('conversion')}}(USDT)</span>
                   <p class="white_gray">{{show ? iTofixed((item.usdt_price * item.change_balance),4) || '0.00' : hideit}}
                   </p>
                 </div>

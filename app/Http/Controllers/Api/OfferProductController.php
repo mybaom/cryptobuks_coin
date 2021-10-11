@@ -379,61 +379,62 @@ class OfferProductController extends Controller
         $currentDataString = $redis->get($todayCacheKey);
         $yesteDayDataString = $redis->get($todayCacheKey);
 
-        if(empty($currentDataString)){
-            $getCurrentMinuteData = DB::table('offer_product_increase_record')
-                ->where('obp_id', $id)
-                ->where('minute', '=', $searchMinute)->get()->first();
-            if(! $getCurrentMinuteData){
-                throw new \Exception('current data not found.');
+        try {
+            if(empty($currentDataString)){
+                $getCurrentMinuteData = DB::table('offer_product_increase_record')
+                    ->where('obp_id', $id)
+                    ->where('minute', '=', $searchMinute)->get()->first();
+                if(! $getCurrentMinuteData){
+                    throw new \Exception('current data not found.');
+                }
+                $setCacheResult = $redis->set($todayCacheKey, json_encode($getCurrentMinuteData, JSON_UNESCAPED_UNICODE));
+                $redis->expire($todayCacheKey, 90000);
+                if(! $setCacheResult)
+                {
+                    throw new \Exception('set redis fail.');
+                }
+                $currentDataString = json_encode($getCurrentMinuteData, JSON_UNESCAPED_UNICODE);
             }
-            $setCacheResult = $redis->set($todayCacheKey, json_encode($getCurrentMinuteData, JSON_UNESCAPED_UNICODE));
-            $redis->expire($todayCacheKey, 90000);
-            if(! $setCacheResult)
-            {
-                throw new \Exception('set redis fail.');
+            if(empty($yesteDayDataString)){
+                $getYesteDayMinuteData = DB::table('offer_product_increase_record')
+                    ->where('obp_id', $id)
+                    ->where('minute', '=', $yestedaySearchMinute)->get()->first();
+                if(! $getYesteDayMinuteData){
+                    throw new \Exception('yesteday data not found.');
+                }
+                $setCacheResult = $redis->set($yestedayCacheKey, json_encode($getYesteDayMinuteData, JSON_UNESCAPED_UNICODE));
+                $redis->expire($yestedayCacheKey, 3600);
+                if(! $setCacheResult)
+                {
+                    throw new \Exception('set redis fail.');
+                }
+                $yesteDayDataString = json_encode($getYesteDayMinuteData, JSON_UNESCAPED_UNICODE);
             }
-            $currentDataString = json_encode($getCurrentMinuteData, JSON_UNESCAPED_UNICODE);
+
+            $currentData = json_decode($currentDataString, true);
+            $yesteDayData = json_decode($yesteDayDataString, true);
+
+            $nowPrice = $this->subPrice(rand($currentData['lowest_price'] * 10000000000
+                    , $currentData['highest_price'] * 10000000000) / 10000000000);
+            $nowPrice = $this->numberAddSubRand($nowPrice, $currentData['open_price'] < $currentData['close_price'] ? true : false);
+            // 涨幅百分比
+            $proportion = substr($this->numberAddSubRand(round(abs(($currentData['open_price'] - $yesteDayData['close_price']) / $yesteDayData['close_price']) * 100, 2), $nowPrice > $yesteDayData['close_price']), 0, 5);
+            $price1 = $this->subPrice($this->numberAddSubRand($this->subPrice( rand($currentData['lowest_price'] * 10000000000, $currentData['highest_price'] * 10000000000) / 10000000000), $nowPrice > $yesteDayData['close_price']));
+            $price3 = $this->subPrice($this->numberAddSubRand($this->subPrice(rand($currentData['lowest_price'] * 10000000000, $currentData['highest_price'] * 10000000000) / 10000000000), $nowPrice > $yesteDayData['close_price']));
+            list($highestPrice, $nowPrice, $lowestPrice) = $this->getSortList([$price1, $nowPrice, $price3]);
+
+            $result = [
+                'now_price' => $nowPrice,
+                'proportion' => $proportion,
+                'highest_price' => $highestPrice,
+                'lowest_price' => $lowestPrice,
+                'rise_fall_symbol' => $nowPrice > $yesteDayData['close_price'] ? '1' : '0'
+            ];
+
+            return $this->success($result);
+        }catch (\Exception $e){
+            return $this->error($e->getMessage());
         }
-        if(empty($yesteDayDataString)){
-            $getYesteDayMinuteData = DB::table('offer_product_increase_record')
-                ->where('obp_id', $id)
-                ->where('minute', '=', $yestedaySearchMinute)->get()->first();
-            if(! $getYesteDayMinuteData){
-                throw new \Exception('yesteday data not found.');
-            }
-            $setCacheResult = $redis->set($yestedayCacheKey, json_encode($getYesteDayMinuteData, JSON_UNESCAPED_UNICODE));
-            $redis->expire($yestedayCacheKey, 3600);
-            if(! $setCacheResult)
-            {
-                throw new \Exception('set redis fail.');
-            }
-            $yesteDayDataString = json_encode($getYesteDayMinuteData, JSON_UNESCAPED_UNICODE);
-        }
-
-        $currentData = json_decode($currentDataString, true);
-        $yesteDayData = json_decode($yesteDayDataString, true);
-
-
-
-        $nowPrice = $this->subPrice(rand($currentData['lowest_price'] * 10000000000
-                , $currentData['highest_price'] * 10000000000) / 10000000000);
-        $nowPrice = $this->numberAddSubRand($nowPrice, $currentData['open_price'] < $currentData['close_price'] ? true : false);
-        // 涨幅百分比
-        $proportion = substr($this->numberAddSubRand(round(abs(($currentData['open_price'] - $yesteDayData['close_price']) / $yesteDayData['close_price']) * 100, 2), $nowPrice > $yesteDayData['close_price']), 0, 5);
-        $price1 = $this->subPrice($this->numberAddSubRand($this->subPrice( rand($currentData['lowest_price'] * 10000000000, $currentData['highest_price'] * 10000000000) / 10000000000), $nowPrice > $yesteDayData['close_price']));
-        $price3 = $this->subPrice($this->numberAddSubRand($this->subPrice(rand($currentData['lowest_price'] * 10000000000, $currentData['highest_price'] * 10000000000) / 10000000000), $nowPrice > $yesteDayData['close_price']));
-        list($highestPrice, $nowPrice, $lowestPrice) = $this->getSortList([$price1, $nowPrice, $price3]);
-
-        $result = [
-            'now_price' => $nowPrice,
-            'proportion' => $proportion,
-            'highest_price' => $highestPrice,
-            'lowest_price' => $lowestPrice,
-            'rise_fall_symbol' => $nowPrice > $yesteDayData['close_price'] ? '1' : '0'
-        ];
-
-        return $this->success($result);
-
     }
 
     private function getSortList($arr)

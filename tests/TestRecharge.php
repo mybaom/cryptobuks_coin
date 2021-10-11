@@ -5,6 +5,7 @@ use App\Agent;
 use App\Currency;
 use App\OfferProduct;
 use App\Setting;
+use App\UsersWallet;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
@@ -198,6 +199,19 @@ class TestRecharge extends BaseTestCase
         $res['now_price'] = $now_price;
         $res['change'] = $recordList[1]->today_price > $recordList[0]->open_price ? '-' : '+' . round(abs(($recordList[0]->open_price - $recordList[1]->today_price) / $recordList[1]->today_price), 2);
         var_dump($res);
+    }
+
+
+    public function testGeta(){
+        $user_id = 1208;
+        $currency_name = '';
+        $change_wallet['balance'] = UsersWallet::where('user_id', $user_id)
+            ->whereHas('currencyCoin', function ($query) use ($currency_name) {
+                empty($currency_name) || $query->where('name', 'like', '%' . $currency_name . '%');
+            })->get(['id', 'currency', 'change_balance', 'lock_change_balance'])
+            ->toArray();
+
+        var_dump($change_wallet);
     }
 
 

@@ -30,6 +30,9 @@ var vue = new Vue({
 		let text = '';
 		that.listAjax(text);
 		that.swipers();
+		initDataTokens({
+			url: 'currency/quotation_new'
+		}, that.currencyQuotationSuccess);
 	},
 	filters: {
 		toFixedTwo: function (value) {
@@ -48,6 +51,26 @@ var vue = new Vue({
 			let text = $('.search_text').val();
 			that.listAjax(text);
 		},
+		//socket连接封装
+		socket() {
+			let that = this;
+			var socket = io(socket_api);
+			socket.on('connect', function (datas) {
+				socket.emit('login', data.message.id);
+				// 后端推送来消息时
+				socket.on('kline', function (msg) {
+					if (msg.type == 'kline') {
+						// now_price
+						let list = that.lists;
+						for (i in list) {
+							if (list[i].currency == msg.currency_id) {
+								that.lists[i].usdt_price = msg.close;
+							}
+						}
+					}
+				});
+			});
+		},
 		listAjax(texts) {
 			let that = this;
 			initDataTokens({
@@ -61,6 +84,8 @@ var vue = new Vue({
 					if (texts == '') {
 						that.datas = res.message;
 					}
+					// socket实时更新数据
+					that.socket(token);
 					
 					that.ulipaiList=res.message.ulipaigoods;
 					that.trusteeship_funds=res.message.trusteeship_funds;
