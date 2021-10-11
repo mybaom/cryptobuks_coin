@@ -370,7 +370,7 @@ class OfferProductController extends Controller
         $redis = \Illuminate\Support\Facades\Redis::connection();
         $time = time();
         $minute = date('YmdHi', $time);
-        $yesteDayMinute = date('YmdHi', $time - 3600 * 24);
+        $yesteDayMinute = date('YmdHi', ($time - 3600 * 24));
         $searchMinute = date('Y-m-d H:i', $time) . ':00';
         $yestedaySearchMinute = date('Y-m-d H:i:s', strtotime($searchMinute) - 3600*24);
 

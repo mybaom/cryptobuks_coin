@@ -90,6 +90,7 @@ class TestOfferProduct extends BaseTestCase
         $yesteDayMinute = date('YmdHi', $time - 3600 * 24);
         $searchMinute = date('Y-m-d H:i', $time) . ':00';
         $yestedaySearchMinute = date('Y-m-d H:i:s', strtotime($searchMinute) - 3600*24);
+        echo $searchMinute;
         echo $yestedaySearchMinute;die;
 
         echo substr($this->numberAddSubRand(round(abs((0.0002251520 - 0.0001663320) / 0.0001663320) * 100, 2), 0.0002251520 > 0.0001663320), 0, 5);
