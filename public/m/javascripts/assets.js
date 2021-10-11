@@ -63,7 +63,7 @@ var vue = new Vue({
 					// 	that.lists.find((item) => item.currency == msg.currency_id).usdt_price = msg.close;
 
 						for (i in list) {
-							if (list[i].currency == msg.currency_id) {
+							if (that.lists[i].currency == msg.currency_id) {
 								that.lists[i].usdt_price = msg.close;
 							}
 						}
