@@ -15,12 +15,13 @@ class OfferProductController extends Controller
     {
         try {
             $result = OfferProduct::getProductList();
+            $result = json_decode(json_encode($result, JSON_UNESCAPED_UNICODE), true);
             foreach ($result as $k => $v)
             {
                 try{
                     $info = $this->getNewTimeData2($v['id']);
-                    $result[$k]->rise_fall_symbol = $info['rise_fall_symbol'];
-                    $result[$k]->rise_fall_probability_today = $info['proportion'];
+                    $result[$k]['rise_fall_symbol'] = $info['rise_fall_symbol'];
+                    $result[$k]['rise_fall_probability_today'] = $info['proportion'];
                 }catch (\Exception $e){
 
                 }
