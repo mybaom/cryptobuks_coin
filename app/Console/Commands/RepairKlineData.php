@@ -60,6 +60,12 @@ class RepairKlineData extends Command
             foreach ($currencyList as $k => $v) {
                 foreach (self::$period as $n => $i) {
                     $url = str_replace('{{name}}', $v['name'], str_replace('{{period}}', $i, self::$resoucesUrl));
+                    $file_headers = @get_headers($url);
+                    if(!$file_headers || $file_headers[0] == 'HTTP/1.1 404 Not Found' ||trim($file_headers[0]) == 'HTTP/1.1 403 Forbidden') {
+                        echo FormatOutput::red('资源不存在，url：' . $url, '') .PHP_EOL;
+                        continue;
+                    }
+
                     $resourcesString = file_get_contents($url);
                     if(! $resourcesString)
                     {
