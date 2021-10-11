@@ -53,7 +53,8 @@ var vue = new Vue({
 			let that = this;
 			var socket = io(socket_api);
 			socket.on('connect', function (datas) {
-				socket.emit('login', data.message.id);
+				//socket.emit('login', data.message.id);
+				console.log(datas)
 				// 后端推送来消息时
 				socket.on('kline', function (msg) {
 					if (msg.type == 'kline') {
