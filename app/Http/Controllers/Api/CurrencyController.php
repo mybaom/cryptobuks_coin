@@ -350,9 +350,10 @@ class CurrencyController extends Controller
 
         if($cbv) {
             try {
+                $cbv = json_decode(json_encode($cbv, JSON_UNESCAPED_UNICODE), true);
                 $newData = $this->getNewTimeData(1);
-                $cbv->change = $newData['proportion'] ? $newData['proportion'] : $cbv->change;
-                $cbv->now_price = $newData['now_price'] ? $newData['now_price'] : $cbv->now_price;
+                $cbv['change'] = $newData['proportion'];
+                $cbv['now_price'] = $newData['now_price'];
             }catch (\Exception $e)
             {
 

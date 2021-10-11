@@ -1,6 +1,7 @@
 <?php
 namespace Tests;
 
+use App\OfferProduct;
 use App\Service\RedisService;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Illuminate\Support\Facades\DB;
@@ -85,6 +86,10 @@ class TestOfferProduct extends BaseTestCase
     }
 
     public function testProportion(){
+        $cbv = OfferProduct::getProductById(1);
+        $cbv->change = 1;
+        var_dump($cbv->change);
+        die;
         $time = time();
         $minute = date('YmdHi', $time);
         $yesteDayMinute = date('YmdHi', $time - 3600 * 24);
