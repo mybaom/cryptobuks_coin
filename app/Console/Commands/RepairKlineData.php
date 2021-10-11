@@ -2,6 +2,7 @@
 namespace App\Console\Commands;
 
 use App\Service\RedisService;
+use App\Utils\FormatOutput;
 use Elasticsearch\Client;
 use Elasticsearch\ClientBuilder;
 use Illuminate\Console\Command;
@@ -59,31 +60,80 @@ class RepairKlineData extends Command
             foreach ($currencyList as $k => $v) {
                 foreach (self::$period as $n => $i) {
                     $url = str_replace('{{name}}', $v['name'], str_replace('{{period}}', $i, self::$resoucesUrl));
-//                    $resources = file_get_contents($url);
-//                    if($resources)
-//                    {
-//
-//                    }
-//                    FormatOutput
-                    echo $url . "\n";
+                    $resourcesString = file_get_contents($url);
+                    if(! $resourcesString)
+                    {
+                        echo FormatOutput::red('获取资源失败，url：' . $url, '') .PHP_EOL;
+                        continue;
+                    }
+                    $resources = json_decode($resourcesString, true);
+                    if(empty($resources['data']) || empty($resources['status']) || $resources['status'] != 'ok')
+                    {
+                        echo FormatOutput::red('获取资源数据失败，url：' . $url, '') .PHP_EOL;
+                        continue;
+                    }
+                    if(empty($resources['ch']))
+                    {
+                        echo FormatOutput::red('获取资源类型失败，url：' . $url, '') .PHP_EOL;
+                        continue;
+                    }
+                    if(strpos($resources['ch'], 'usdt') === false)
+                    {
+                        echo FormatOutput::red('资源类型非USDT，url：' . $url, '') .PHP_EOL;
+                        continue;
+                    }
+                    $this->executeResources($v, $resources['data'], $i);
                 }
             }
         }
-
     }
 
-    public function setEs($market_data)
+    public function executeResources($currency, $resources, $period)
+    {
+        try {
+            foreach ($resources as $k => $v)
+            {
+                $marketData = [
+                    "id"             => $v['id'],
+                    "period"         => $period,
+                    "base-currency"  => $currency['name'],
+                    "quote-currency" => "USDT",
+                    "open"           => $v['open'],
+                    "close"          => $v['close'],
+                    "high"           => $v['high'],
+                    "low"            => $v['low'],
+                    "vol"            => $v['vol'],
+                    "amount"         => $v['amount']
+                ];
+
+                $setEsResult = $this->setEs($marketData);
+
+                if(! $setEsResult)
+                {
+                    echo FormatOutput::red("写入Es失败，名称：$currency[name]，类型：$period " . "时间：$v[id]") .PHP_EOL;
+                }
+
+            }
+        }catch (\Exception $e){
+            $message = $e->getMessage();
+            echo FormatOutput::red("异常：" . $message .  "，名称：$currency[name]，类型：$period " . "，数据：" . json_encode($v, JSON_UNESCAPED_UNICODE)) .PHP_EOL;
+            die;
+        }
+    }
+
+    public function setEs($marketData)
     {
         $es_client = self::getEsearchClient();
-        $type = $market_data['base-currency'] . '.' . $market_data['quote-currency'] . '.' . $market_data['period'];
+        $type = $marketData['base-currency'] . '.' . $marketData['quote-currency'] . '.' . $marketData['period'];
         // $market_data['close']>6600&&var_dump($market_data);
         $params = [
             'index' => 'market.kline',
             'type' => 'doc',
-            'id' => $type . '.' . $market_data['id'],
-            'body' => $market_data,
+            'id' => $type . '.' . $marketData['id'],
+            'body' => $marketData,
         ];
         $response = $es_client->index($params);
+
         return $response;
     }
 
