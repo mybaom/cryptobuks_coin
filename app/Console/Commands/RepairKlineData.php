@@ -66,7 +66,11 @@ class RepairKlineData extends Command
                         echo FormatOutput::red('获取资源失败，url：' . $url, '') .PHP_EOL;
                         continue;
                     }
-                    $resources = json_decode($resourcesString, true);
+                    try{
+                        $resources = json_decode($resourcesString, true);
+                    }catch (\Exception $e){
+                        echo FormatOutput::red('获取资源数据失败，url：' . $url, '') .PHP_EOL;
+                    }
                     if(empty($resources['data']) || empty($resources['status']) || $resources['status'] != 'ok')
                     {
                         echo FormatOutput::red('获取资源数据失败，url：' . $url, '') .PHP_EOL;
@@ -85,6 +89,8 @@ class RepairKlineData extends Command
                     $this->executeResources($v, $resources['data'], $i);
                 }
             }
+
+            echo FormatOutput::red('end', '') .PHP_EOL;
         }
     }
 
