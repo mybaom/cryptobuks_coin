@@ -59,7 +59,7 @@ var vue = new Vue({
 					console.log(msg);
 					if (msg.type == 'kline') {
 						// now_price
-						let list = that.lists;
+						console.log(that.lists)
 						that.lists.find((item) => item.currency == msg.currency_id).usdt_price = msg.close;
 
 						// for (i in list) {
