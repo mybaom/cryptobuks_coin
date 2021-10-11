@@ -54,9 +54,9 @@ var vue = new Vue({
 			var socket = io(socket_api);
 			socket.on('connect', function (datas) {
 				//socket.emit('login', data.message.id);
-				console.log(datas)
 				// 后端推送来消息时
 				socket.on('kline', function (msg) {
+					console.log(msg);
 					if (msg.type == 'kline') {
 						// now_price
 						let list = that.lists;
