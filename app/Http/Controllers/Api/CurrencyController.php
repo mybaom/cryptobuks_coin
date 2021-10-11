@@ -15,6 +15,7 @@ use App\MarketHour;
 use App\CurrencyQuotation;
 use App\AreaCode;
 use App\UsersWallet;
+use Illuminate\Support\Facades\Redis;
 
 class CurrencyController extends Controller
 {
@@ -349,15 +350,10 @@ class CurrencyController extends Controller
         $cbv = OfferProduct::getProductById(1);
 
         if($cbv) {
-            try {
-                $cbv = json_decode(json_encode($cbv, JSON_UNESCAPED_UNICODE), true);
-                $newData = $this->getNewTimeData(1);
-                $cbv['change'] = $newData['proportion'];
-                $cbv['now_price'] = $newData['now_price'];
-            }catch (\Exception $e)
-            {
-
-            }
+            $cbv = json_decode(json_encode($cbv, JSON_UNESCAPED_UNICODE), true);
+            $newData = $this->getNewTimeData(1);
+            $cbv['change'] = $newData['proportion'];
+            $cbv['now_price'] = $newData['now_price'];
 
             if (count($currency[0]['quotation']) < 3){
                 $currency[0]['quotation'][] = $cbv;
