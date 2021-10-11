@@ -377,7 +377,7 @@ class OfferProductController extends Controller
         $todayCacheKey = 'offer_product_data_' . $minute . '_' . $id;
         $yestedayCacheKey = 'offer_product_data_' . $yesteDayMinute . '_' . $id;
         $currentDataString = $redis->get($todayCacheKey);
-        $yesteDayDataString = $redis->get($todayCacheKey);
+        $yesteDayDataString = $redis->get($yestedayCacheKey);
 
         if(empty($currentDataString)){
             $getCurrentMinuteData = DB::table('offer_product_increase_record')
