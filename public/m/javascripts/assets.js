@@ -56,23 +56,18 @@ var vue = new Vue({
 				//socket.emit('login', data.message.id);
 				// 后端推送来消息时
 				socket.on('kline', function (msg) {
-					console.log(msg);
-					if (msg.type == 'kline') {
-						// now_price
-						console.log(that.lists)
-						that.lists.find((item) => item.currency == msg.currency_id).usdt_price = msg.close;
+					// console.log(msg);
+					// // if (msg.type == 'kline') {
+					// 	// now_price
+					// 	console.log(that.lists)
+					// 	that.lists.find((item) => item.currency == msg.currency_id).usdt_price = msg.close;
 
-						// for (i in list) {
-						// 	that.lists.find((item) => item.currency == msg.currency_id)
-						// 	//quotation.find((item) => item.currency_name == 'BTC').now_price},
-						// 	that.lists.find((item) => item.currency == msg.currency_id).now_price
-						//
-						//
-						// 	if (list[i].currency == msg.currency_id) {
-						// 		that.lists[i].usdt_price = msg.close;
-						// 	}
-						// }
-					}
+						for (i in list) {
+							if (list[i].currency == msg.currency_id) {
+								that.lists[i].usdt_price = msg.close;
+							}
+						}
+					// }
 				});
 			});
 		},
