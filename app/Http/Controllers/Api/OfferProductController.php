@@ -19,8 +19,8 @@ class OfferProductController extends Controller
             {
                 try{
                     $info = $this->getNewTimeData2($v['id']);
-                    $result[$k]['rise_fall_symbol'] = $info['rise_fall_symbol'];
-                    $result[$k]['rise_fall_probability_today'] = $info['proportion'];
+                    $result[$k]->rise_fall_symbol = $info['rise_fall_symbol'];
+                    $result[$k]->rise_fall_probability_today = $info['proportion'];
                 }catch (\Exception $e){
 
                 }
