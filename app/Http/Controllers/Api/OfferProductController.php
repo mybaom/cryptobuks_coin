@@ -417,7 +417,7 @@ class OfferProductController extends Controller
 
         $nowPrice = $this->subPrice(rand($currentData['lowest_price'] * 10000000000
                 , $currentData['highest_price'] * 10000000000) / 10000000000);
-        $nowPrice = $this->numberAddSubRand($nowPrice, $currentData['open_price'] < $currentData['close_price'] ? true : false);
+        $nowPrice = $this->subPrice($this->numberAddSubRand($nowPrice, $currentData['open_price'] < $currentData['close_price'] ? true : false));
         // 涨幅百分比
         $proportion = substr($this->numberAddSubRand(round(abs(($currentData['open_price'] - $yesteDayData['close_price']) / $yesteDayData['close_price']) * 100, 2), $nowPrice > $yesteDayData['close_price']), 0, 5);
         $price1 = $this->subPrice($this->numberAddSubRand($this->subPrice( rand($currentData['lowest_price'] * 10000000000, $currentData['highest_price'] * 10000000000) / 10000000000), $nowPrice > $yesteDayData['close_price']));
