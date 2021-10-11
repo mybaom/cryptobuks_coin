@@ -60,11 +60,18 @@ var vue = new Vue({
 					if (msg.type == 'kline') {
 						// now_price
 						let list = that.lists;
-						for (i in list) {
-							if (list[i].currency == msg.currency_id) {
-								that.lists[i].usdt_price = msg.close;
-							}
-						}
+						that.lists.find((item) => item.currency == msg.currency_id).usdt_price = msg.close;
+
+						// for (i in list) {
+						// 	that.lists.find((item) => item.currency == msg.currency_id)
+						// 	//quotation.find((item) => item.currency_name == 'BTC').now_price},
+						// 	that.lists.find((item) => item.currency == msg.currency_id).now_price
+						//
+						//
+						// 	if (list[i].currency == msg.currency_id) {
+						// 		that.lists[i].usdt_price = msg.close;
+						// 	}
+						// }
 					}
 				});
 			});
