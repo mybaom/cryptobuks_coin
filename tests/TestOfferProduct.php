@@ -1,6 +1,7 @@
 <?php
 namespace Tests;
 
+use App\Currency;
 use App\OfferProduct;
 use App\Service\RedisService;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
