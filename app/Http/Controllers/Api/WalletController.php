@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\CurrencyQuotation;
 use App\MyBank;
 use Illuminate\Support\Carbon;
 use App\Conversion;
@@ -634,22 +635,22 @@ class WalletController extends Controller
                 }
             }
 
-            $currencyInfo = Currency::find($currency_id);
-            $hzcurrencyInfo = Currency::find($hzcurrency);
+            $currencyInfo = DB::table('currency_quotation')->where('currency_id', $currency_id)->first();
+            $hzcurrencyInfo = DB::table('currency_quotation')->where('currency_id', $hzcurrency)->first();
             if (empty($hzcurrencyInfo) || empty($currencyInfo)) {
                 return $this->error('currency not found.');
             }
-            if($currencyInfo->price <= 0)
+            if($currencyInfo->now_price <= 0)
             {
                 return $this->error('currency price is zero.');
             }
-            if($hzcurrencyInfo->price <= 0)
+            if($hzcurrencyInfo->now_price <= 0)
             {
                 return $this->error('transfer currency price is zero.');
             }
 
             // 计算划转账户增加数量
-            $hzNumber = sprintf("%.4f", $currencyInfo->price / $hzcurrencyInfo->price * $number);
+            $hzNumber = sprintf("%.4f", $currencyInfo->now_price / $hzcurrencyInfo->now_price * $number);
         }catch (\Exception $e){
             return $this->error($e->getMessage());
         }
