@@ -31,6 +31,7 @@ var vue = new Vue({
 		that.listAjax(text);
 		that.swipers();
 		that.socket();
+		setInterval(this.getNowData, 3000);
 	},
 	filters: {
 		toFixedTwo: function (value) {
@@ -74,6 +75,30 @@ var vue = new Vue({
 				});
 			});
 		},
+		getNowData: function () {
+			let that = this;
+			$.ajax({
+				url: _API + "getNewTimeData",
+				type: "GET",
+				dataType: "json",
+				async: true,
+				data: {id: get_param('id')},
+				beforeSend: function beforeSend(request) {
+					request.setRequestHeader("Authorization", token);
+				},
+				success: function (data) {
+					if (data.type == 'ok') {
+						var res = data.message;
+						that.Lists.find((item) => item.currency_name == 'CBV').usdt_price = res.now_price;
+					} else if (data.type == '999') {
+						window.location = 'login.html';
+					}
+				},
+				error: function () {
+
+				}
+			})
+	    },
 		listAjax(texts) {
 			let that = this;
 			initDataTokens({
