@@ -281,6 +281,21 @@
                 </el-dropdown>
             </div>
         </div>
+        <div class="flex  bizhong ">
+            <p data-localize="zdy.huazhuanzhi" style="color:#90a2b0;font-size:16px;margin-right: 20px;">划转至</p>
+            <div class="ml10 bizhong-ml">
+                <el-dropdown trigger="click" @command="hzselectedCurrency">
+                    <span class="el-dropdown-link">
+                        {{value3}}<i class="el-icon-arrow-down el-icon--right"></i>
+                    </span>
+                    <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item v-for="item in currencyList" :key="item.id" :command="item">
+                            {{item.name}}
+                        </el-dropdown-item>
+                    </el-dropdown-menu>
+                </el-dropdown>
+            </div>
+        </div>
         <div class="hz-num">
             <div class="hz-title" data-localize="assets.transnum">划转数量</div>
             <div class="hz-row">
@@ -337,6 +352,7 @@
                 currency: '',
                 numbers: '',
                 currencyList: [],
+                hzcurrency: '',
                 value3: "",
                 accountList: [],
                 value3Id: '',
@@ -681,6 +697,12 @@
                     }
 
                 },
+                // 划转币种选择
+                hzselectedCurrency(command) {
+                    var that = this;
+                    that.value3 = command.name;
+                    that.hzcurrency = command.id;
+                },
                 // 划转
                 sumbitOrder() {
                     var that = this;
@@ -715,7 +737,8 @@
                             currency_id: that.currency,
                             number: that.numbers,
                             from_field: froms,
-                            to_field: tos
+                            to_field: tos,
+                            hzcurrency: that.hzcurrency,
                         }
                     }, function (res) {
                         layer_msg(res.message);
