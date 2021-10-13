@@ -279,4 +279,16 @@ class TestOfferProduct extends BaseTestCase
         var_dump($currencies);
     }
 
+    public function testa(){
+        $std = new \stdClass();
+        $type = 'type2';
+        $number = 100;
+        $std->type1 = 53212.03;
+        $std->type2 = 0.0000018923;
+
+        echo sprintf("%.4f", $std->type1 / $std->type2 * $number);
+
+        //echo $std->$type;
+    }
+
 }

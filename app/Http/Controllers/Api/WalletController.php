@@ -578,7 +578,181 @@ class WalletController extends Controller
             return $this->error('操作失败:' . $e->getMessage());
         }
     }
-//资产划转
+
+    /**
+     * 账户划转
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function transferWallet(Request $request)
+    {
+        $typeList = [
+            'legal' => 1,
+            'lever' => 3,
+            'micro' => 4,
+            'change' => 2,
+        ];
+        $user_id = Users::getUserId();
+        $currency_id = Input::get("currency_id", '');
+        $hzcurrency = Input::get("hzcurrency", '');
+        $number = Input::get("number", '');
+        $from_field = $request->get('from_field', ""); //出
+        $to_field = $request->get('to_field', ""); //入
+
+        if(!in_array($from_field, $typeList) || !in_array($to_field, $typeList))
+        {
+            return $this->error('type error');
+        }
+
+        if($currency_id == $hzcurrency && $from_field == $to_field)
+        {
+            return $this->error('同一币种的同一账户无法划转');
+        }
+
+        if (empty($from_field) || empty($number) || empty($to_field) || empty($currency_id) || empty($hzcurrency)) {
+            return $this->error('参数错误');
+        }
+        if ($number < 0) {
+            return $this->error('输入的金额不能为负数');
+        }
+        $from_account_log_type = $this->fromArr[$from_field];
+        $to_account_log_type =  $this->toArr[$to_field];
+        $memo = $this->mome[$from_field] . '划转' . $this->mome[$to_field];
+        if ($from_field == 'lever') {
+            if ($this->hasLeverTrade($user_id)) {
+                return $this->error('您有正在进行中的杆杠交易,不能进行此操作');
+            }
+        }
+
+        $currencyInfo   = Currency::find($currency_id);
+        $hzcurrencyInfo = Currency::find($hzcurrency);
+        if(empty($hzcurrencyInfo) || empty($currencyInfo))
+        {
+            return $this->error('currency not found.');
+        }
+
+        // 计算划转账户增加数量
+        $hzNumber = sprintf("%.4f", $currencyInfo->usdt_price / $hzcurrencyInfo->usdt_price * $number);
+
+        try {
+            DB::beginTransaction();
+            $userWallet = UsersWallet::where('user_id', $user_id)
+                ->lockForUpdate()
+                ->where('currency', $currency_id)
+                ->first();
+            if (!$userWallet) {
+                throw new \Exception('钱包不存在');
+            }
+            $hzUserWallet = UsersWallet::where('user_id', $user_id)
+                ->lockForUpdate()
+                ->where('currency', $hzcurrency)
+                ->first();
+            if (!$hzUserWallet) {
+                throw new \Exception('钱包不存在');
+            }
+            if($userWallet->$from_field < $number){
+                throw new \Exception('钱包余额不足');
+            }
+
+            // 扣除划转账户余额
+            $decrementBlanceResult = DB::table('users_wallet')
+                ->where('user_id', $user_id)
+                ->where('currency', $currency_id)
+                ->where($from_field, '>=', $number)
+                ->decrement($from_field, $number);
+
+            $incrementBlanceResult = DB::table('users_wallet')
+                ->where('user_id', $user_id)
+                ->where('currency', $hzcurrency)
+                ->increment($to_field, $hzNumber);
+
+            if(!$decrementBlanceResult || !$incrementBlanceResult)
+            {
+                throw new \Exception('划转失败');
+            }
+
+            $result = $this->setTransferWalletLogs($userWallet, -$number, $from_account_log_type, $typeList[$from_field], $memo);
+            if ($result !== true) {
+                throw new \Exception($result);
+            }
+            $result = $this->setTransferWalletLogs($hzUserWallet, $hzNumber, $to_account_log_type, $typeList[$to_field], $memo);
+            if ($result !== true) {
+                throw new \Exception($result);
+            }
+
+            DB::commit();
+            return $this->success('划转成功');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return $this->error('操作失败:' . $e->getMessage());
+        }
+    }
+
+    /**
+     * 设置账户划转记录
+     * @param $userWallet
+     * @param $change
+     * @param $account_log_type
+     * @param $balanceType
+     * @param $memo
+     * @param false $isLock
+     * @param int $extra_sign
+     * @param string $extra_data
+     * @return false
+     * @throws \Exception
+     */
+    private function setTransferWalletLogs($userWallet, $change, $account_log_type, $balanceType, $memo, $isLock = false, $extra_sign = 0, $extra_data = '')
+    {
+        $user_id = $userWallet->user_id;
+        $fields = [
+            '',
+            'legal_balance',
+            'change_balance',
+            'lever_balance',
+            'micro_balance',
+            'insurance_balance'
+        ];
+        $field = ($isLock ? 'lock_' : '') . $fields[$balanceType];
+        $before = $userWallet->$field;
+        $after = bc_add($before, $change);
+        $now = time();
+        AccountLog::unguard();
+        $account_log = AccountLog::create([
+            'user_id' => $user_id,
+            'value' => $change,
+            'info' => $memo,
+            'type' => $account_log_type,
+            'created_time' => $now,
+            'currency' => $userWallet->currency,
+        ]);
+
+        WalletLog::unguard();
+        $wallet_log = WalletLog::create([
+            'account_log_id' => $account_log->id,
+            'user_id' => $user_id,
+            'from_user_id' => $user_id,
+            'wallet_id' => $userWallet->id,
+            'balance_type' => $balanceType,
+            'lock_type' => $isLock ? 1 : 0,
+            'before' => $before,
+            'change' => $change,
+            'after' => $after,
+            'memo' => $memo,
+            'extra_sign' => $extra_sign,
+            'extra_data' => $extra_data,
+            'create_time' => $now,
+        ]);
+
+        if(!$wallet_log || !$account_log)
+        {
+            throw new \Exception('update log fail.');
+        }
+
+        return false;
+    }
+
+
+    //资产划转
     public function hzhistory(Request $request)
     {
         $user_id = Users::getUserId();

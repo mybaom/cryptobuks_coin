@@ -208,6 +208,7 @@ Route::group([ 'middleware' => ['lang', /*'check_user'*/]], function () {
         Route::post('wallet/detail', 'Api\WalletController@getWalletDetail');//用户账户资产详情
         //Route::post('wallet/change', 'Api\WalletController@changeWallet')->middleware(['demo_limit']);//账户划转
         Route::post('wallet/change', 'Api\WalletController@changeWallet');//账户划转
+        Route::post('wallet/transferWallet', 'Api\WalletController@transferWallet');//账户划转（支持币币账户和法币账户划转）
         Route::any('wallet/hzhistory', 'Api\WalletController@hzhistory');//账户历史记录
 
 		Route::post('wallet/charge_req', 'Api\WalletController@chargeReq');
