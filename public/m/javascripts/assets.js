@@ -49,7 +49,7 @@ var vue = new Vue({
 			that.listAjax(text);
 		},
 		//socket连接封装
-		socket() {
+		socket(list) {
 			let that = this;
 			var socket = io(socket_api);
 			socket.on('connect', function (datas) {
@@ -61,11 +61,11 @@ var vue = new Vue({
 					// 	// now_price
 					// 	console.log(that.lists)
 					// 	that.lists.find((item) => item.currency == msg.currency_id).usdt_price = msg.close;
-					console.log(that.lists)
+					console.log(ist)
 
-						for (i in that.lists) {
-							if (that.lists[i].currency == msg.currency_id) {
-								that.lists[i].usdt_price = msg.close;
+						for (i in list) {
+							if (list[i].currency == msg.currency_id) {
+								list[i].usdt_price = msg.close;
 							}
 						}
 					// }
@@ -86,7 +86,7 @@ var vue = new Vue({
 						that.datas = res.message;
 					}
 					// socket实时更新数据
-					that.socket();
+					that.socket(that.Lists);
 					
 					that.ulipaiList=res.message.ulipaigoods;
 					that.trusteeship_funds=res.message.trusteeship_funds;
