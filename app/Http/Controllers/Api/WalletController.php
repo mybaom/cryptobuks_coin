@@ -599,40 +599,49 @@ class WalletController extends Controller
         $from_field = $request->get('from_field', ""); //出
         $to_field = $request->get('to_field', ""); //入
 
-        if(empty($typeList[$from_field]) || empty($typeList[$to_field]))
-        {
-            return $this->error('type error');
-        }
-
-        if($currency_id == $hzcurrency && $from_field == $to_field)
-        {
-            return $this->error('同一币种的同一账户无法划转');
-        }
-
-        if (empty($from_field) || empty($number) || empty($to_field) || empty($currency_id) || empty($hzcurrency)) {
-            return $this->error('参数错误');
-        }
-        if ($number < 0) {
-            return $this->error('输入的金额不能为负数');
-        }
-        $from_account_log_type = $this->fromArr[$from_field];
-        $to_account_log_type =  $this->toArr[$to_field];
-        $memo = $this->mome[$from_field] . '划转' . $this->mome[$to_field];
-        if ($from_field == 'lever') {
-            if ($this->hasLeverTrade($user_id)) {
-                return $this->error('您有正在进行中的杆杠交易,不能进行此操作');
+        try {
+            if (empty($typeList[$from_field]) || empty($typeList[$to_field])) {
+                return $this->error('type error');
             }
-        }
 
-        $currencyInfo   = Currency::find($currency_id);
-        $hzcurrencyInfo = Currency::find($hzcurrency);
-        if(empty($hzcurrencyInfo) || empty($currencyInfo))
-        {
-            return $this->error('currency not found.');
-        }
+            if ($currency_id == $hzcurrency && $from_field == $to_field) {
+                return $this->error('同一币种的同一账户无法划转');
+            }
 
-        // 计算划转账户增加数量
-        $hzNumber = sprintf("%.4f", $currencyInfo->usdt_price / $hzcurrencyInfo->usdt_price * $number);
+            if (empty($from_field) || empty($number) || empty($to_field) || empty($currency_id) || empty($hzcurrency)) {
+                return $this->error('参数错误');
+            }
+            if ($number < 0) {
+                return $this->error('输入的金额不能为负数');
+            }
+            $from_account_log_type = $this->fromArr[$from_field];
+            $to_account_log_type = $this->toArr[$to_field];
+            $memo = $this->mome[$from_field] . '划转' . $this->mome[$to_field];
+            if ($from_field == 'lever') {
+                if ($this->hasLeverTrade($user_id)) {
+                    return $this->error('您有正在进行中的杆杠交易,不能进行此操作');
+                }
+            }
+
+            $currencyInfo = Currency::find($currency_id);
+            $hzcurrencyInfo = Currency::find($hzcurrency);
+            if (empty($hzcurrencyInfo) || empty($currencyInfo)) {
+                return $this->error('currency not found.');
+            }
+            if($currencyInfo->usdt_price <= 0)
+            {
+                return $this->error('currency price is zero.');
+            }
+            if($hzcurrencyInfo->usdt_price <= 0)
+            {
+                return $this->error('transfer currency price is zero.');
+            }
+
+            // 计算划转账户增加数量
+            $hzNumber = sprintf("%.4f", $currencyInfo->usdt_price / $hzcurrencyInfo->usdt_price * $number);
+        }catch (\Exception $e){
+            return $this->error($e->getMessage());
+        }
 
         try {
             DB::beginTransaction();
