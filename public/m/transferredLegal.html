@@ -286,7 +286,7 @@
             <div class="ml10 bizhong-ml">
                 <el-dropdown trigger="click" @command="hzselectedCurrency">
                     <span class="el-dropdown-link">
-                        {{value3}}<i class="el-icon-arrow-down el-icon--right"></i>
+                        {{value4}}<i class="el-icon-arrow-down el-icon--right"></i>
                     </span>
                     <el-dropdown-menu slot="dropdown">
                         <el-dropdown-item v-for="item in currencyList" :key="item.id" :command="item">
@@ -700,7 +700,7 @@
                 // 划转币种选择
                 hzselectedCurrency(command) {
                     var that = this;
-                    that.value3 = command.name;
+                    that.value4 = command.name;
                     that.hzcurrency = command.id;
                 },
                 // 划转
