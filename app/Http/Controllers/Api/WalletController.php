@@ -628,7 +628,7 @@ class WalletController extends Controller
             if (empty($hzcurrencyInfo) || empty($currencyInfo)) {
                 return $this->error('currency not found.');
             }
-            if($currencyInfo->usdt_price <= 0)
+            if($currencyInfo->price <= 0)
             {
                 return $this->error('currency price is zero.');
             }
