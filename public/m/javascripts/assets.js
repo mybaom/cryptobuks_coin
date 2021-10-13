@@ -64,11 +64,11 @@ var vue = new Vue({
 					// 	// now_price
 					// 	console.log(that.lists)
 					// 	that.lists.find((item) => item.currency == msg.currency_id).usdt_price = msg.close;
-					console.log(that.list)
+					console.log(that.lists)
 
-						for (i in that.list) {
-							if (that.list[i].currency == msg.currency_id) {
-								that.list[i].usdt_price = msg.close;
+						for (i in that.lists) {
+							if (that.lists[i].currency == msg.currency_id) {
+								that.lists[i].usdt_price = msg.close;
 							}
 						}
 					// }
