@@ -109,6 +109,7 @@ class WalletController extends Controller
            // $change_wallet['totle'] += $num * $v['cny_price'];
             $change_wallet['usdt_totle'] += $num * $v['usdt_price'];
         }
+        $change_wallet['balance'] = $newChaneWallet;
         
         $change_wallet['CNY'] = '';
         $lever_wallet['balance'] = UsersWallet::where('user_id', $user_id)
