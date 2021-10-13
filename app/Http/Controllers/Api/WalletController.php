@@ -768,7 +768,7 @@ class WalletController extends Controller
             throw new \Exception('update log fail.');
         }
 
-        return false;
+        return true;
     }
 
 
