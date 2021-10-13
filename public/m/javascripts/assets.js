@@ -60,7 +60,7 @@ var vue = new Vue({
 				// 后端推送来消息时
 				socket.on('kline', function (msg) {
 					// console.log(msg);
-					// // if (msg.type == 'kline') {
+					if (msg.type == 'kline') {
 					// 	// now_price
 					// 	console.log(that.lists)
 					// 	that.lists.find((item) => item.currency == msg.currency_id).usdt_price = msg.close;
@@ -70,7 +70,7 @@ var vue = new Vue({
 								vue.Lists[i].usdt_price = msg.close;
 							}
 						}
-					// }
+					}
 				});
 			});
 		},
