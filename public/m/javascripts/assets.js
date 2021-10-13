@@ -64,7 +64,7 @@ var vue = new Vue({
 					// 	// now_price
 					// 	console.log(that.lists)
 					// 	that.lists.find((item) => item.currency == msg.currency_id).usdt_price = msg.close;
-					console.log(vue)
+					console.log(vue.lists)
 
 						for (i in vue.lists) {
 							if (vue.lists[i].currency == msg.currency_id) {
