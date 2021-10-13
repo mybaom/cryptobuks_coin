@@ -30,6 +30,7 @@ var vue = new Vue({
 		let text = '';
 		that.listAjax(text);
 		that.swipers();
+		that.socket();
 	},
 	filters: {
 		toFixedTwo: function (value) {
