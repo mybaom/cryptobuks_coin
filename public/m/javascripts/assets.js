@@ -47,9 +47,12 @@ var vue = new Vue({
 			let that = this;
 			let text = $('.search_text').val();
 			that.listAjax(text);
+			// socket实时更新数据
+			that.socket();
 		},
 		//socket连接封装
-		socket(that) {
+		socket() {
+			let that = this;
 			var socket = io(socket_api);
 			socket.on('connect', function (datas) {
 				//socket.emit('login', data.message.id);
@@ -84,9 +87,6 @@ var vue = new Vue({
 					if (texts == '') {
 						that.datas = res.message;
 					}
-
-					// socket实时更新数据
-					that.socket(that);
 					
 					that.ulipaiList=res.message.ulipaigoods;
 					that.trusteeship_funds=res.message.trusteeship_funds;
