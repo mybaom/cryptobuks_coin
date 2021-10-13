@@ -359,6 +359,8 @@
                 value3Id: '',
                 imgsIndex:0,
                 imgsTwoIndex:0,
+                fromfield: '',
+                tofield: '',
                 imgs:['data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAADj0lEQVRIS8WXz09cVRTHv983M1DaqKShCixMWlur7czADCRqZl7txKRNTN1YA7rXGkVF19ZYTVj7E2z0DxBJGhcaEpsYUuahNRlmKPMgtjXtjggllWootgz3a+4MIPTnVBm4i7d479zzufe8c8/5XqKM0d/fX72l/uGDAeKADFpJ7ZCw1U4leVnCBTrILAgnZ++r/uHZXbuu3c0t72QwkMvVVqGqU9IbAOru5mzx+7Sk7oJT+DgVi83cbs5twd7weDtoPgHwkJ0sYJTgCRilDZxff7/gT9n39TvCDxqYxxwYl45zmEB0ETYJOZ3Jlj3f3Ap+E7ivry/Q8Mjjn5J8vTRBg5A5mmxpSpez4/SIn6RRF8B9JXt+MX9l6q1UKlVYOX8VWFLAy431EngB4By08E6yJfplacP3NOgNjx4BAx8BqgFwIhHb205yYcnLKvBQzu+WYHd6mTCHEvHoz/eEu8F4KDv6lOB8D2AriZ5ELNxxE9gbGW+HMb2Q5kg983+hS4AiXPwRZA2BlxLxcG/xB9iHzd6QQucAbJPMq24pvGs2hnL+KxKsz0vz3PJoKrZ9pghOD+ePkXzfJlIyHnl6zYgrHHnZ/CmbcJI+cFsix5jJZEJzzqYJAnVy4LrNYa8S4HTGT9JBWsB0jfm7kT+N5A8Zw+8EjbrxSFMloEs+09n8GYJRx9Fz9HL+5xA6KB1NtES6Kgn2sv57AD4E0U1v2D8N4gkDs39fPHqqkuB0Lr+f4gDIX+hli6VvWzCk+icjkclKggczmQbH2TRhs5vp4XyBZGDit/FgW1vbcmWpxAJsOW7cuceWzsK6gn3fr5q5Dtsyr69zqMcbHMfYUE/ZrD4NbURybcBxktCzXEAAnEnGw82VSKoln17WHwHQVCwgq0qmgeu2rlPJ3LAmUWqLF2tDmi22RRJHErHwV2sZci/nvwzB+rykWbPbdaN/LCuQoaz/ooCv11UI/Pvzx3oAvVYJ6QPoeDIesb6LY5XmGhhQMPTAmJWjz6+l2BPxbWFmb1sqxWWleQt5q0DjTv8zgKXVSYMS3y0324sNn+oCl+Stjs9fmX7zjvJ2ZULdKOjtObcyVVRaC4Gzm3F12tpfxeY6BhZ2U3QBHLbntBhKYlJ0OpPNZQr6lXArAoMm+DbpdAAq8wrDacn89yvMygX0nz9fff9f1w6COACwFdJ2ALWLNjMgLwLKQDj5Z5mXtn8AbtDYHY9my00AAAAASUVORK5CYII=','data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAEf0lEQVRIS8VXW2wUZRT+zsy2O7PFUpsil2jiLVJ9EB4M2oZqExMrCV4CbHdXow9GawC5JcyignE1KZFOkyraipiYqAk72w0RFaOQGIGaVo0PlBfxgoaQkFIaLm06M1t255h/u9vOdunulja6j7PnnO+fb875zvcTSvit2vSnd/6tS5pA8mMgfoAZdxKhWqQycImAv8H0Kzh19KrqO/LtZkoUK0uFAp6OXK5SKpQtAL8CUE2xYuP/8xAc6rQt+91DkZuvTJczLXCwzQwA9B4ICzMFTzHTQWb0JJPOafmkb1A8Ty03b/F4pFoiNBDxWoDuH8fHBYC3GGFf7HrgecB+P8vSCmsvgTZkqDxBjF1GWO0p5Y1D7eZKh6mVgIcz8R8OjCqbj0Uo6c7PAfZ3syyfTRgArwPIYqS2xTTffoC4FNDJGKaAbrYQ5A6AVcGUc7s3EG+mVDYmBzig250E3sDgSxKwOqr5+mYGmBsd0s06Bh0GUM2grpimbMwDDrYlAiDHAGCl4Hk0rpXlgTa3203E/AyB6hm4TRQh4ByDe5noQPd25cjUg/r1a3Uykt8DUBkcimk+gSHygEz3/gFgAbPzcixcsd9dILQ7UctlzicA6oow0EfXpBeir3tPu+OCuvUSAFHzou1R7jm0ja6kgYN7rAgkvMnAiZimPjIlqRGgLwGuLI12Ggb4KUNTj7njA7p1PN1wDt4ydqgRavmIy4aHrfNiTom4Ibrd92M2IbAncS9Jzk8ASgSdgBpmR3ootsP7W/aJ6HZm6hFzXlmpLqFAm72aiL8G+JSh+Zblvq3ZC1Axeqcjos/Q1Pop9frFnDPTExRstz8A80YGdsU0tTUbKBpJYv6uNHqvH+UQPe5uuKBuvQHgbRB1UlC3BJUPphiN8bB6fIJm3fqUgOdnAwzgc0NTJ2oEdasRwA8AfqaAbg0SsIDKlEXRrXQhCxTUrb8A3DUrYMYZI6zena2xpnV0cXm5dF50t3hjIWVy6hfFE49PKktAt20Ce2cJPGaE1YkaQo7lFbbAS/63wBEulyvsBBhjk1SPpRZFd86bW6qBM4bmorpjdHF5Mk314LTNFdStzwA8NyuqCzXX/zFODO5yCQj1G5qyfIpc9pagzzMQEPskwMvSAlJIMv27R+6TyzxiS829ZJayJBj4ioCbSvneDIwQ8GTRJZFeix1cpSTt9FoE0GJo6sc5a7E9Uct842sx1G69yAxR8+JIMrH0m9eqLk84kIBuBgkULWYEJOZnAdQzZ4wA4RyA3hSnDsTD8/K0vaARcMlkF4D1c2l9HOAwgarB2GeE1fVZrBzP1Rhhz8KKRIzAa+bG7EkdwvKA+YsBU212O818e9vNsnTWfp+A9OmEK3FSvDP+6qRBKNRk/nfMlZLssreMfQOmsqmgvc2Z4TxDT/0AHwTQM+Zxfq/x+YZE/JBp1pQnpaUAGgBaK+Y0XWemht4NnjaBqrIVEoQtLfEKA3GgTnv0Bq8w7gOs2sve+VaiCYT0pQ3AHQCqMjHifvTP+KUNR6+q3pIubf8C8rBQ3JEmtQIAAAAASUVORK5CYII=']
             },
             mounted: function () {
@@ -479,6 +481,7 @@
                 selectedOne(command,index) {
                     this.imgsIndex=index;
                     var that = this;
+                    this.fromfield = command;
                     if (command == 'lever') {
                         var j = 0;
                         for (var i = 0; i < that.accountList.length; i++) {
@@ -548,6 +551,7 @@
                 selectedTwo(command,index) {
                     var that = this;
                     this.imgsTwoIndex=index;
+                    this.tofield = command;
                     if (command == 'lever') {
                         that.value2 = getlg('contractAccount');
                         var j = 0;
@@ -709,30 +713,30 @@
                 // 划转
                 sumbitOrder() {
                     var that = this;
-                    var froms = '';
-                    var tos = '';
+                    // var froms = '';
+                    // var tos = '';
                     if (!that.numbers) {
                         layer_msg(getlg('hnum'));
                         return false;
                     }
-                    if (that.value1 == getlg('contractAccount')) {
-                        froms = 'lever'
-                    } else if (that.value1 == getlg('secondContractAccount')) {
-                        froms = 'micro'
-                    } else if (that.value1 == getlg('Flashexchange')) {
-                        froms = 'change'
-                    } else if (that.value1 == getlg('c2cAccount')) {
-                        froms = 'legal'
-                    }
-                    if (that.value2 == getlg('contractAccount')) {
-                        tos = 'lever'
-                    } else if (that.value2 == getlg('secondContractAccount')) {
-                        tos = 'micro'
-                    } else if (that.value2 == getlg('Flashexchange')) {
-                        tos = 'change'
-                    } else if (that.value2 == getlg('c2cAccount')) {
-                        tos = 'legal'
-                    }
+                    // if (that.value1 == getlg('contractAccount')) {
+                    //     froms = 'lever'
+                    // } else if (that.value1 == getlg('secondContractAccount')) {
+                    //     froms = 'micro'
+                    // } else if (that.value1 == getlg('Flashexchange')) {
+                    //     froms = 'change'
+                    // } else if (that.value1 == getlg('c2cAccount')) {
+                    //     froms = 'legal'
+                    // }
+                    // if (that.value2 == getlg('contractAccount')) {
+                    //     tos = 'lever'
+                    // } else if (that.value2 == getlg('secondContractAccount')) {
+                    //     tos = 'micro'
+                    // } else if (that.value2 == getlg('Flashexchange')) {
+                    //     tos = 'change'
+                    // } else if (that.value2 == getlg('c2cAccount')) {
+                    //     tos = 'legal'
+                    // }
                     initDataTokens({
                         // url: 'wallet/change',
                         url: 'wallet/transferWallet',
@@ -740,8 +744,8 @@
                         data: {
                             currency_id: that.currency,
                             number: that.numbers,
-                            from_field: froms,
-                            to_field: tos,
+                            from_field: that.fromfield,
+                            to_field: that.tofield,
                             hzcurrency: that.hzcurrency,
                         }
                     }, function (res) {
