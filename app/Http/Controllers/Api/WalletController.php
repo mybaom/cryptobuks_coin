@@ -630,7 +630,7 @@ class WalletController extends Controller
             }
             if($currencyInfo->price <= 0)
             {
-                return $this->error('currency price is zero.');
+                return $this->error('currency price is zero.' . json_encode($currencyInfo, JSON_UNESCAPED_UNICODE));
             }
             if($hzcurrencyInfo->price <= 0)
             {
