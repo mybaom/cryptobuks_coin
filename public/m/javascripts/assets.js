@@ -76,6 +76,7 @@ var vue = new Vue({
 			});
 		},
 		getNowData: function () {
+			var token = get_user_login();
 			let that = this;
 			$.ajax({
 				url: _API + "getNewTimeData",
