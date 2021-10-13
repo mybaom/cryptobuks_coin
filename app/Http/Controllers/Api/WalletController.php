@@ -592,13 +592,24 @@ class WalletController extends Controller
             'micro' => 4,
             'change' => 2,
         ];
+        $fields = [
+            '',
+            'legal_balance',
+            'change_balance',
+            'lever_balance',
+            'micro_balance',
+            'insurance_balance'
+        ];
+        $isLock = false;
+
         $user_id = Users::getUserId();
         $currency_id = Input::get("currency_id", '');
         $hzcurrency = Input::get("hzcurrency", '');
         $number = Input::get("number", '');
         $from_field = $request->get('from_field', ""); //出
         $to_field = $request->get('to_field', ""); //入
-
+        $from_blance_field = $fields[$typeList[$from_field]];
+        $to_blance_field = $fields[$typeList[$to_field]];
         try {
             if (empty($typeList[$from_field]) || empty($typeList[$to_field])) {
                 return $this->error('type error');
@@ -630,7 +641,7 @@ class WalletController extends Controller
             }
             if($currencyInfo->price <= 0)
             {
-                return $this->error('currency price is zero.' . json_encode($currencyInfo, JSON_UNESCAPED_UNICODE));
+                return $this->error('currency price is zero.');
             }
             if($hzcurrencyInfo->price <= 0)
             {
@@ -659,7 +670,7 @@ class WalletController extends Controller
             if (!$hzUserWallet) {
                 throw new \Exception('钱包不存在');
             }
-            if($userWallet->$from_field < $number){
+            if($userWallet->$from_blance_field < $number){
                 throw new \Exception('钱包余额不足');
             }
 
@@ -667,13 +678,13 @@ class WalletController extends Controller
             $decrementBlanceResult = DB::table('users_wallet')
                 ->where('user_id', $user_id)
                 ->where('currency', $currency_id)
-                ->where($from_field, '>=', $number)
-                ->decrement($from_field, $number);
+                ->where($from_blance_field, '>=', $number)
+                ->decrement($from_blance_field, $number);
 
             $incrementBlanceResult = DB::table('users_wallet')
                 ->where('user_id', $user_id)
                 ->where('currency', $hzcurrency)
-                ->increment($to_field, $hzNumber);
+                ->increment($to_blance_field, $hzNumber);
 
             if(!$decrementBlanceResult || !$incrementBlanceResult)
             {
