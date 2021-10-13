@@ -599,7 +599,7 @@ class WalletController extends Controller
         $from_field = $request->get('from_field', ""); //出
         $to_field = $request->get('to_field', ""); //入
 
-        if(!in_array($from_field, $typeList) || !in_array($to_field, $typeList))
+        if(empty($typeList[$from_field]) || empty($typeList[$to_field]))
         {
             return $this->error('type error');
         }
