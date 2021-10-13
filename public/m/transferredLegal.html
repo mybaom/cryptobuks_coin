@@ -737,6 +737,12 @@
                     // } else if (that.value2 == getlg('c2cAccount')) {
                     //     tos = 'legal'
                     // }
+                    if (that.fromfield == 'match') {
+                        that.fromfield = 'change';
+                    }
+                    if (that.tofield == 'match') {
+                        that.tofield = 'change';
+                    }
                     initDataTokens({
                         // url: 'wallet/change',
                         url: 'wallet/transferWallet',
