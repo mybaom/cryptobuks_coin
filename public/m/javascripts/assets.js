@@ -83,7 +83,7 @@ var vue = new Vue({
 				type: "GET",
 				dataType: "json",
 				async: true,
-				data: {id: get_param('id')},
+				data: {id: 1},
 				beforeSend: function beforeSend(request) {
 					request.setRequestHeader("Authorization", token);
 				},
