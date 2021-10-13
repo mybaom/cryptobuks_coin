@@ -4,6 +4,7 @@ namespace Tests;
 use App\Currency;
 use App\OfferProduct;
 use App\Service\RedisService;
+use App\UsersWallet;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redis;
@@ -260,6 +261,22 @@ class TestOfferProduct extends BaseTestCase
         }
 
         return trim($data, ".");
+    }
+
+    public function testgetWalletList(){
+        $user_id = 1208;
+        $currencies = Currency::select('*', DB::raw('0 as is_legal'))->where('is_display', 1)->orderBy('sort', 'desc')->get();
+        $currencies = $currencies->filter(function ($item, $key) {
+            $sum = array_sum([$item->is_legal, $item->is_lever, $item->is_match, $item->is_micro]);
+            return $sum > 1;
+        })->values();
+        $currencies->transform(function ($item, $key) use ($user_id) {
+            $wallet = UsersWallet::where('user_id', $user_id)->where('currency', $item->id)->first();
+            $item->setVisible(['id', 'name', 'is_legal', 'is_lever', 'is_match', 'is_micro', 'wallet']);
+            return $item->setAttribute('wallet', $wallet);
+        });
+
+        var_dump($currencies);
     }
 
 }

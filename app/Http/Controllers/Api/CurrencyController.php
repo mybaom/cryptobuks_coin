@@ -679,7 +679,7 @@ class CurrencyController extends Controller
     public function userCurrencyList()
     {
         $user_id = Users::getUserId();
-        $currencies = Currency::where('is_display', 1)->orderBy('sort', 'desc')->get();
+        $currencies = Currency::select('*', DB::raw('0 as is_legal'))->where('is_display', 1)->orderBy('sort', 'desc')->get();
         $currencies = $currencies->filter(function ($item, $key) {
             $sum = array_sum([$item->is_legal, $item->is_lever, $item->is_match, $item->is_micro]);
             return $sum > 1;
