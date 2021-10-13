@@ -205,6 +205,14 @@ class TestRecharge extends BaseTestCase
     public function testGeta(){
         $user_id = 1208;
         $currency_name = '';
+
+        $offerWallet = DB::table('offer_product_wallet')
+            ->join('offer_buy_product', 'offer_buy_product.id', '=', 'offer_product_wallet.obp_id')
+            ->where('user_id', $user_id)
+            ->where('offer_buy_product.id', 1)
+            ->first();
+        var_dump($offerWallet);die;
+
         $change_wallet['balance'] = UsersWallet::where('user_id', $user_id)
             ->whereHas('currencyCoin', function ($query) use ($currency_name) {
                 empty($currency_name) || $query->where('name', 'like', '%' . $currency_name . '%');

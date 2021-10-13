@@ -67,9 +67,44 @@ class WalletController extends Controller
                 empty($currency_name) || $query->where('name', 'like', '%' . $currency_name . '%');
             })->get(['id', 'currency', 'change_balance', 'lock_change_balance'])
             ->toArray();
+
+        // 查询认购钱包
+        $offerWallet = DB::table('offer_product_wallet')
+            ->join('offer_buy_product', 'offer_buy_product.id', '=', 'offer_product_wallet.obp_id')
+            ->where('user_id', $user_id)
+            ->where('offer_buy_product.id', 1)
+            ->first();
+        $cbvWallet = [];
+        if($offerWallet){
+            $cbvWallet = [
+                'change_balance' =>  $offerWallet->balance,
+                'cny_price' => '',
+                'currency'  => 0,
+                'currency_name' => $offerWallet->name,
+                'currency_type' => $offerWallet->name,
+                'id' => $offerWallet->id,
+                'is_legal' => 1,
+                'is_lever' => 1,
+                'is_match' => 1,
+                'is_micro' => 0,
+                'lock_change_balance' => "0.00000000",
+                'pb_price' =>  "0.00000000",
+                'usdt_price' => $offerWallet->now_price
+            ];
+        }
+
         $change_wallet['totle'] = 0;
         $change_wallet['usdt_totle'] = 0;
+        $newChaneWallet = [];
         foreach ($change_wallet['balance'] as $k => $v) {
+            if($k >= 3 && $cbvWallet)
+            {
+                $newChaneWallet[] = $cbvWallet;
+                $num = $cbvWallet['change_balance'] + $cbvWallet['lock_change_balance'];
+                // $change_wallet['totle'] += $num * $v['cny_price'];
+                $change_wallet['usdt_totle'] += $num * $cbvWallet['usdt_price'];
+            }
+            $newChaneWallet[] = $v;
             $num = $v['change_balance'] + $v['lock_change_balance'];
            // $change_wallet['totle'] += $num * $v['cny_price'];
             $change_wallet['usdt_totle'] += $num * $v['usdt_price'];
