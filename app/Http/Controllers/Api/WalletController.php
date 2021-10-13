@@ -632,13 +632,13 @@ class WalletController extends Controller
             {
                 return $this->error('currency price is zero.');
             }
-            if($hzcurrencyInfo->usdt_price <= 0)
+            if($hzcurrencyInfo->price <= 0)
             {
                 return $this->error('transfer currency price is zero.');
             }
 
             // 计算划转账户增加数量
-            $hzNumber = sprintf("%.4f", $currencyInfo->usdt_price / $hzcurrencyInfo->usdt_price * $number);
+            $hzNumber = sprintf("%.4f", $currencyInfo->price / $hzcurrencyInfo->price * $number);
         }catch (\Exception $e){
             return $this->error($e->getMessage());
         }
