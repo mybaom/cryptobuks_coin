@@ -202,25 +202,12 @@
             <p data-localize="transaction.nodata">暂无记录</p>
         </div>
     </div> -->
-</div>
-<div class="card-footer">
-    <button class="buy" data-localize="td.buy" onclick="showBuyBoxFun()">买入</button>
-    <button class="sell" data-localize="td.sell">卖出</button>
-</div>
-<div id="place">
-    <div id="data" class="bgColor pb10">
+    <div class="card-footer">
+        <button class="buy" data-localize="td.buy" onclick="showBuyBoxFun()">{{getlg('buy')}}</button>
+        <button class="sell" data-localize="td.sell">{{getlg('sell')}}</button>
     </div>
-    <div id="mask1" @click="close">
-        <div id="Limited">
-            <ul>
-                <li></li>
-                <li class="cancel" data-localize="transaction.cancel">取消</li>
-            </ul>
-        </div>
-    </div>
-
-    <div style="height:10px;background-color:#f4f8fb;"></div>
-    <div class="col-12 col-lg-3">
+    <div v-if="volumes.lenght > 0" style="height:10px;background-color:#f4f8fb;"></div>
+    <div v-if="volumes.lenght > 0" class="col-12 col-lg-3">
         <div class="card">
             <div class="card-body">
                 <table class="table table-sm orders_okspusdt ordersTable">
@@ -231,6 +218,19 @@
                     </tr>
                 </table>
             </div>
+        </div>
+    </div>
+</div>
+
+<div id="place">
+    <div id="data" class="bgColor pb10">
+    </div>
+    <div id="mask1" @click="close">
+        <div id="Limited">
+            <ul>
+                <li></li>
+                <li class="cancel" data-localize="transaction.cancel">取消</li>
+            </ul>
         </div>
     </div>
 
