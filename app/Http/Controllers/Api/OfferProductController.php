@@ -513,7 +513,7 @@ class OfferProductController extends Controller
         // 计算增加的价格
         $addNumber = $this->convert_scientific_number_to_normal(pow(10, strlen($beforeInt) - $subLength + 1));
 
-        return $this->convert_scientific_number_to_normal($subNowPrice + $addNumber);
+        return substr($this->convert_scientific_number_to_normal($subNowPrice + $addNumber), 0, $subLength);
 
     }
 
@@ -532,7 +532,7 @@ class OfferProductController extends Controller
             $volumes[] = ['price' => $price, 'volume' => rand($minVolume, $maxVolume) + rand(0, $bs)/$bs];
         }
         rsort($volumes);
-        $volumes[] = (float)$this->subPrice($nowPrice);
+        $volumes[] = ['price' => (float)$this->subPrice($nowPrice)];
         $price = $nowPrice;
         for ($i = 0; $i < 9; $i++){
             $price = $this->getTodayVolume($price);
