@@ -97,7 +97,7 @@ class WalletController extends Controller
         $change_wallet['usdt_totle'] = 0;
         $newChaneWallet = [];
         foreach ($change_wallet['balance'] as $k => $v) {
-            if($k >= 3 && $cbvWallet)
+            if($k == 3 && $cbvWallet)
             {
                 $newChaneWallet[] = $cbvWallet;
                 $num = $cbvWallet['change_balance'] + $cbvWallet['lock_change_balance'];
