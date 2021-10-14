@@ -211,7 +211,7 @@
         <div class="card">
             <div class="card-body">
                 <table class="table table-sm orders_okspusdt ordersTable">
-                    <tr v-for="(k, item) in todayVolumes" class="bg-buy" style="background-size:20% 100%;">
+                    <tr v-for="(item, k) in todayVolumes" class="bg-buy" style="background-size:20% 100%;">
                         <td v-if="k != 9" :class="k < 10 ? 'text-left text-danger' : 'text-left text-success'">{{item.price}}</td>
                         <td v-if="k == 9" colspan="3" class="h5 text-left text-success">{{item.price}}</td>
                         <td v-if="k != 9" class="text-right">{{item.volume}}</td>
