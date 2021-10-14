@@ -438,13 +438,13 @@
                                 that.currencyList = arr;
                                 that.value1 = arr2[0].texts;
                                 that.value2 = arr2[1].texts;
-                                if(arr2[0].type == 'lever'){
+                                if(that.fromfield == 'lever'){
                                     that.balances = arr[0].wallet.lever_balance;
-                                // }else if(arr2[0].type == 'micro'){
-                                //     that.balances = arr[0].wallet.micro_balance;
-                                }else if(arr2[0].type == 'match'){
+                                }else if(that.fromfield == 'micro'){
+                                    that.balances = arr[0].wallet.micro_balance;
+                                }else if(that.fromfield == 'match'){
                                     that.balances = arr[0].wallet.change_balance;
-                                }else if(arr2[0].type == 'legal'){
+                                }else if(that.fromfield == 'legal'){
                                     that.balances = arr[0].wallet.legal_balance;
                                 }
                             }
