@@ -87,6 +87,92 @@ class TestOfferProduct extends BaseTestCase
 
     }
 
+    /**
+     * 获取合理价格并且后面加1的方法
+     * @param $nowPrice
+     * @return string
+     */
+    public function testVolume($nowPrice)
+    {
+        $nowPrice = $this->subPrice($nowPrice);
+        // 获取当前价格在什么价位
+        $beforeInt = substr($nowPrice,0, strrpos($nowPrice,"."));
+        // 如果价格大于0，则获得价格小数后两位的位置
+        if($beforeInt > 0){
+            $subLength = strlen($beforeInt) + 3;
+        }else{
+            // 如果价格小于0，则拿到价格的非零的第一位数在哪个位置
+            $afterNumber = substr($nowPrice,strripos($nowPrice,".")+1);
+            $afterInt = 0;
+            for ($i = 0; $i < strlen($afterNumber); $i++){
+                if($afterNumber[$i] != 0){
+                    $afterInt = $i;
+                    break;
+                }
+            }
+            $subLength = 8;
+            switch ($afterInt){
+                case 8:
+                    $subLength = 8;
+                    break;
+                case 7:
+                    $subLength = 8;
+                    break;
+                case 6:
+                    $subLength = 8;
+                    break;
+                case 5:
+                    $subLength = 8;
+                    break;
+                case 4:
+                    $subLength = 8;
+                    break;
+                case 3:
+                    $subLength = 8;
+                    break;
+                case 2:
+                    $subLength = 7;
+                    break;
+                case 1:
+                    $subLength = 7;
+                    break;
+                case 0:
+                    $subLength = 6;
+                    break;
+            }
+        }
+
+
+        // 裁剪出合理的显示价位
+        $subNowPrice = substr($nowPrice, 0, $subLength);
+        // 计算增加的价格
+        $addNumber = $this->convert_scientific_number_to_normal(pow(10, strlen($beforeInt) - $subLength + 1));
+
+        return $this->convert_scientific_number_to_normal($subNowPrice + $addNumber);
+
+    }
+
+    public function testVolumes(){
+        $nowPrice = "0.000132422";
+        $minVolume = 200000;
+        $maxVolume = 1000000;
+        $volumes  = [];
+        $bs = 10000;
+        $price = $nowPrice;
+        for ($i = 0; $i < 9; $i++){
+            $price = $this->testVolume($price);
+            $volumes[] = ['price' => $price, 'volume' => rand($minVolume, $maxVolume) + rand(0, $bs)/$bs];
+        }
+        rsort($volumes);
+        $volumes[] = (float)$this->subPrice($nowPrice);
+        $price = $nowPrice;
+        for ($i = 0; $i < 9; $i++){
+            $price = $this->testVolume($price);
+            $volumes[] = ['price' => $price, 'volume' => rand($minVolume, $maxVolume) + rand(0, $bs)/$bs];
+        }
+        var_dump($volumes);
+    }
+
     public function testProportion(){
         $cbv = OfferProduct::getProductById(1);
         $cbv->change = 1;
@@ -120,7 +206,7 @@ class TestOfferProduct extends BaseTestCase
         //$number = "10.0000234100100";
         $beforeInt = substr($number,0, strrpos($number,"."));
         if($beforeInt > 0){
-            return substr($number, 0, 9);
+            return substr($number, 0, 8);
         }else{
             $afterNumber = substr($number,strripos($number,".")+1);
             $afterInt = 0;
@@ -155,6 +241,9 @@ class TestOfferProduct extends BaseTestCase
                     break;
                 case 1:
                     $subLength = 6;
+                    break;
+                case 0:
+                    $subLength = 5;
                     break;
             }
             return substr($number, 0, $subLength + 2);

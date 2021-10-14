@@ -495,6 +495,9 @@ class CurrencyController extends Controller
                 case 1:
                     $subLength = 6;
                     break;
+                case 0:
+                    $subLength = 5;
+                    break;
             }
             return substr($number, 0, $subLength + 2);
         }

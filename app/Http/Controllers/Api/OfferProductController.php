@@ -72,6 +72,7 @@ class OfferProductController extends Controller
             $result->min30 = new \stdClass();
             $result->hour = new \stdClass();
             $days = $this->getDates();
+            $result->volumes = $info->now_price ? $this->getTodayVolumes($info->now_price, $info->min_volume, $info->max_volume) : [];
             $result->day = $this->getOfferProductDataByDays($id, $days['days']);
             $result->week = $this->getOfferProductDataByDays($id, $days['weeks']);
             $result->month = $this->getOfferProductDataByDays($id, $days['months']);
@@ -375,7 +376,6 @@ class OfferProductController extends Controller
         return trim($data, ".");
     }
 
-
     public function getNewTimeData()
     {
         $id = Input::get('id');
@@ -442,13 +442,104 @@ class OfferProductController extends Controller
                 'lowest_price' => $lowestPrice,
                 'rise_fall_symbol' => $nowPrice > $yesteDayData['close_price'] ? '1' : '0',
                 'currentData' => $currentData,
-                'yesteDayData' => $yesteDayData
+                'yesteDayData' => $yesteDayData,
+                'volumes' => $nowPrice ? $this->getTodayVolumes($nowPrice, $currentData['min_volume'] ?? 200000, $currentData['max_volume'] ?? 1000000) : [],
             ];
 
             return $this->success($result);
         }catch (\Exception $e){
             return $this->error($e->getMessage());
         }
+    }
+
+    /**
+     * 获取合理价格并且后面加1的方法
+     * @param $nowPrice
+     * @return string
+     */
+    public function getTodayVolume($nowPrice)
+    {
+        $nowPrice = $this->subPrice($nowPrice);
+        // 获取当前价格在什么价位
+        $beforeInt = substr($nowPrice,0, strrpos($nowPrice,"."));
+        // 如果价格大于0，则获得价格小数后两位的位置
+        if($beforeInt > 0){
+            $subLength = strlen($beforeInt) + 3;
+        }else{
+            // 如果价格小于0，则拿到价格的非零的第一位数在哪个位置
+            $afterNumber = substr($nowPrice,strripos($nowPrice,".")+1);
+            $afterInt = 0;
+            for ($i = 0; $i < strlen($afterNumber); $i++){
+                if($afterNumber[$i] != 0){
+                    $afterInt = $i;
+                    break;
+                }
+            }
+            $subLength = 8;
+            switch ($afterInt){
+                case 8:
+                    $subLength = 8;
+                    break;
+                case 7:
+                    $subLength = 8;
+                    break;
+                case 6:
+                    $subLength = 8;
+                    break;
+                case 5:
+                    $subLength = 8;
+                    break;
+                case 4:
+                    $subLength = 8;
+                    break;
+                case 3:
+                    $subLength = 8;
+                    break;
+                case 2:
+                    $subLength = 7;
+                    break;
+                case 1:
+                    $subLength = 7;
+                    break;
+                case 0:
+                    $subLength = 6;
+                    break;
+            }
+        }
+
+
+        // 裁剪出合理的显示价位
+        $subNowPrice = substr($nowPrice, 0, $subLength);
+        // 计算增加的价格
+        $addNumber = $this->convert_scientific_number_to_normal(pow(10, strlen($beforeInt) - $subLength + 1));
+
+        return $this->convert_scientific_number_to_normal($subNowPrice + $addNumber);
+
+    }
+
+    /**
+     * 获取合理价格并且后面加1的方法
+     * @param $nowPrice
+     * @return string
+     */
+    public function getTodayVolumes($nowPrice, $minVolume, $maxVolume){
+//        $nowPrice = "0.000132422";
+        $volumes  = [];
+        $bs = 10000;
+        $price = $nowPrice;
+        for ($i = 0; $i < 9; $i++){
+            $price = $this->getTodayVolume($price);
+            $volumes[] = ['price' => $price, 'volume' => rand($minVolume, $maxVolume) + rand(0, $bs)/$bs];
+        }
+        rsort($volumes);
+        $volumes[] = (float)$this->subPrice($nowPrice);
+        $price = $nowPrice;
+        for ($i = 0; $i < 9; $i++){
+            $price = $this->getTodayVolume($price);
+            $volumes[] = ['price' => $price, 'volume' => rand($minVolume, $maxVolume) + rand(0, $bs)/$bs];
+        }
+
+        return $volumes;
     }
 
     public function getNewTimeData2($id)
@@ -572,6 +663,9 @@ class OfferProductController extends Controller
                     break;
                 case 1:
                     $subLength = 6;
+                    break;
+                case 0:
+                    $subLength = 5;
                     break;
             }
             return substr($number, 0, $subLength + 2);
