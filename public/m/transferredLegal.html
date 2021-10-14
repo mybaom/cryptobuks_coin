@@ -691,13 +691,24 @@
                             console.log(that.accountList);
                             that.value1 = that.accountList[0].texts;
                             that.value2 = that.accountList[1].texts;
-                            if (that.accountList[0].type == 'lever') {
+                            // if (that.accountList[0].type == 'lever') {
+                            //     that.balances = that.currencyList[i].wallet.lever_balance;
+                            // } else if (that.accountList[0].type == 'match') {
+                            //     that.balances = that.currencyList[i].wallet.change_balance;
+                            // } else if (that.accountList[0].type == 'micro') {
+                            //     that.balances = that.currencyList[i].wallet.micro_balance;
+                            // } else if (that.accountList[0].type == 'legal') {
+                            //     that.balances = that.currencyList[i].wallet.legal_balance;
+                            // }
+
+
+                            if (that.fromfield == 'lever') {
                                 that.balances = that.currencyList[i].wallet.lever_balance;
-                            } else if (that.accountList[0].type == 'match') {
+                            } else if (that.fromfield == 'match') {
                                 that.balances = that.currencyList[i].wallet.change_balance;
-                            } else if (that.accountList[0].type == 'micro') {
+                            } else if (that.fromfield == 'micro') {
                                 that.balances = that.currencyList[i].wallet.micro_balance;
-                            } else if (that.accountList[0].type == 'legal') {
+                            } else if (that.fromfield == 'legal') {
                                 that.balances = that.currencyList[i].wallet.legal_balance;
                             }
                         }
