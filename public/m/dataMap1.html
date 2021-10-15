@@ -47,7 +47,7 @@
 	        <div class="tradeorder-jymode tradeorder-bili">
 	            <h1  data-localize="contract.transactionMode">交易模式</h1>
 	            <div class="tradeorder-jymode-list">
-	                <span v-for="item in tradeCurrency" :class="[{'tradeorder-jymode-active':tradeCurrencyId == item.id}]" @click="tradeCurrencyClick(item.id,item.name)" :key="item.id"><!--{{item.name}} USDT--></span>
+	                <span v-for="item in tradeCurrency" :class="[{'tradeorder-jymode-active':tradeCurrencyId == item.id}]" @click="tradeCurrencyClick(item.id,item.name)" :key="item.id">{{item.name}}</span>
 	            </div>
 	        </div>
 	        <div class="tradeorder-time tradeorder-bili">
