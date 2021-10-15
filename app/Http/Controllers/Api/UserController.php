@@ -1639,6 +1639,7 @@ class UserController extends Controller
         $currencyName = Input::get("currency", '');
         $number = Input::get("number", '');
         $amount = Input::get("dnum",0);
+        $type   = Input::get("type",3);
         $bank = $currencyName."地址充值";
         $userAddress = Input::get("user_address", "");
         $isBank = Input::get("isBank", 0);
@@ -1701,7 +1702,7 @@ class UserController extends Controller
             'number' => $number,
             'amount' => $amount,
             'now_price' => $nowprice,
-            'type' => 1,
+            'type' => $type,
             'user_account' => $userAddress,
             'target_account' => $targetAccount,
             'bank' => $bank,
