@@ -1136,7 +1136,7 @@ class UserController extends Controller
             return $this->error('充值记录错误');
         }
 
-        $userWallet =   UsersWallet::getUsdtWallet($req->uid);
+        $userWallet =   UsersWallet::getUserWallet($req->uid, $req->currency_id);
         // return $this->success('充值成功');
         //通过并加钱
 
@@ -1149,7 +1149,7 @@ class UserController extends Controller
         $request->put('way',"increment");
         $request->put('conf_value',$req->amount);
         $request->put('info',"充值");
-        $request->put('id',$userWallet->id);
+        $request->put('id', $userWallet->id);
         $this->postConfService($request);
         return $this->success('充值成功');
     }

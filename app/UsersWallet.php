@@ -160,6 +160,12 @@ class UsersWallet extends Model
             ->first();
     }
 
+    public static function getUserWallet($userId, $currencyId){
+        return  self::where("user_id", $userId)
+            ->where("currency", $currencyId)
+            ->first();
+    }
+
     public static function getDF1Wallet($userId){
         return  self::where("user_id", $userId)
             ->where("currency", 12) //df One
