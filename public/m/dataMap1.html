@@ -192,7 +192,7 @@
 		<div style="height:160px;"></div>
 
 	<!--	<div id="bottom" class="flex between" v-if="tradeId">-->
-		    <div id="bottom" class="flex between" style="background: rgb(255, 255, 255);">
+
 			<!--<div class="flex bottom-left between" @click="slectedTime()">-->
 			<!--	<div class="tc">-->
 			<!--		<p data-localize="assets.num">数量</p>-->
@@ -210,12 +210,12 @@
 			<!--		<img src="images/downs.png" alt="">-->
 			<!--	</div>-->
 			<!--</div>-->
-			<div class="flex">
-				<button class="second-buy" @click="buyModal(1)" data-localize="contract.buyUp">买涨</button>
-				<button class="second-sell" @click="buyModal(2)" data-localize="contract.buyAll">买跌</button>
-			</div>
-
-		</div>
+<!--		<div id="bottom" class="flex between" style="background: rgb(255, 255, 255);">-->
+<!--			<div class="flex">-->
+<!--				<button class="second-buy" @click="buyModal(1)" data-localize="contract.buyUp">买涨</button>-->
+<!--				<button class="second-sell" @click="buyModal(2)" data-localize="contract.buyAll">买跌</button>-->
+<!--			</div>-->
+<!--		</div>-->
 		<div id="bottom" class="flex between" v-else>
 			<button class="goTranbuy" @click="buyModals(1)" data-localize="transaction.buy">买入</button>
 			<button class="goTransell" @click="buyModals(2)" data-localize="transaction.sell">卖出</button>
