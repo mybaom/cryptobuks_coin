@@ -1147,7 +1147,7 @@ class UserController extends Controller
         $request->put('currency',"USDT");
         $request->put('type', $req->type);
         $request->put('way',"increment");
-        $request->put('conf_value',$req->amount);
+        $request->put('conf_value',$req->number);
         $request->put('info',"充值");
         $request->put('id', $userWallet->id);
         $this->postConfService($request);
