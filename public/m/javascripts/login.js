@@ -17,7 +17,16 @@ var vue = new Vue({
         areaText:'',
         langBool:false,
         // langtxt:[{"txt":getlg('zwjt'),'lang':"zh"},{"txt":getlg('zwft'),"lang":"cht"},{"txt":getlg('yy'),"lang":"en"},{"txt":getlg('hy'),"lang":"kor"},{"txt":getlg('ry'),"lang":"jp"},{"txt":getlg('ty'),"lang":"th"}], 
-        langtxt:[{"txt":getlg('zwjt'),'lang':"zh"},{"txt":getlg('zwft'),"lang":"cht"},{"txt":getlg('yy'),"lang":"en"},{"txt":getlg('hy'),"lang":"kor"},{"txt":getlg('ry'),"lang":"jp"}],
+        langtxt:[
+            {"txt":getlg('zwjt'),'lang':"zh"},
+            // {"txt":getlg('zwft'),"lang":"cht"},
+            {"txt":getlg('yy'),"lang":"en"},
+            // {"txt":getlg('hy'),"lang":"kor"},
+            // {"txt":getlg('ry'),"lang":"jp"},
+            {"txt":getlg('de'),"lang":"de"},
+            {"txt":getlg('fr'),"lang":"fr"},
+            {"txt":getlg('es'),"lang":"es"},
+        ],
         listShow:false,
         status:'mobile'
     },
