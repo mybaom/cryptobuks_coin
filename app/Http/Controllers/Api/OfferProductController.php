@@ -462,7 +462,7 @@ class OfferProductController extends Controller
                 'rise_fall_symbol' => $nowPrice > $yesteDayData['close_price'] ? '1' : '0',
                 'currentData' => $currentData,
                 'yesteDayData' => $yesteDayData,
-                'volume' => rand($offerProductData['min_volume'], $offerProductData['max_volume']),
+                'volume' => rand($offerProductData['min_volume'] * 60 * 24 * 10, $offerProductData['max_volume'] * 60 * 24 * 10),
                 'volumes' => $nowPrice ? $this->getTodayVolumes($nowPrice, $currentData['min_volume'] ?? 200000, $currentData['max_volume'] ?? 1000000) : [],
             ];
 
