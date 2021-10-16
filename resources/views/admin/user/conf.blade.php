@@ -19,7 +19,7 @@
                             <option value="{{ $item->id }}">{{ $item->name }}</option>
                         @endforeach
                     </select>
-<!--                    <input type="text" name="currency" autocomplete="off" class="layui-input layui-disabled" value="{{ $results['currency_name'] }}" placeholder="" disabled>-->
+<!--                    <input type="text" name="currency" autocomplete="off" class="layui-input layui-disabled" value="" placeholder="" disabled>-->
                 </div>
             </div>
             <div class="layui-form-item">
