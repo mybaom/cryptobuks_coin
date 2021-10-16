@@ -172,7 +172,7 @@
             </div>
             <div class="tradeorder-buy tradeorder-bili">
                 <span data-localize="td.transnum">划转数量</span>
-                <span id="hznum" v-if="typeof detailList.quotation != 'undefined'">{{info.now_price * inputValue / detailList.quotation[selectId].now_price}}</span>
+                <span id="hznum" v-if="typeof detailList.quotation != 'undefined'">{{toNonExponential(info.now_price * inputValue / detailList.quotation[selectId].now_price)}}</span>
                 <span id="hznum" v-if="typeof detailList.quotation == 'undefined'">0</span>
             </div>
             <div class="tradeorder-buy tradeorder-bili">
@@ -755,6 +755,10 @@
                             return monthData;
                             break;
                     }
+                },
+                toNonExponential(num) {
+                    var m = num.toExponential().match(/\d(?:\.(\d*))?e([+-]\d+)/);
+                    return num.toFixed(Math.max(0, (m[1] || '').length - m[2]));
                 },
                 quotationChange(e){
                     if(e.target.value == '') return false;
