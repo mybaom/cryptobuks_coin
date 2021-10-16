@@ -388,8 +388,10 @@ class OfferProductController extends Controller
 
         $todayCacheKey = 'offer_product_data_' . $minute . '_' . $id;
         $yestedayCacheKey = 'offer_product_data_' . $yesteDayMinute . '_' . $id;
+        $offerProductCacheKey = 'offer_product_' . $id;
         $currentDataString = $redis->get($todayCacheKey);
         $yesteDayDataString = $redis->get($yestedayCacheKey);
+        $offerProductDataString = $redis->get($offerProductCacheKey);
 
         try {
             if(empty($currentDataString)){
@@ -423,8 +425,25 @@ class OfferProductController extends Controller
                 $yesteDayDataString = json_encode($getYesteDayMinuteData, JSON_UNESCAPED_UNICODE);
             }
 
+            if(empty($offerProductDataString)){
+                $offerProductData = DB::table('offer_buy_product')
+                    ->where('id', $id)
+                    ->get()->first();
+                if(! $offerProductData){
+                    throw new \Exception('current data not found.');
+                }
+                $setCacheResult = $redis->set($offerProductCacheKey, json_encode($offerProductData, JSON_UNESCAPED_UNICODE));
+                $redis->expire($todayCacheKey, 1800);
+                if(! $setCacheResult)
+                {
+                    throw new \Exception('set redis fail.');
+                }
+                $offerProductDataString = json_encode($offerProductData, JSON_UNESCAPED_UNICODE);
+            }
+
             $currentData = json_decode($currentDataString, true);
             $yesteDayData = json_decode($yesteDayDataString, true);
+            $offerProductData = json_decode($offerProductDataString, true);
 
             $nowPrice = $this->subPrice(rand($currentData['lowest_price'] * 10000000000
                     , $currentData['highest_price'] * 10000000000) / 10000000000);
@@ -443,7 +462,7 @@ class OfferProductController extends Controller
                 'rise_fall_symbol' => $nowPrice > $yesteDayData['close_price'] ? '1' : '0',
                 'currentData' => $currentData,
                 'yesteDayData' => $yesteDayData,
-                'volume' => rand($currentData['volume'], $yesteDayData['volume']),
+                'volume' => rand($offerProductData['min_volume'], $offerProductData['max_volume']),
                 'volumes' => $nowPrice ? $this->getTodayVolumes($nowPrice, $currentData['min_volume'] ?? 200000, $currentData['max_volume'] ?? 1000000) : [],
             ];
 
