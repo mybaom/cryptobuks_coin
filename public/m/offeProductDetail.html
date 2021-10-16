@@ -107,7 +107,7 @@
             <p data-localize="mk.low">低</p><span class="min-price"></span>
         </li>
         <li class="flex">
-            <p data-localize="mk.open">开盘</p><span class="open-price"></span>
+            <p data-localize="mk.open">交易量</p><span class="volume"></span>
         </li>
     </ul>
 
@@ -251,7 +251,7 @@
                     <span class="width2 tc fl pb5" style="width:30%;" data-localize="assets.time">{{getlg('time')}}</span>
                     <span class="width2 tc fl pb5" data-localize="transaction.price">{{getlg('tprice')}}</span>
                     <span class="width1 tc fl pb5" data-localize="assets.num">{{getlg('tnum')}}</span>
-                    <span class="tc width1 fl" data-localize="transaction.option">{{getlg('ttotal')}}</span>
+                    <span class="tc width1 fl" style="width: 23%;" data-localize="transaction.option">{{getlg('ttotal')}}</span>
                 </li>
                 <li>
                     <ul class="conplete_list colorGrey ft12" style="padding: 10px 0;">
@@ -259,7 +259,7 @@
                             <span class="width2 tc fl" style="width:30%;">{{item.create_time}}</span>
                             <span class="width2 tc fl">{{item.price || '0.0000' | toFixed4}}</span>
                             <span class="width1 tc fl">{{item.number || '0.00' | toFixeds}}</span>
-                            <span class='tc width1 fl'>{{item.total_price || '0.0000' | toFixed4}}</span>
+                            <span class='tc width1 fl' style="width: 23%;">{{item.total_price || '0.0000' | toFixed4}}</span>
                         </li>
                     </ul>
                 </li>
@@ -1039,6 +1039,7 @@
                                 $('.max-price').html(res.highest_price);
                                 $('.min-price').html(res.lowest_price);
                                 $('.now_price').html(res.now_price);
+                                $('.volume').html(res.volume);
 
                                 $('.rise_fall_probability').html((res.rise_fall_symbol == 1 ? '+' : '-') + res.proportion + '%');
                                 if(res.rise_fall_symbol == 1) {
