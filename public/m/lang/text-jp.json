@@ -331,7 +331,8 @@
     "pcoin":"通貨単位",
 	"mobile":"携帯電話",
     "message":"私のメッセージ",
-    "reply":"応答："
+    "reply":"応答：",
+    "onlineMessage":"オンライン伝言"
   },
     "senior":{
         "test":"認証",

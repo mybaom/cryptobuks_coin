@@ -126,7 +126,7 @@
      */
     pdfjsLib.GlobalWorkerOptions.workerSrc =
         'pdfJs/build/pdf.worker.js';
-    var loadingTask = pdfjsLib.getDocument({ url: 'pdf/whitePaper.pdf', });//  _url为后台请求pdf流的路径
+    var loadingTask = pdfjsLib.getDocument({ url: 'pdf/whitePaper2.pdf', });//  _url为后台请求pdf流的路径
     loadingTask.promise.then(function(pdf) {
 
         for (var i = 1; i <= pdf._pdfInfo.numPages; i ++) {
