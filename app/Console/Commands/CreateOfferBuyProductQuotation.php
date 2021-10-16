@@ -40,12 +40,14 @@ class CreateOfferBuyProductQuotation extends Command{
                 }
 
                 // 获得浮动价格
-                $price1 = $this->getNowPrice(
-                    $todayPrice,
-                    $v->now_price,
-                    $v->rise_fall_probability / 100,
-                    $v->min_increase / 100,
-                    $v->max_increase / 100
+                $price1 = $this->getReasonablePrice(
+                    $this->getNowPrice(
+                        $todayPrice,
+                        $v->now_price,
+                        $v->rise_fall_probability / 100,
+                        $v->min_increase / 100,
+                        $v->max_increase / 100
+                    )
                 );
                 $price2 = $this->getReasonablePrice(
                     $this->getNowPrice(
@@ -69,7 +71,15 @@ class CreateOfferBuyProductQuotation extends Command{
                 list($highestPrice, $closePrice, $lowestPrice) = $this->getSortList([$price1, $price2, $price3]);
                 $openPrice = (float)$v->now_price;
 
-                $data = ['obp_id' => $v->id, 'highest_price' => $highestPrice, 'close_price' => $closePrice, 'lowest_price' => $lowestPrice, 'open_price' => $openPrice, 'minute' => $currentDate, 'time' => $time, 'volume' => rand($v->min_volume, $v->max_volume)];
+                $data = ['obp_id' => $v->id,
+                    'highest_price' => $highestPrice,
+                    'close_price' => $closePrice,
+                    'lowest_price' => $lowestPrice,
+                    'open_price' => $openPrice,
+                    'minute' => $currentDate,
+                    'time' => $time,
+                    'volume' => rand($v->min_volume, $v->max_volume)
+                ];
                 $insertData[] = array_merge($data, ['time_type' => 1]);
                 if ($isFiveMin) {
                     $insertData[] = array_merge($data, ['time_type' => 2]);
