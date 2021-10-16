@@ -26,7 +26,7 @@ class Currency extends Model
         return $this->hasMany(MicroNumber::class)->orderBy('number', 'asc');
     }
 
-    public function getUsdtInfo()
+    public static function getUsdtInfo()
     {
         $usdt = DB::table('currency')
             ->select(
