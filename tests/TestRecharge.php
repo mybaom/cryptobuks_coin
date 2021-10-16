@@ -223,4 +223,22 @@ class TestRecharge extends BaseTestCase
     }
 
 
+    public function test()
+    {
+        $needOfferProduct = 1;
+        $currency = Currency::with('quotation')
+            ->whereHas('quotation', function ($query) {
+                $query->where('is_display', 1);
+            })
+            ->where('is_display', 1)
+            ->where('is_legal', 1)
+            ->get();
+
+        $currency = json_decode(json_encode($currency, JSON_UNESCAPED_UNICODE),true);
+
+
+        var_dump(array_column($currency[0]['quotation'], 'currency_name'));
+    }
+
+
 }

@@ -337,6 +337,7 @@ class CurrencyController extends Controller
 
     public function newQuotation()
     {
+        $needOfferProduct = Input::get('need_offer_product', 1);
         $currency = Currency::with('quotation')
             ->whereHas('quotation', function ($query) {
                 $query->where('is_display', 1);
@@ -349,7 +350,25 @@ class CurrencyController extends Controller
 
         $cbv = OfferProduct::getProductById(1);
 
-        if($cbv) {
+        if($needOfferProduct == 2)
+        {
+            $usdt = Currency::getUsdtInfo();
+            if (count($currency[0]['quotation']) < 3){
+                $currency[0]['quotation'][] = $usdt;
+            }else{
+                $result = [];
+                foreach ($currency[0]['quotation'] as $k => $v) {
+                    if($k == 2){
+                        $result[] = $usdt;
+                    }
+                    $result[] = $v;
+                }
+
+                $currency[0]['quotation'] = $result;
+            }
+        }
+
+        if($cbv && $needOfferProduct == 1) {
             try{
                 $cbv = json_decode(json_encode($cbv, JSON_UNESCAPED_UNICODE), true);
                 $newData = $this->getNewTimeData(1);

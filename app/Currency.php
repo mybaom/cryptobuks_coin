@@ -26,6 +26,44 @@ class Currency extends Model
         return $this->hasMany(MicroNumber::class)->orderBy('number', 'asc');
     }
 
+    public function getUsdtInfo()
+    {
+        $usdt = DB::table('currency')
+            ->select(
+                DB::raw('id'),
+                DB::raw('name as currency_name'),
+                DB::raw('logo'),
+                DB::raw('price as now_price'),
+                DB::raw('0 as `change`'),
+                DB::raw('"0.00000000" as fluctuate_max'),
+                DB::raw('"0.00000000" as fluctuate_min'),
+                DB::raw('1 as is_display'),
+                DB::raw('3 as legal_id'),
+                DB::raw('"USDT" as legal_name'),
+                DB::raw('name as legal_name2'),
+                DB::raw('0 as lever_max_share'),
+                DB::raw('1 as lever_min_share'),
+                DB::raw('"0.00000000" as lever_share_num'),
+                DB::raw('"0.0000" as lever_trade_fee'),
+                DB::raw('2 as market_from'),
+                DB::raw('"火币接口" as market_from_name'),
+                DB::raw('"0.00" as micro_trade_fee'),
+                DB::raw('1 as open_coin_trade'),
+                DB::raw('1 as open_lever'),
+                DB::raw('1 as open_microtrade'),
+                DB::raw('0 as open_transaction'),
+                DB::raw('"0.0000" as overnight'),
+                DB::raw('1 as risk_group_result'),
+                DB::raw('1 as rmb_relation'),
+                DB::raw('0 as sort'),
+                DB::raw('"0.0000" as spread'),
+                DB::raw('0 as volume')
+            )
+            ->where('id', 3)
+            ->first();
+        return $usdt;
+    }
+
     // public function getExRateAttribute()
     // {
     //     return Setting::getValueByKey('ExRate', 6.5);

@@ -671,7 +671,10 @@
                 get_user_login();
                 setInterval(this.getNowData, 3000);
                 initDataTokens({
-                    url: 'currency/quotation_new'
+                    url: 'currency/quotation_new',
+                    data: {
+                        need_offer_product: 2
+                    }
                 }, that.currencyQuotationSuccess);
             },
             created: function () {
