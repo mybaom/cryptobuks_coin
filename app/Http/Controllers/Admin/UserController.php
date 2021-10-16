@@ -409,7 +409,7 @@ class UserController extends Controller
         $walletInfo = UsersWallet::find($id);
         $list = DB::table('users_wallet')
             ->select('users_wallet.id', 'currency.name')
-            ->join('currency', 'currency.id', '=', 'users_wallet.currency_id')
+            ->join('currency', 'currency.id', '=', 'users_wallet.currency')
             ->where('users_wallet.user_id', '=', $walletInfo->user_id)
             ->get()->toArray();
 
