@@ -204,7 +204,7 @@
     </div> -->
     <div class="card-footer">
         <button class="buy" data-localize="td.buy" onclick="showBuyBoxFun()">{{getlg('buy')}}</button>
-        <button class="sell" data-localize="td.sell">{{getlg('sell')}}</button>
+        <button class="sell" onclick="sell()" data-localize="td.sell">{{getlg('sell')}}</button>
     </div>
     <div v-if="todayVolumes" style="height:10px;background-color:#f4f8fb;"></div>
     <div v-if="todayVolumes" class="col-12 col-lg-3">
@@ -1138,6 +1138,10 @@
 
     function showBuyBoxFun() {
         app.showBuyBox = true
+    }
+
+    function sell() {
+        alert(getlg('DontcanShell'));
     }
 
 

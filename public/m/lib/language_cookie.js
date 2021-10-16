@@ -352,6 +352,7 @@ var ts = {
         renamerequired:"真实姓名不能为空",
         currencyName: "币种",
         btcLink: "比特币链",
+        DontcanShell: "暂时不能卖出",
     },
     hk: {
          juzudz:"請輸入居住地址",
@@ -618,7 +619,7 @@ var ts = {
       renamerequired: "真實姓名不能為空",
       currencyName: "幣種",
       btcLink: "比特幣鏈",
-
+      DontcanShell: "暂时唔卖埠",
     },
     en: {
          juzudz:"Please enter your residential address",
@@ -884,6 +885,7 @@ var ts = {
       renamerequired: "Real name cannot be empty",
       currencyName: "Currency Name",
       btcLink: "Bitcoin chain",
+      DontcanShell: "Temporarily unable to sell",
     },
     jp: {
               juzudz:"住所を入力してください。",
@@ -1153,6 +1155,7 @@ var ts = {
       renamerequired: "実名は空ではいけません。",
       currencyName: "貨幣種類",
       btcLink: "ビットコインチェーン",
+      DontcanShell: "当分の間は売れません",
     },
     kor: {
              juzudz:"거주 지 를 입력 하 세 요",
@@ -1422,6 +1425,7 @@ var ts = {
       renamerequired: "실명 은 비어 있 으 면 안 됩 니 다.",
       currencyName: "화폐종류",
       btcLink: "비트코인 체인",
+      DontcanShell: "당분간 팔 수 없습니다.",
     },
     th: {
         juzudz:"กรุณาระบุที่อยู่",
@@ -1690,6 +1694,7 @@ var ts = {
       renamerequired: "ชื่อจริงไม่สามารถว่างเปล่า",
       currencyName: "สกุลเงิน",
       btcLink: "ห่วงโซ่ Bitcoin",
+      DontcanShell: "ไม่สามารถขายได้ชั่วคราว",
     },
     de: {
         juzudz: "Bitte geben Sie Ihre Wohnadresse ein",
@@ -1883,6 +1888,7 @@ var ts = {
         ungebunden: "Ungebunden",
         mobil:'Mobil',
         btcLink: "Bitcoin-Kette",
+        DontcanShell: "Vorübergehend nicht in der Lage zu verkaufen",
     },
     fr: {
         juzudz: "Veuillez entrer votre adresse résidentielle",
@@ -2152,6 +2158,7 @@ var ts = {
         renamerequired : "Le vrai nom ne peut pas être vide",
         deviseName : "Devise",
         btcLink: "Chaîne de bitcoins",
+        DontcanShell: "Impossible de vendre pour le moment",
     },
     es: {
         juzudz: "Por favor ingrese su dirección residencial",
@@ -2421,6 +2428,7 @@ var ts = {
         renamerequired: "El nombre real no puede estar vacío",
         currencyName: "Moneda",
         btcLink: "Cadena Bitcoin",
+        DontcanShell: "No se puede vender temporalmente",
     }
 
 };
