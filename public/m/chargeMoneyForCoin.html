@@ -106,7 +106,7 @@
                 <div id="code"></div>
             </div>
         </div>
-       <div class="address tc plr10 ft14">{{chargeAddress[currentChangeName]}}</div>
+        <div class="tc plr10 ft14">{{checkedPrefix}} <span class="address">{{chargeAddress[currentChangeName]}}</span></div>
         <div class="copy blue tc mt10 ft14" data-localize="assets.copyaddress">复制地址</div>
         <div class="cz-row">
 	    	<label data-localize="assets.num">充值数量</label>
@@ -230,6 +230,12 @@
                     {name:"BTC", now_price : 0},
                     {name:"ETH", now_price : 0},
                 ],
+                checkedPrefix: 'ERC20:',
+                prefixList: {
+                    BTC: getlg('btcLink') + ':',
+                    USDT: "ERC20:",
+                    ETH: "ERC20:"
+                },
                 // {name:"USDT", now_price : 0}
                 currentChangeName: "USDT",
                 nowPrice: 1,
@@ -238,6 +244,8 @@
             methods: {
                 currencyChange: function(e){
                     this.currentChangeName = e.target.value;
+                    console.log(this.prefixList[e.target.value])
+                    this.checkedPrefix = this.prefixList[e.target.value];
                     this.nowPrice = this.currencyList.find((item) => item.name == e.target.value).now_price;
                     $('#code').html('');
                     $('#code').qrcode({

@@ -351,7 +351,7 @@ var ts = {
           mr:"买入",
         renamerequired:"真实姓名不能为空",
         currencyName: "币种",
-
+        btcLink: "比特币链",
     },
     hk: {
          juzudz:"請輸入居住地址",
@@ -617,7 +617,7 @@ var ts = {
       mr:"買入",
       renamerequired: "真實姓名不能為空",
       currencyName: "幣種",
-
+      btcLink: "比特幣鏈",
 
     },
     en: {
@@ -883,6 +883,7 @@ var ts = {
       mr:"buy",
       renamerequired: "Real name cannot be empty",
       currencyName: "Currency Name",
+      btcLink: "Bitcoin chain",
     },
     jp: {
               juzudz:"住所を入力してください。",
@@ -1151,6 +1152,7 @@ var ts = {
       mr:"買い入れる",
       renamerequired: "実名は空ではいけません。",
       currencyName: "貨幣種類",
+      btcLink: "ビットコインチェーン",
     },
     kor: {
              juzudz:"거주 지 를 입력 하 세 요",
@@ -1419,6 +1421,7 @@ var ts = {
       mr:"매입 하 다.",
       renamerequired: "실명 은 비어 있 으 면 안 됩 니 다.",
       currencyName: "화폐종류",
+      btcLink: "비트코인 체인",
     },
     th: {
         juzudz:"กรุณาระบุที่อยู่",
@@ -1686,6 +1689,7 @@ var ts = {
       mr:"ซื้อ",
       renamerequired: "ชื่อจริงไม่สามารถว่างเปล่า",
       currencyName: "สกุลเงิน",
+      btcLink: "ห่วงโซ่ Bitcoin",
     },
     de: {
         juzudz: "Bitte geben Sie Ihre Wohnadresse ein",
@@ -1878,6 +1882,7 @@ var ts = {
         Informationen: "Bitte überprüfen Sie die Eingabeinformationen",
         ungebunden: "Ungebunden",
         mobil:'Mobil',
+        btcLink: "Bitcoin-Kette",
     },
     fr: {
         juzudz: "Veuillez entrer votre adresse résidentielle",
@@ -2146,7 +2151,7 @@ var ts = {
         mr: "Acheter",
         renamerequired : "Le vrai nom ne peut pas être vide",
         deviseName : "Devise",
-
+        btcLink: "Chaîne de bitcoins",
     },
     es: {
         juzudz: "Por favor ingrese su dirección residencial",
@@ -2415,6 +2420,7 @@ var ts = {
         mr: "Comprar",
         renamerequired: "El nombre real no puede estar vacío",
         currencyName: "Moneda",
+        btcLink: "Cadena Bitcoin",
     }
 
 };
@@ -2432,9 +2438,17 @@ function getlg(keys) {
         return ts.kor[keys];
     } else if (getLocal('language') == 'th') {
         return ts.th[keys];
-    } else {
+    } else if (getLocal('language') == 'de') {
+        return ts.de[keys];
+    } else if (getLocal('language') == 'fr') {
+        return ts.fr[keys];
+    } else if (getLocal('language') == 'es') {
+        return ts.es[keys];
+    } else{
         return ts.zh[keys];
     }
+
+
 }
 
 var voltxt = getlg('voltxt');
