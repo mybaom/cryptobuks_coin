@@ -172,7 +172,7 @@ class CreateOfferBuyProductQuotation extends Command{
 //        // 裁剪出合理的显示价位
 //        $subNowPrice = substr($nowPrice, 0, $subLength);
         // 计算增加的价格
-        $addNumber = $this->convert_scientific_number_to_normal(pow(10, strlen($beforeInt) - $subLength + 1) * rand(1, 4));
+        $addNumber = $this->convert_scientific_number_to_normal(pow(10, strlen($beforeInt) - $subLength + 1) * rand(0, 3));
 
         // 随机概率为增加或是减少
         $addOrSub = rand(0, 1);
