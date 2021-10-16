@@ -85,7 +85,7 @@
 
 
 
-<!--            <input type="hidden" name="id" value="{{$results['id']}}">-->
+<!--            <input type="hidden" name="id" value="">-->
             <div class="layui-form-item">
                 <div class="layui-input-block">
                     <button class="layui-btn" lay-submit lay-filter="user_submit">立即提交</button>
