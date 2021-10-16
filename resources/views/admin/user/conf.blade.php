@@ -78,7 +78,7 @@
 @section('scripts')
     <script type="text/javascript">
 
-        import Select from "../../../../public/m/element-ui/lib/select";
+        //import Select from "../../../../public/m/element-ui/lib/select";
         layui.use(['form','upload','layer'], function () {
             var layer = layui.layer;
             var form = layui.form;
@@ -128,8 +128,8 @@
                 return false;
             });
         });
-        export default {
-            components: {Select}
-        }
+        // export default {
+        //     components: {Select}
+        // }
     </script>
 @stop
