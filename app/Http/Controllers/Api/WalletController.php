@@ -676,7 +676,12 @@ class WalletController extends Controller
             }else{
                 $currencyInfo = DB::table('currency_quotation')->where('currency_id', $currency_id)->first();
             }
-            $hzcurrencyInfo = DB::table('currency_quotation')->where('currency_id', $hzcurrency)->first();
+            if($hzcurrency == 3) {
+                $hzcurrencyInfo = DB::table('currency')->select(DB::raw('price as now_price'))->where('id', $hzcurrency)->first();
+            }else{
+                $hzcurrencyInfo = DB::table('currency_quotation')->where('currency_id', $hzcurrency)->first();
+            }
+//            $hzcurrencyInfo = DB::table('currency_quotation')->where('currency_id', $hzcurrency)->first();
             if (empty($hzcurrencyInfo) || empty($currencyInfo)) {
                 return $this->error('currency not found.');
             }
