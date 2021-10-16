@@ -406,14 +406,19 @@ class UserController extends Controller
         if (empty($id)) {
             return $this->error('参数错误');
         }
-        $result = UsersWallet::find($id);
-        if (empty($result)) {
+        $list = DB::table('user_wallet')
+            ->select('user_wallet.id, currency.name')
+            ->join('currency', 'currency.id', '=', 'user_wallet.currency_id')
+            ->get()->toArray();
+            //UsersWallet::find($id);
+        if (empty($list)) {
             return $this->error('无此结果');
         }
-        $account = Users::where('id', $result->user_id)->value('phone');
+        $account = Users::where('id', $list[0]['user_id'])->value('phone');
         if (empty($account)) {
-            $account = Users::where('id', $result->user_id)->value('email');
+            $account = Users::where('id', $list[0]['user_id'])->value('email');
         }
+        $result['list'] = $list;
         $result['account'] = $account;
         return view('admin.user.conf', ['results' => $result]);
     }

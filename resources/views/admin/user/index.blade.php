@@ -41,7 +41,6 @@
             <button class="layui-btn layui-btn-primary" onclick="javascrtpt:window.location.href='{{url('/admin/user/csv')}}'"> <i class="layui-icon  layui-icon-export"></i></button>
             <button class="layui-btn btn-search" id="mobile_search" lay-submit lay-filter="mobile_search"> <i class="layui-icon layui-icon-search"></i> </button>
             <button class="layui-btn btn-search" id="add_user" lay-submit lay-filter="mobile_search"> 添加用户</button>
-
         </div>
     </div>
 </div>
