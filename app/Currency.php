@@ -31,6 +31,7 @@ class Currency extends Model
     {
         $usdt = DB::table('currency')
             ->select(
+                DB::raw('id as currency_id'),
                 DB::raw('id'),
                 DB::raw('name as currency_name'),
                 DB::raw('logo'),
