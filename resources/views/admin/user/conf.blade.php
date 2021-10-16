@@ -19,7 +19,7 @@
                             <option value="{{ $item->id }}">{{ $item->name }}</option>
                         @endforeach
                     </select>
-{{--                    <input type="text" name="currency" autocomplete="off" class="layui-input layui-disabled" value="{{ $results['currency_name'] }}" placeholder="" disabled>--}}
+<!--                    <input type="text" name="currency" autocomplete="off" class="layui-input layui-disabled" value="{{ $results['currency_name'] }}" placeholder="" disabled>-->
                 </div>
             </div>
             <div class="layui-form-item">
@@ -27,25 +27,25 @@
                 <div class="layui-input-block">
                     <select name="type" lay-verify="required">
                         <option value=""></option>
-{{--                        <optgroup label="★★秒合约★★">--}}
-{{--                            <option value="7">余额</option>--}}
-{{--                            <option value="8">锁定余额</option>--}}
-{{--                        </optgroup>--}}
-{{--                        <hr class="layui-bg-gray">--}}
-{{--                        <optgroup label="法币交易">--}}
-{{--                            <option value="1">余额</option>--}}
-{{--                            <option value="2">锁定余额</option>--}}
-{{--                        </optgroup>--}}
+<!--                        <optgroup label="★★秒合约★★">
+                            <option value="7">余额</option>
+                            <option value="8">锁定余额</option>
+                        </optgroup>
+                        <hr class="layui-bg-gray">
+                        <optgroup label="法币交易">
+                            <option value="1">余额</option>
+                            <option value="2">锁定余额</option>
+                        </optgroup>-->
                         <hr class="layui-bg-gray">
                         <optgroup label="币币充值">
                             <option value="3">余额</option>
-{{--                            <option value="4">锁定余额</option>--}}
+<!--                            <option value="4">锁定余额</option>-->
                         </optgroup>
-{{--                        <hr class="layui-bg-gray">--}}
-{{--                        <optgroup label="杠杆交易">--}}
-{{--                            <option value="5">余额</option>--}}
-{{--                            <option value="6">锁定余额</option>--}}
-{{--                        </optgroup>--}}
+<!--                        <hr class="layui-bg-gray">
+                        <optgroup label="杠杆交易">
+                            <option value="5">余额</option>
+                            <option value="6">锁定余额</option>
+                        </optgroup>-->
                     </select>
                 </div>
             </div>
