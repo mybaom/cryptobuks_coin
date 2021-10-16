@@ -47,19 +47,23 @@ class CreateOfferBuyProductQuotation extends Command{
                     $v->min_increase / 100,
                     $v->max_increase / 100
                 );
-                $price2 = $this->getNowPrice(
-                    $todayPrice,
-                    $v->now_price,
-                    $v->rise_fall_probability / 100,
-                    $v->min_increase / 100,
-                    $v->max_increase / 100
+                $price2 = $this->getReasonablePrice(
+                    $this->getNowPrice(
+                        $todayPrice,
+                        $v->now_price,
+                        $v->rise_fall_probability / 100,
+                        $v->min_increase / 100,
+                        $v->max_increase / 100
+                    )
                 );
-                $price3 = $this->getNowPrice(
-                    $todayPrice,
-                    $v->now_price,
-                    $v->rise_fall_probability / 100,
-                    $v->min_increase / 100,
-                    $v->max_increase / 100
+                $price3 = $this->getReasonablePrice(
+                    $this->getNowPrice(
+                        $todayPrice,
+                        $v->now_price,
+                        $v->rise_fall_probability / 100,
+                        $v->min_increase / 100,
+                        $v->max_increase / 100
+                    )
                 );
 
                 list($highestPrice, $closePrice, $lowestPrice) = $this->getSortList([$price1, $price2, $price3]);
@@ -99,6 +103,147 @@ class CreateOfferBuyProductQuotation extends Command{
         return true;
     }
 
+    /**
+     * 获取合理价格并且后面加1的方法
+     * @param $nowPrice
+     * @return string
+     */
+    public function getReasonablePrice($nowPrice)
+    {
+        $nowPrice = $this->subPrice($nowPrice);
+        // 获取当前价格在什么价位
+        $beforeInt = substr($nowPrice,0, strrpos($nowPrice,"."));
+        // 如果价格大于0，则获得价格小数后两位的位置
+        if($beforeInt > 0){
+            $subLength = strlen($beforeInt) + 3;
+        }else{
+            // 如果价格小于0，则拿到价格的非零的第一位数在哪个位置
+            $afterNumber = substr($nowPrice,strripos($nowPrice,".")+1);
+            $afterInt = 0;
+            for ($i = 0; $i < strlen($afterNumber); $i++){
+                if($afterNumber[$i] != 0){
+                    $afterInt = $i;
+                    break;
+                }
+            }
+            $subLength = 8;
+            switch ($afterInt){
+                case 8:
+                    $subLength = 8;
+                    break;
+                case 7:
+                    $subLength = 8;
+                    break;
+                case 6:
+                    $subLength = 8;
+                    break;
+                case 5:
+                    $subLength = 8;
+                    break;
+                case 4:
+                    $subLength = 8;
+                    break;
+                case 3:
+                    $subLength = 8;
+                    break;
+                case 2:
+                    $subLength = 7;
+                    break;
+                case 1:
+                    $subLength = 7;
+                    break;
+                case 0:
+                    $subLength = 6;
+                    break;
+            }
+        }
+
+//
+//        // 裁剪出合理的显示价位
+//        $subNowPrice = substr($nowPrice, 0, $subLength);
+        // 计算增加的价格
+        $addNumber = $this->convert_scientific_number_to_normal(pow(10, strlen($beforeInt) - $subLength + 1) * rand(1, 8));
+
+        // 随机概率为增加或是减少
+        $addOrSub = rand(0, 1);
+        if($addOrSub) {
+            return $this->convert_scientific_number_to_normal($nowPrice + $addNumber);
+        }else{
+            return $this->convert_scientific_number_to_normal($nowPrice - $addNumber);
+        }
+
+    }
+
+    /**
+     * 剪切价格字段到理想的位数
+     * @param $number
+     * @return false|string
+     */
+    public function subPrice($number)
+    {
+        //$number = "10.0000234100100";
+        $beforeInt = substr($number,0, strrpos($number,"."));
+        if($beforeInt > 0){
+            return substr($number, 0, 9);
+        }else{
+            $afterNumber = substr($number,strripos($number,".")+1);
+            $afterInt = 0;
+            for ($i = 0; $i < strlen($afterNumber); $i++){
+                if($afterNumber[$i] != 0){
+                    $afterInt = $i;
+                    break;
+                }
+            }
+            $subLength = 8;
+            switch ($afterInt){
+                case 8:
+                    $subLength = 8;
+                    break;
+                case 7:
+                    $subLength = 8;
+                    break;
+                case 6:
+                    $subLength = 8;
+                    break;
+                case 5:
+                    $subLength = 8;
+                    break;
+                case 4:
+                    $subLength = 8;
+                    break;
+                case 3:
+                    $subLength = 7;
+                    break;
+                case 2:
+                    $subLength = 7;
+                    break;
+                case 1:
+                    $subLength = 6;
+                    break;
+                case 0:
+                    $subLength = 5;
+                    break;
+            }
+            return substr($number, 0, $subLength + 2);
+        }
+    }
+
+    /**
+     * 随机在最尾数涨幅
+     * @param $number
+     */
+    public function numberAddSubRand($number, $zf){
+        //$number = "10.000023";
+        //$number = 10.01;
+//        $zf = true;
+        $randNum = rand(0, 3);
+        $afterNumber = substr($number,strripos($number,".")+1);
+        if($zf) {
+            return $this->convert_scientific_number_to_normal($number + pow(10, strlen($afterNumber) * -1) * $randNum);
+        }else{
+            return $this->convert_scientific_number_to_normal($number - pow(10, strlen($afterNumber) * -1) * $randNum);
+        }
+    }
 
     private function getSortList($arr)
     {
