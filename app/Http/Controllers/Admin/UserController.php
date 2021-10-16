@@ -406,11 +406,13 @@ class UserController extends Controller
         if (empty($id)) {
             return $this->error('参数错误');
         }
-        $list = DB::table('user_wallet')
-            ->select('user_wallet.id, currency.name')
-            ->join('currency', 'currency.id', '=', 'user_wallet.currency_id')
+        $walletInfo = UsersWallet::find($id);
+        $list = DB::table('users_wallet')
+            ->select('users_wallet.id, currency.name')
+            ->join('currency', 'currency.id', '=', 'users_wallet.currency_id')
+            ->where('users_wallet.user_id', '=', $walletInfo->user_id)
             ->get()->toArray();
-            //UsersWallet::find($id);
+
         if (empty($list)) {
             return $this->error('无此结果');
         }
