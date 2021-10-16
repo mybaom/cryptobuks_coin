@@ -416,9 +416,9 @@ class UserController extends Controller
         if (empty($list)) {
             return $this->error('无此结果');
         }
-        $account = Users::where('id', $list[0]['user_id'])->value('phone');
+        $account = Users::where('id', $walletInfo->user_id)->value('phone');
         if (empty($account)) {
-            $account = Users::where('id', $list[0]['user_id'])->value('email');
+            $account = Users::where('id', $walletInfo->user_id)->value('email');
         }
         $result['list'] = $list;
         $result['account'] = $account;
