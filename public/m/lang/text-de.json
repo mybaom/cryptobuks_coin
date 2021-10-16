@@ -120,7 +120,8 @@
 	    "lastPrice":"Neuester Preis",
 	    "lastPricecny":"Neuester Preis",
 	    "change":"Aufstieg und Fall",
-	    "about":"Über die BBANK"
+	    "about":"Über die BBANK",
+        "whitePaper": "papel blanco"
     },
     "transaction":{
 	    "buy":"Kaufen",

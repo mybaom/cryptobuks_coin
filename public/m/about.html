@@ -26,21 +26,31 @@
 		<a class="back" href="javascript:history.go(-1)">
 		</a>
 		<h4 class="ft16" data-localize="index.aboutus">关于我们</h4>
+
 	</header>
 	<div class="header-space"></div>
 	<div class="nav about-list">
 		<ul class="ft16 demos">
-
-
-
+			<li class='news-item'><a href='white_paper.html' data-localize="index.whitePaper">白皮书</a></li>
 		</ul>
 	</div>
 	<!-- js引入 -->
-	<script type="text/javascript" src="lib/layer_mobile/layer.js"></script>
+<!--	<script type="text/javascript" src="lib/layer_mobile/layer.js"></script>-->
+<!--	<script type="text/javascript" src="lib/jquery-2.1.1.min.js"></script>-->
+<!--	<script type="text/javascript" src="lib/jquery.localize.min.js"></script>-->
+<!--	<script type="text/javascript" src="lib/language_cookie.js"></script>-->
+<!--	<script type="text/javascript" src="javascripts/main.js"></script>-->
+
+
 	<script type="text/javascript" src="lib/jquery-2.1.1.min.js"></script>
+	<script type="text/javascript" src="javascripts/jquery.cookie.js"></script>
+	<script type="text/javascript" src="lib/layer_mobile/layer.js"></script>
 	<script type="text/javascript" src="lib/jquery.localize.min.js"></script>
-	<script type="text/javascript" src="lib/language_cookie.js"></script>
+	<script type="text/javascript" src="lib/language_cookie.js?1"></script>
 	<script type="text/javascript" src="javascripts/main.js"></script>
+<!--	<script type="text/javascript" src="javascripts/login.js"></script>-->
+
+
 	<script>
 		$(function () {
 			$.ajax({
@@ -57,7 +67,7 @@
 						html += "<li class='news-item'><a href='journalism.html?id=" + data.message.list[i].id +
 							"'>" + data.message.list[i].title + "</a></li>";
 					};
-					$('.demos').html(html);
+					$('.demos').append(html);
 				}
 			});
 		})

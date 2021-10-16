@@ -120,7 +120,8 @@
     "lastPrice":"最新价",
     "lastPricecny":"最新价",
     "change":"涨跌幅",
-    "about":"关于BBANK"
+    "about":"关于BBANK",
+    "whitePaper": "白皮书"
   },
   "transaction":{
     "buy":"买入",

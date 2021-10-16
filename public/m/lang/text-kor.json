@@ -115,7 +115,8 @@
     "name":"이름",
     "lastPrice": "최신 가격",
     "change": "상승 하락",
-    "about":" 우리에 대해 "
+    "about":" 우리에 대해 ",
+    "whitePaper": "백지"
   },
   "transaction":{
     "buy":" 매입",

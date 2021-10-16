@@ -123,7 +123,8 @@
     "lastPrice":"Last Price",
     "lastPricecny":"Last Price",
     "change":"Change",
-    "about":"About BBANK"
+    "about":"About BBANK",
+    "whitePaper": "white paper",
   },
   "transaction": {
     "buy": "BUY",

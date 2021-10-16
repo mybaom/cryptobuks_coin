@@ -120,7 +120,8 @@
     "lastPrice": "Dernier prix",
     "lastPricecny": "Dernier prix",
     "change": "Ascension et chute",
-    "about":"À propos de BBANK"
+    "about":"À propos de BBANK",
+    "whitePaper": "papier blanc"
   },
   "transaction":{
     "buy": "acheter",

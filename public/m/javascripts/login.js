@@ -169,6 +169,7 @@ var vue = new Vue({
                 that.status="email";
             }else{
                 layer_msg(getlg('phoneandemail'));
+                return false;
             }
             if (!that.passwords) {
                 layer_msg(getlg('pinpwd'));

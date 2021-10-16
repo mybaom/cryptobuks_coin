@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!-- css引入 -->
+    <link rel="stylesheet" type="text/css" href="lib/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="css/common.css" />
+</head>
+<body>
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <script type="text/javascript" src="lib/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="lib/jquery.media.js"></script>
+    <script type="text/javascript" src="pdfJs/build/pdf.js"></script>
+    <style type="text/css">
+        div#content{
+            padding: 10px 10px;
+            font-size: 1rem;
+        }
+        div#content ul{
+            list-style: none;
+        }
+        div#content p{
+            line-height: 25px;
+
+        }
+        div#correlation ol{
+            margin-left: 30px;
+        }
+        div#correlation ol li{
+            line-height: 1.6rem;
+        }
+        div#correlation ol li a{
+            text-decoration: none;
+        }
+        div#content h2,
+        div#correlation h2{
+            margin-bottom: 10px;
+        }
+        p{
+            background: transparent !important;
+        }
+        /* span{
+            color: #728DAF !important;
+        } */
+        h4{
+            background-color: transparent;
+        }
+        #correlation{
+            padding: 0 15px;
+        }
+        #content img{
+            max-width: 100%;
+        }
+        body
+        {
+            padding: 0;
+            margin: 0;
+        }
+        canvas
+        {
+            width: 100%;
+        }
+        .header {
+            height: 100px;
+            line-height: 100px;
+        }
+        .header h4
+        {
+            line-height: 100px;
+            font-size: 50px;
+        }
+        .back {
+            position: absolute;
+            left: 30px;
+            display: block;
+            /*background: url(../images/return1.png)no-repeat;*/
+            background-size: 80px 72px;
+            margin: 0px auto;
+            background-position: center 0px;
+            margin-left: -20px;
+            top: 16px;
+            width: 80px;
+            height: 72px;
+        }
+    </style>
+</head>
+<body>
+<div id="journalism">
+    <header class="header">
+        <a class="back mt5" href="javascript:history.go(-1)"></a>
+        <h4 class="ft20 blod" data-localize="index.whitePaper">白皮书</h4>
+    </header>
+    <div class="header-space"></div>
+    <div id="content">
+        <!-- <h2></h2> -->
+        <div></div>
+    </div>
+    <!-- <div id="correlation">
+        <h2>相关新闻</h2>
+        <ol></ol>
+    </div> -->
+</div>
+<div id="app">
+<!--    <canvas id="the-canvas"></canvas>-->
+</div>
+<script type="text/javascript">
+    /**
+     *坑：
+     * 之前版本（具体版本分界线我也不知道，我下载 的是2.0.943版本）写法：
+     *      PDFJS.workerSrc = '../build/pdf.worker.js';//加载核心库
+     *      PDFJS.getDocument(url).then(function getPdfHelloWorld(pdf) {
+     *
+     *      })
+     * 2.0.943版本写法：
+     *      pdfjsLib.GlobalWorkerOptions.workerSrc ='../build/pdf.worker.js';
+     *      pdfjsLib.getDocument(url).then(function(pdf){
+     *
+     *      });
+     */
+    pdfjsLib.GlobalWorkerOptions.workerSrc =
+        'pdfJs/build/pdf.worker.js';
+    var loadingTask = pdfjsLib.getDocument({ url: 'pdf/whitePaper.pdf', });//  _url为后台请求pdf流的路径
+    loadingTask.promise.then(function(pdf) {
+
+        for (var i = 1; i <= pdf._pdfInfo.numPages; i ++) {
+            $('#app').append('<canvas id="the-canvas-'+ i +'"></canvas>');
+            let num = i;
+            pdf.getPage(i).then((page) => {
+                console.log(num)
+                /**
+                 * 坑：
+                 * 官网上给的例子是这样写的
+                 *      var scale = 1.5;
+                 *      var viewport = page.getViewport({ scale: scale, });
+                 * 但是！！我们要这样写：
+                 *      var scale = 1.5;
+                 *      var viewport = page.getViewport(scale);
+                 */
+                var scale = 1.5
+                var viewport = page.getViewport({scale: scale,});
+                var canvas = document.getElementById('the-canvas-'+ num +'');
+                var context = canvas.getContext('2d');
+                canvas.height = viewport.height;
+                canvas.width = viewport.width;
+                var renderContext = {
+                    canvasContext: context,
+                    viewport: viewport,
+                };
+                page.render(renderContext);
+            });
+        }
+    });
+</script>
+
+</body>
+</html>

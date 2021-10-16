@@ -116,7 +116,8 @@
     "lastPrice":"最新の価格",
     "lastPricecny":"最新の価格",
     "change":"見積もり変更",
-    "about":"私たちに関しては"    
+    "about":"私たちに関しては",
+    "whitePaper": "白書"
   },
   "transaction":{
     "buy":"買い入れる",

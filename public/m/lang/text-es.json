@@ -120,7 +120,8 @@
     "lastPrice": "Precio más reciente",
     "lastPricecny": "Último precio",
     "change": "Levántate y cae",
-    "about": "Acerca de BBANK"
+    "about": "Acerca de BBANK",
+    "whitePaper": "papel blanco"
   },
   "transaction":{
     "buy": "compra",

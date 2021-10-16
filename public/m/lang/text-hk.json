@@ -118,7 +118,8 @@
       "lastPrice":"最新價",
       "lastPricecny":"最新價",
       "change":"漲跌幅",
-      "about":"關於GEMINI"
+      "about":"關於GEMINI",
+      "whitePaper": "白皮書"
     },
     "transaction":{
       "buy":"買入",

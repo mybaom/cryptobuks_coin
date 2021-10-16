@@ -2146,6 +2146,7 @@ var ts = {
         mr: "Acheter",
         renamerequired : "Le vrai nom ne peut pas être vide",
         deviseName : "Devise",
+
     },
     es: {
         juzudz: "Por favor ingrese su dirección residencial",

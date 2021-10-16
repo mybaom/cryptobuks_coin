@@ -116,13 +116,13 @@
 		</header>
 		<div class="header-space"></div>
 		<div class="content-box">
-		    <div class="content-box-list">
-		        <h1>ID</h1>
-		        <article>
-		            <span>{{userid}}</span>
-		            <img src="images/myimg/jitou.png">
-		        </article>
-		    </div>
+<!--		    <div class="content-box-list">-->
+<!--		        <h1>ID</h1>-->
+<!--		        <article>-->
+<!--		            <span>{{userid}}</span>-->
+<!--		            <img src="images/myimg/jitou.png">-->
+<!--		        </article>-->
+<!--		    </div>-->
 		    <div class="content-box-list">
 		        <h1 data-localize="zdy.sjh">手机号</h1>
 		        <article>
@@ -169,7 +169,16 @@
 	            phone:"",
 	            code:'',
 	            lang:"",
-	            langtxt:[{"txt":getlg('zwjt'),'lang':"zh"},{"txt":getlg('zwft'),"lang":"cht"},{"txt":getlg('yy'),"lang":"en"},{"txt":getlg('hy'),"lang":"kor"},{"txt":getlg('ry'),"lang":"jp"},{"txt":getlg('ty'),"lang":"th"}],
+	            langtxt:[
+					{"txt":getlg('zwjt'),'lang':"zh"},
+					// {"txt":getlg('zwft'),"lang":"cht"},
+					{"txt":getlg('yy'),"lang":"en"},
+					// {"txt":getlg('hy'),"lang":"kor"},
+					// {"txt":getlg('ry'),"lang":"jp"},
+					{"txt":getlg('de'),"lang":"de"},
+					{"txt":getlg('fr'),"lang":"fr"},
+					{"txt":getlg('es'),"lang":"es"},
+	            ],
 	            langIndex:0,
 	            langBool:false,
 	        },
