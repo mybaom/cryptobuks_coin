@@ -1136,6 +1136,7 @@
             // myChart.setOption(option);
             $('#echart').html('');
             // chart.dispose();
+            document.getElementById('echart').removeAttribute('_echarts_instance_');
             chart = echarts.init(document.getElementById('echart'))
             chart.setOption(newOption);
 
