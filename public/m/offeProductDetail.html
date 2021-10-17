@@ -1134,10 +1134,11 @@
             newOption.dataZoom[0].endValue = 100-(50/(currentData.length/100));
 
             // myChart.setOption(option);
-            chart.clear();//消除当前实例
+            $('#echart').html('');
             // chart.dispose();
             chart = echarts.init(document.getElementById('echart'))
             chart.setOption(newOption);
+
 
         })
 
