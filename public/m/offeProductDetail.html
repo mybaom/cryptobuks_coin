@@ -1120,10 +1120,10 @@
 
 
             newOption.series[0].data = nowData.values;
-            newOption.series[1].data = calculateMA(5, nowData.values);
-            newOption.series[2].data = calculateMA(10, nowData.values);
-            newOption.series[3].data = calculateMA(20, nowData.values);
-            newOption.series[4].data = calculateMA(30, nowData.values);
+            newOption.series[1].data = calculateMA(1, nowData.values);
+            newOption.series[2].data = calculateMA(2, nowData.values);
+            newOption.series[3].data = calculateMA(3, nowData.values);
+            newOption.series[4].data = calculateMA(4, nowData.values);
             newOption.series[5].data = setVolumeData(nowData.volumes, currentDate, currentData);
             newOption.xAxis[0].data  = currentDate;
             newOption.xAxis[1].data  = currentDate;
