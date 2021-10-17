@@ -1127,11 +1127,11 @@
             option.series[5].data = setVolumeData(nowData.volumes, currentDate, currentData);
             option.xAxis[0].data  = currentDate;
             option.xAxis[1].data  = currentDate;
-            // option.dataZoom[0].start = (100-(10/(currentData.length/100)));
-            // // 这个的意思是页面只展示30条数据，然后用数据总长度-30再除以总长度可以得到最后一栏数据的初始位置
-            // option.dataZoom[0].start = (currentData.length-30)/currentData.length * 100;
-            // option.dataZoom[0].end   = 100;
-            // option.dataZoom[0].endValue = 100-(50/(currentData.length/100));
+            option.dataZoom[0].start = (100-(10/(currentData.length/100)));
+            // 这个的意思是页面只展示30条数据，然后用数据总长度-30再除以总长度可以得到最后一栏数据的初始位置
+            option.dataZoom[0].start = (currentData.length-30)/currentData.length * 100;
+            option.dataZoom[0].end   = 100;
+            option.dataZoom[0].endValue = 100-(50/(currentData.length/100));
 
             // myChart.setOption(option);
             chart.clear();//消除当前实例
