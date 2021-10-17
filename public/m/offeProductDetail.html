@@ -1135,8 +1135,7 @@
 
             // myChart.setOption(option);
             // chart.clear();//消除当前实例
-            document.getElementById('echart').removeAttribute('_echarts_instance_');
-            chart = echarts.init(document.getElementById('echart'))
+            chart.dispose();
             chart.setOption(option, true);
         })
 
