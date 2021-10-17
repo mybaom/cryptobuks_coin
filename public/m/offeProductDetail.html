@@ -1134,9 +1134,10 @@
             option.dataZoom[0].endValue = 100-(50/(currentData.length/100));
 
             // myChart.setOption(option);
-            // chart.clear();//消除当前实例
-            chart.dispose();
+            chart.clear();//消除当前实例
+            // chart.dispose();
             chart.setOption(option, true);
+            chart.resize();
         })
 
     })
