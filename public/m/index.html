@@ -36,15 +36,15 @@
 <!--				<li data-type="hk"><img class="logos" src="images/hk.png">-->
 <!--					<span>中文繁体</span></li>-->
 				<li data-type="zh"><img class="logos" src="images/cn.png">
-					<span>简体中文</span></li>
+					<span>{{getlg('zwjt')}}</span></li>
 				<li data-type="en"><img class="logos" src="images/en.png">
-					<span>English</span></li>
+					<span>{{getlg('yy')}}</span></li>
 				<li data-type="de"><img class="logos" src="images/de-logo.png">
-					<span>德语</span></li>
+					<span>{{getlg('de')}}</span></li>
 				<li data-type="fr"><img class="logos" src="images/fr-logo.png">
-					<span>法语</span></li>
+					<span>{{getlg('fr')}}</span></li>
 				<li data-type="es"><img class="logos" src="images/es-logo.png">
-					<span>西班牙语</span></li>
+					<span>{{getlg('es')}}</span></li>
 <!--				<li data-type="kor"><img class="logos" src="images/kor.png">-->
 <!--					<span>韩语</span></li>-->
 
@@ -281,7 +281,14 @@
 <script type="text/javascript" src="lib/jquery.localize.min.js"></script>
 <script type="text/javascript" src="lib/language_cookie.js"></script>
 <script type="text/javascript" src="javascripts/main.js"></script>
+<script type="text/javascript" src="lib/vue.min.js"></script>
 <script>
+	var app = new Vue({
+		el: '#home',
+		data: {
+
+		},
+	});
     if(!getLocal('langstatus')){
         setLocal('langstatus','1');
         setLocal('language', 'en');
