@@ -131,6 +131,7 @@ class AccountLog extends Model
     const COIN_TRADE = 51;
     const OFFER_BALANCE_ADD = 52;
     const OFFER_BALANCE_MUL = 53;
+    const WALLET_LEVEL_OUT = 54;
     const WALLETOUT = 99; //用户申请提币
     const WALLETOUTDONE = 100; //用户提币成功
     const WALLETOUTBACK = 101; //用户提币失败
@@ -376,9 +377,9 @@ class AccountLog extends Model
             case self::WALLET_LEVEL_OUT:
                 return '合约账户转出至交易账户';
                 break;
-            case self::WALLET_LEVEL_IN:
-                return '交易账户转入合约账户';
-                break;
+//            case self::WALLET_LEVEL_IN:
+//                return '交易账户转入合约账户';
+//                break;
             case self::INVITATION_TO_RETURN:
                 return '邀请返佣金';
                 break;
@@ -412,30 +413,30 @@ class AccountLog extends Model
             case self::WALLET_LEVEL_LEGAL_IN:
                 return '合约转资金审核通过，资金增加';
                 break;
-            case self::WALLET_MICRO_LEVEL_OUT:
-                return '期权转入合约,期权减少';
-                break;
-            case self::WALLET_MICRO_LEVEL_IN :
-                return '期权转入合约，合约增加';
-                break;
-            case self::WALLET_LEVEL_MICRO_OUT :
-                return '合约转期权审核通过,合约减少';
-                break;
-            case self::WALLET_LEVEL_MICRO_IN:
-                return '合约转期权审核通过，期权增加';
-                break;
-            case self::WALLET_LEGAL_MICRO_OUT:
-                return '资金转入期权,资金减少';
-                break;
-            case self::WALLET_LEGAL_MICRO_IN :
-                return '资金转入期权，期权增加';
-                break;
-            case self::WALLET_MICRO_LEGAL_OUT :
-                return '期权转资金审核通过,期权减少';
-                break;
-            case self::WALLET_MICRO_LEGAL_IN :
-                return '期权转资金审核通过，资金增加';
-                break;
+//            case self::WALLET_MICRO_LEVEL_OUT:
+//                return '期权转入合约,期权减少';
+//                break;
+//            case self::WALLET_MICRO_LEVEL_IN :
+//                return '期权转入合约，合约增加';
+//                break;
+//            case self::WALLET_LEVEL_MICRO_OUT :
+//                return '合约转期权审核通过,合约减少';
+//                break;
+//            case self::WALLET_LEVEL_MICRO_IN:
+//                return '合约转期权审核通过，期权增加';
+//                break;
+//            case self::WALLET_LEGAL_MICRO_OUT:
+//                return '资金转入期权,资金减少';
+//                break;
+//            case self::WALLET_LEGAL_MICRO_IN :
+//                return '资金转入期权，期权增加';
+//                break;
+//            case self::WALLET_MICRO_LEGAL_OUT :
+//                return '期权转资金审核通过,期权减少';
+//                break;
+//            case self::WALLET_MICRO_LEGAL_IN :
+//                return '期权转资金审核通过，资金增加';
+//                break;
 
             case self::WALLET_DONGJIEGANGGAN:
                 return '合约转资金,冻结合约转化值';
