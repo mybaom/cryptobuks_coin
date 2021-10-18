@@ -141,7 +141,7 @@ class OfferProductController extends Controller
         foreach ($getDbData as $k => $v) {
             $simpleMin = substr($v->minute, 5, 11);
             $result->date[] = $simpleMin;
-            $result->data[] = [$v->minute, empty($lastClosePrice) ?? $v->open_price, $v->close_price, $v->lowest_price, $v->highest_price, $v->volume];
+            $result->data[] = [$v->minute, $lastClosePrice == 0 ? $v->open_price : $lastClosePrice, $v->close_price, $v->lowest_price, $v->highest_price, $v->volume];
             $lastClosePrice = $v->close_price;
         }
 
