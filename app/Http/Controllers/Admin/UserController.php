@@ -654,6 +654,7 @@ class UserController extends Controller
 
             if(strpos($request->get('id'), 'o_')) {
                 $id = str_replace('o_', '');
+                echo $id;
                 $wallet = DB::table('offer_product_wallet')->where('id', $id)->get();
                 if (empty($wallet)) {
                     return $validator->errors()->add('isUser', '没有此钱包');
