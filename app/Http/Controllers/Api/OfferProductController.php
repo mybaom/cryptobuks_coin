@@ -159,6 +159,9 @@ class OfferProductController extends Controller
             $balance = Input::get('ye', 0);
             $hznum = Input::get('hznum', 0);
             $nowPrice = Input::get('now_price', 0);
+            if(!is_numeric($number) || $number <= 0){
+                throw new \Exception('number error');
+            }
             $productInfo = DB::table('offer_buy_product')->where('id', $id)->where('status', 1)->first();
             if (!$productInfo) {
                 throw new \Exception('product not found.');
