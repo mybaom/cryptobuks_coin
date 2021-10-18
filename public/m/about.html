@@ -31,7 +31,7 @@
 	<div class="header-space"></div>
 	<div class="nav about-list">
 		<ul class="ft16 demos">
-			<li class='news-item'><a href='white_paper.html' data-localize="index.whitePaper">白皮书</a></li>
+			<li class='news-item'><a href='white_paper.html' class="whitePaper" data-localize="index.whitePaper"></a></li>
 		</ul>
 	</div>
 	<!-- js引入 -->
@@ -70,6 +70,29 @@
 					$('.demos').append(html);
 				}
 			});
+		})
+		$(document).ready(function () {
+			if (getLocal('language') && getLocal('language') == 'en') {
+				$('.whitePaper').html('white paper');
+			} else if(getLocal('language') && getLocal('language') == 'hk'){
+				$('.whitePaper').html('白皮書r');
+			}else if(getLocal('language') && getLocal('language') == 'cn'){
+				$('.whitePaper').html('白皮书');
+			}else if(getLocal('language') && getLocal('language') == 'kor'){
+				$('.whitePaper').html('백지');
+			}else if(getLocal('language') && getLocal('language') == 'jp'){
+				$('.whitePaper').html('白書');
+			}else if(getLocal('language') && getLocal('language') == 'th'){
+				$('.whitePaper').html('กระดาษสีขาว');
+			}else if(getLocal('language') && getLocal('language') == 'de'){
+				$('.whitePaper').html('papel blanco');
+			}else if(getLocal('language') && getLocal('language') == 'fr'){
+				$('.whitePaper').html('papier blanc');
+			}else if(getLocal('language') && getLocal('language') == 'es'){
+				$('.whitePaper').html('papel blanco');
+			}else{
+				$('.whitePaper').html('白皮书');
+			}
 		})
 	</script>
 </body>

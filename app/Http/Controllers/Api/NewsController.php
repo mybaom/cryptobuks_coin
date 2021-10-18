@@ -42,6 +42,9 @@ class NewsController extends Controller
         $category_id = $request->get('c_id');
         $lang = $request->get('lang', '') ?: session()->get('lang');
         $lang == '' && $lang = 'zh';
+        if($category_id == 19){
+            $lang = 'en';
+        }
         if (empty($category_id)) {
             $article = News::where('lang', $lang)
                 ->orderBy('sorts', 'desc')
