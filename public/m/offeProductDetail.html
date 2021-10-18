@@ -614,6 +614,7 @@
                 {
                     name: 'Volume',
                     type: 'bar',
+                    barWidth: '50%',
                     xAxisIndex: 1,
                     yAxisIndex: 1,
                     data: []
@@ -802,7 +803,7 @@
                                     socket.emit('login', data.message.id);
                                     // 后端推送来消息时
                                     socket.on('kline', function (msg) {
-                                        if (msg.type == 'kline') {
+                                        if (msg.type == 'kline' && msg.symbol.indexOf("USDT") != -1) {
                                             // now_price
                                             let lists = that.detailList.quotation;
                                             for (i in lists) {
