@@ -447,7 +447,7 @@ class UserController extends Controller
         // 判断是否是认购产品充值
         if(strpos($id, 'o_') !== false){
             $id = str_replace('o_', '', $id);
-            $wallet = DB::table('offer_product_wallet')->where('id', $id)->get();
+            $wallet = DB::table('offer_product_wallet')->where('id', $id)->first();
             $user = Users::getById($wallet->user_id);
             try {
                 $data_wallet['balance_type'] = '0';
@@ -654,7 +654,7 @@ class UserController extends Controller
 
             if(strpos($request->get('id'), 'o_') !== false) {
                 $id = str_replace('o_', '', $request->get('id'));
-                $wallet = DB::table('offer_product_wallet')->where('id', $id)->get();
+                $wallet = DB::table('offer_product_wallet')->where('id', $id)->first();
                 if (empty($wallet)) {
                     return $validator->errors()->add('isUser', '没有此钱包');
                 }
@@ -727,7 +727,7 @@ class UserController extends Controller
         // 判断是否是认购产品充值
         if(strpos($id, 'o_') !== false){
             $id = str_replace('o_', '', $id);
-            $wallet = DB::table('offer_product_wallet')->where('id', $id)->get();
+            $wallet = DB::table('offer_product_wallet')->where('id', $id)->first();
             $user = Users::getById($wallet->user_id);
             try {
                 $data_wallet['balance_type'] = '0';
