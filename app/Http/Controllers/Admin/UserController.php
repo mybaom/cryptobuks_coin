@@ -445,7 +445,7 @@ class UserController extends Controller
         $data_wallet['create_time'] = time();
         DB::beginTransaction();
         // 判断是否是认购产品充值
-        if(strpos('o_', $id)){
+        if(strpos($id, 'o_')){
             $id = str_replace('o_', '');
             $wallet = DB::table('offer_product_wallet')->where('id', $id)->get();
             $user = Users::getById($wallet->user_id);
@@ -652,7 +652,7 @@ class UserController extends Controller
         //以上验证通过后 继续验证
         $validator->after(function ($validator) use ($request) {
 
-            if(strpos('o_', $request->get('id'))) {
+            if(strpos($request->get('id'), 'o_')) {
                 $wallet = DB::table('offer_product_wallet')->where('id', $request->get('id'))->get();
                 if (empty($wallet)) {
                     return $validator->errors()->add('isUser', '没有此钱包');
@@ -724,7 +724,7 @@ class UserController extends Controller
         DB::beginTransaction();
 
         // 判断是否是认购产品充值
-        if(strpos('o_', $id)){
+        if(strpos($id, 'o_')){
             $id = str_replace('o_', '');
             $wallet = DB::table('offer_product_wallet')->where('id', $id)->get();
             $user = Users::getById($wallet->user_id);
