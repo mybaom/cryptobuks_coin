@@ -242,6 +242,9 @@ class OfferProductController extends Controller
             $userId = Users::getUserId();
             $info   = DB::table('offer_product_wallet')->where('user_id', $userId)->where('obp_id', $id)->first();
             $list   = DB::table('offer_product_order')->where('obp_id', $id)->where('user_id', $userId)->get()->toArray();
+            foreach ($list as $k => $v){
+                $list[$k]['create_time'] = date('Y-m-d H:i:s', strtotime($v['create_time']) + 3600 * 8);
+            }
             $std    = new \stdClass();
             $std->info = $info;
             $std->list = $list;
