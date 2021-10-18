@@ -1,0 +1,5506 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="lib/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="fonts/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="css/common.css">
+    <link rel="stylesheet" type="text/css" href="css/dataMap.css?v=123" />
+    <link rel="stylesheet" type="text/css" href="css/LeveragedDeals.css?v=1" />
+    <link rel="stylesheet" type="text/css" href="css/footer.css" />
+    <style>
+        .sell_out{
+            height: 141px;
+            overflow-x: hidden;
+            overflow-y: scroll;
+        }
+        .control{
+            display: block;
+        }
+        .CNY ul{
+            width: 70%;
+        }
+        .card-footer
+        {
+            text-align: center;
+            display: inline-block;
+            width: 80%;
+            margin: auto;
+            margin-left: 10%;
+            padding-bottom: 20px;
+            padding-top: 10px;
+        }
+        .card-footer button
+        {
+            width: 46%;
+            height: 35px;
+            border: 0;
+            color: #FFF;
+            border-radius: 4px;
+        }
+        .card-footer .buy {
+            float: left;
+            background-color: #47c363;
+        }
+        .card-footer .sell
+        {
+            float: right;
+            background-color: #fc544b;
+        }
+        .filter-time
+        {
+            text-align: right;
+            padding-right: 20px;
+        }
+        .filter-time a, a:link{
+            margin-left: 10px;
+            cursor: pointer;
+            color: #007bff;
+            user-select:none;
+        }
+        .active{
+            text-decoration: underline !important;
+        }
+        .text-success, .text-success-all *, .text-success-all *:before, .text-success-all *:after {
+            color: #47c363 !important;
+        }
+        .text-danger, .text-danger-all *, .text-danger-all *:before, .text-danger-all *:after {
+            color: #fc544b !important;
+        }
+        .text-right
+        {
+            color: rgb(108, 117, 125) !important;
+        }
+        .ordersTable td
+        {
+            border: 0 !important;
+        }
+        .h5.text-success
+        {
+            font-size: 20px;
+        }
+    </style>
+</head>
+
+<body class="bgColor">
+<div class="header">
+    <p class="pull-left"></p>
+    <span class="contractdetail"></span>
+</div>
+<div class="CNY bgWhite">
+    <div class="pull-left">
+        <h5 style="margin-top: 15px;" data-localize="zdy.current">当前</h5>
+        <h2 style="" class="now_price"></h2>
+        <h4 class="flex alcenter"><span style="margin-left:5px;margin-top:5px;" class="rise_fall_probability"></span>
+        </h4>
+    </div>
+    <ul class="pull-right ft12 ">
+        <li class="flex">
+            <p data-localize="mk.high">高</p><span class="max-price"></span>
+        </li>
+        <li class="flex">
+            <p data-localize="mk.low">低</p><span class="min-price"></span>
+        </li>
+        <li class="flex">
+            <p data-localize="mk.open">交易量</p><span class="volume"></span>
+        </li>
+    </ul>
+
+</div>
+<div class="CNY bgWhite filter-time">
+    <a class="setDataMin" data-type="1">1min</a>
+    <a class="setDataMin" data-type="5">5min</a>
+    <a class="setDataMin" data-type="15">15min</a>
+    <a class="setDataMin" data-type="30">30min</a>
+    <a class="setDataMin" data-type="60">1hour</a>
+    <a class="setDataMin" data-type="day">day</a>
+    <a class="setDataMin" data-type="week">week</a>
+    <a class="setDataMin" data-type="month">month</a>
+</div>
+<div id="app">
+<!--    <div class="head">-->
+<!--        <h5 data-localize="zdy.current" style="margin-top: 15px; color: rgb(78, 91, 133);">当前</h5>-->
+<!--        <div class="price">80.12898921</div>-->
+<!--        <div class="bl">-0.0%</div>-->
+<!--    </div>-->
+
+    <div id="echart" style="width:100%; min-height: 450px;">
+
+    </div>
+
+
+    <!-- 持仓列表  -->
+    <!-- <div class="position" style="display:none;">
+        <h4 class="position-name bgColor"></h4>
+        <p class='fengxian' data-localize="deals.risk">风险率：</p>
+        <ul class="position-list">
+
+        </ul>
+        <button style="text-align:center;background-color: rgba(0, 0, 0, 0);border: none;outline: none;width: 100%;" class="more mt15" data-localize="transaction.getmore">加载更多</button>
+        <div class="no_records" style="display:none;">
+            <p>
+                <img src="images/anonymous.png" />
+            </p>
+            <p data-localize="transaction.nodata">暂无记录</p>
+        </div>
+    </div> -->
+    <div class="card-footer">
+        <button class="buy" data-localize="td.buy" onclick="showBuyBoxFun()">{{getlg('buy')}}</button>
+        <button class="sell" onclick="sell()" data-localize="td.sell">{{getlg('sell')}}</button>
+    </div>
+    <div v-if="todayVolumes" style="height:10px;background-color:#f4f8fb;"></div>
+    <div v-if="todayVolumes" class="col-12 col-lg-3">
+        <div class="card">
+            <div class="card-body">
+                <table class="table table-sm orders_okspusdt ordersTable">
+                    <tr v-for="(item, k) in todayVolumes" class="bg-buy" style="background-size:20% 100%;">
+                        <td v-if="k != 9" :class="k < 10 ? 'text-left text-danger' : 'text-left text-success'">{{item.price}}</td>
+                        <td v-if="k == 9" colspan="3" class="h5 text-left text-success">{{item.price}}</td>
+                        <td v-if="k != 9" class="text-right">{{item.volume}}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="place">
+    <div id="data" class="bgColor pb10">
+    </div>
+    <div id="mask1" @click="close">
+        <div id="Limited">
+            <ul>
+                <li></li>
+                <li class="cancel" data-localize="transaction.cancel">取消</li>
+            </ul>
+        </div>
+    </div>
+
+    <div style="height:10px;background-color:#f4f8fb;"></div>
+    <div id="entrust" style="margin-bottom: 50px;" class="bgColor mt10">
+        <div>
+            <h3 style="display: inline-block;" class="pull-left " data-localize="deals.currentPosition">
+                {{getlg('balance')}}
+            </h3>
+            <span v-if="typeof buyInfo.balance != 'undefined'" class="pull-right filtrate all">
+                {{buyInfo.balance}}
+            </span>
+            <span v-if="typeof buyInfo.balance == 'undefined'" class="pull-right filtrate all">
+                0
+            </span>
+            <ul class="list_ul" style="margin-top:35px;">
+                <li class="ft12 clearfix colorGrey bdb">
+                    <span class="width2 tc fl pb5" style="width:30%;" data-localize="assets.time">{{getlg('time')}}</span>
+                    <span class="width2 tc fl pb5" data-localize="transaction.price">{{getlg('tprice')}}</span>
+                    <span class="width1 tc fl pb5" style="width: 23%;" data-localize="assets.num">{{getlg('tnum')}}</span>
+                    <span class="tc width1 fl" style="width: 23%;" data-localize="transaction.option">{{getlg('ttotal')}}</span>
+                </li>
+                <li>
+                    <ul class="conplete_list colorGrey ft12" style="padding: 10px 0;">
+                        <li class="clearfix" v-for="item in buyRecodes" :key="item.id" style="padding:5px 0;">
+                            <span class="width2 tc fl" style="width:30%;">{{item.create_time}}</span>
+                            <span class="width2 tc fl">{{item.price || '0.0000' | toFixed4}}</span>
+                            <span class="width1 tc fl" style="width: 23%;">{{item.number || '0.00' | toFixeds}}</span>
+                            <span class='tc width1 fl' style="width: 23%;">{{item.total_price || '0.0000' | toFixed4}}</span>
+                        </li>
+                    </ul>
+                </li>
+<!--                <li class="clickMore tc colorGrey" data-localize="deals.clickLoad">点击加载</li>-->
+            </ul>
+
+        </div>
+        <div class="no_record" style="display:none;">
+            <p>
+                <img src="images/anonymous.png" />
+            </p>
+            <p data-localize="transaction.nodata">暂无记录</p>
+        </div>
+    </div>
+</div>
+
+<!-- 一键平仓 -->
+<!-- <div class="stop-trade clearfix">
+    <p class="fl"><span data-localize="deals.total">持仓总盈亏：</span> <span class="total-pro"></span></p>
+    <button class="fr total-btn" type="button" data-localize="deals.onekey">一键平仓</button>
+</div> -->
+<!-- 修改弹窗 -->
+<div style="height:50px;"></div>
+<footer>
+    <a href="index.html">
+        <div>
+            <p class="img img0"></p>
+            <span data-localize="footer.home">首页</span>
+        </div>
+    </a>
+
+    <a href="trades.html">
+        <div>
+            <p class="img img1"></p>
+            <span data-localize="footer.quotation">行情</span>
+        </div>
+    </a>
+<!--    <a href="dataMap1.html?heyueId=2&legal_id=3&currency_id=1&symbol=BTC/USDT">-->
+<!--        <div>-->
+<!--            <p class="img img2"></p>-->
+<!--            <span data-localize="footer.transaction">交易</span>-->
+<!--        </div>-->
+<!--    </a>-->
+    <a href="offerToBuy.html" class="select">
+        <div>
+            <p class="img img6"></p>
+            <span data-localize="offerBuy.footerTitle">认购</span>
+        </div>
+    </a>
+    <a href="assets.html">
+        <div>
+            <p class="img img3"></p>
+            <span data-localize="footer.assets">资产</span>
+        </div>
+    </a>
+    <a href="personal.html">
+        <div>
+            <p class="img img4"></p>
+            <span data-localize="footer.personal">我的</span>
+        </div>
+    </a>
+</footer>
+<script type="text/javascript" src="lib/jquery-2.1.1.min.js"></script>
+<script type="text/javascript" src="lib/vue.min.js"></script>
+<script type="text/javascript" src="javascripts/socket.io.js"></script>
+<script type="text/javascript" src="javascripts/jquery.cookie.js"></script>
+<script type="text/javascript" src="lib/layer_mobile/layer.js"></script>
+<script type="text/javascript" src="lib/jquery.localize.min.js"></script>
+<script type="text/javascript" src="lib/language_cookie.js"></script>
+<script type="text/javascript" src="javascripts/main.js"></script>
+<!--<script type="text/javascript" src="javascripts/LeveragedDeal.js"></script>-->
+<script type="text/javascript" src="js/echarts.min.js"></script>
+<script>
+    var token = get_user_login();
+    // 基于准备好的dom，初始化echarts实例
+    // var myChart = echarts.init(document.getElementById('echart'));
+
+    var option;
+
+    const upColor = '#00da3c';
+    const downColor = '#ec0000';
+    const colorList = ['#c23531', '#2f4554', '#61a0a8', '#d48265', '#91c7ae', '#749f83', '#ca8622', '#bda29a', '#6e7074', '#546570', '#c4ccd3'];
+    const labelFont = 'bold 12px Sans-serif';
+
+
+
+    function splitData(rawData) {
+        const categoryData = [];
+        const values = [];
+        const volumes = [];
+        for (var i = 0; i < rawData.length; i++) {
+            categoryData.push(rawData[i][0]);
+            values.push([rawData[i][1], rawData[i][2], rawData[i][3], rawData[i][4]]);
+            volumes.push(Number(rawData[i][5]));
+        }
+        return {
+            categoryData: categoryData,
+            values: values,
+            volumes: volumes
+        };
+    }
+    function setVolumeData(volumes, times, datas) {
+        const volumeData = [];
+        for (var i = 0; i < datas.length; i++) {
+            //console.log("开盘价"+dataMes[i][0])
+            //console.log("收盘价"+dataMes[i][1])
+            volumeData.push([times[i], volumes[i], datas[i][2] > datas[i][1] ? -1 : 1]);
+            //第一个代表时间，第二个代表成交量的值，第三个判断颜色1为绿色-1为红色
+        }
+
+        return volumeData;
+    }
+    function calculateMA(dayCount, data) {
+        var result = [];
+        for (var i = 0, len = data.length; i < len; i++) {
+            if (i < dayCount) {
+                result.push('-');
+                continue;
+            }
+            var sum = 0;
+            for (var j = 0; j < dayCount; j++) {
+                sum += +data[i - j][1];
+            }
+            result.push(sum / dayCount);
+        }
+        return result;
+    }
+
+
+    option = {
+        title:{
+            show:false,
+        },
+        animation: false,
+        legend: {
+            bottom: 10,
+            left: 'center',
+            data: ['Dow-Jones index', 'MA5', 'MA10', 'MA20', 'MA30']
+        },
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+                type: 'cross'
+            },
+            borderWidth: 1,
+            borderColor: '#ccc',
+            padding: 10,
+            textStyle: {
+                color: '#000'
+            },
+            position: function (pos, params, el, elRect, size) {
+                const obj = {
+                    top: 10
+                };
+                obj[['left', 'right'][+(pos[0] < size.viewSize[0] / 2)]] = 30;
+                return obj;
+            }
+            // extraCssText: 'width: 170px'
+        },
+        axisPointer: {
+            link: [
+                {
+                    xAxisIndex: 'all'
+                }
+            ],
+            label: {
+                backgroundColor: '#777'
+            }
+        },
+        toolbox: {
+            show: false,
+            feature: {
+                dataZoom: {
+                    yAxisIndex: false
+                },
+                brush: {
+                    type: ['lineX', 'clear']
+                }
+            }
+        },
+        brush: {
+            xAxisIndex: 'all',
+            brushLink: 'all',
+            outOfBrush: {
+                colorAlpha: 0.1
+            }
+        },
+        visualMap: {
+            show: false,
+            seriesIndex: 5,
+            dimension: 2,
+            pieces: [
+                {
+                    value: 1,
+                    color: downColor
+                },
+                {
+                    value: -1,
+                    color: upColor
+                }
+            ]
+        },
+        grid: [
+            {
+                left: '10%',
+                right: '5%',
+                height: '60%',
+                top: '3%',
+            },
+            {
+                left: '10%',
+                right: '5%',
+                top: '68%',
+                height: '15%'
+            }
+        ],
+        xAxis: [
+            {
+                type: 'category',
+                data: data.categoryData,
+                scale: true,
+                boundaryGap: false,
+                splitLine: { show: false },
+                min: 'dataMin',
+                max: 'dataMax',
+                axisPointer: {
+                    z: 100
+                },
+                axisLabel: {    //重点在这一块，其余可以忽略
+                    interval: 10,   // x轴文字间隔，这个一定要有，别忘记了
+                    // rotate: 15,
+                    onZero: false,
+                    textStyle: {
+                        color: '#000',
+                        fontSize: 10
+                    }
+                },
+            },
+            {
+                type: 'category',
+                gridIndex: 1,
+                data: data.categoryData,
+                scale: true,
+                boundaryGap: false,
+                axisLine: { onZero: false },
+                axisTick: { show: false },
+                splitLine: { show: false },
+                axisLabel: { show: false },
+                min: 'dataMin',
+                max: 'dataMax'
+            }
+        ],
+        yAxis: [
+            {
+                scale: true,
+                // splitArea: {
+                //     show: true
+                // }
+            },
+            {
+                scale: true,
+                gridIndex: 1,
+                splitNumber: 2,
+                axisLabel: { show: false },
+                axisLine: { show: false },
+                axisTick: { show: false },
+                splitLine: { show: false }
+            }
+        ],
+        dataZoom: [
+            {
+                type: 'inside',
+                xAxisIndex: [0, 1],
+                start: 10, // 百分比来着
+                end: 25, // 百分比来着
+                startValue: 9999,
+                endValue: 10000,
+                zoomLock: false, // 锁定缩放
+            }
+        ],
+        series: [
+            {
+                name: 'Dow-Jones index',
+                type: 'candlestick',
+                data: [],
+                zoom: 100,
+                itemStyle: {
+                    color: upColor,
+                    color0: downColor,
+                    borderColor: upColor,
+                    borderColor0: downColor
+                },
+                markLine: {
+                    show: true,
+                    silent:true
+                },
+                tooltip: {
+                    formatter: function (param) {
+                        param = param[0];
+                        return [
+                            'Date: ' + param.name + '<hr size=1 style="margin: 3px 0">',
+                            'Open: ' + param.data[0] + '<br/>',
+                            'Close: ' + param.data[1] + '<br/>',
+                            'Lowest: ' + param.data[2] + '<br/>',
+                            'Highest: ' + param.data[3] + '<br/>'
+                        ].join('');
+                    }
+                }
+            },
+            {
+                name: 'MA5',
+                type: 'line',
+                data: [],
+                smooth: true,
+                showSymbol: false,
+                lineStyle: {
+                    opacity: 0.5
+                }
+            },
+            {
+                name: 'MA10',
+                type: 'line',
+                data: [],
+                smooth: true,
+                showSymbol: false,
+                lineStyle: {
+                    opacity: 0.5
+                }
+            },
+            {
+                name: 'MA20',
+                type: 'line',
+                data: [],
+                smooth: true,
+                showSymbol: false,
+                lineStyle: {
+                    opacity: 0.5
+                }
+            },
+            {
+                name: 'MA30',
+                type: 'line',
+                data: [],
+                smooth: true,
+                showSymbol: false,
+                lineStyle: {
+                    opacity: 0.5
+                }
+            },
+            {
+                name: 'Volume',
+                type: 'bar',
+                xAxisIndex: 1,
+                yAxisIndex: 1,
+                data: []
+            }
+        ]
+    }
+
+    chart = echarts.init(document.getElementById('echart'))
+    chart.setOption(option);
+
+
+    var min1Data = [
+        [
+            "2021-10-16 00:00:00",
+            "0.00032543",
+            "0.00032567",
+            "0.00032518",
+            "0.00032567",
+            "141"
+        ],
+        [
+            "2021-10-16 00:15:00",
+            "0.00032766",
+            "0.00032790",
+            "0.00032741",
+            "0.00032791",
+            "76"
+        ],
+        [
+            "2021-10-16 00:30:00",
+            "0.00032988",
+            "0.00033013",
+            "0.00032963",
+            "0.00033013",
+            "70"
+        ],
+        [
+            "2021-10-16 00:45:00",
+            "0.00033062",
+            "0.00033087",
+            "0.00033038",
+            "0.00033087",
+            "114"
+        ],
+        [
+            "2021-10-16 01:00:00",
+            "0.00033038",
+            "0.00033013",
+            "0.00033012",
+            "0.00033063",
+            "61"
+        ],
+        [
+            "2021-10-16 01:15:00",
+            "0.00033061",
+            "0.00033036",
+            "0.00033035",
+            "0.00033036",
+            "184"
+        ],
+        [
+            "2021-10-16 01:30:00",
+            "0.00032935",
+            "0.00032910",
+            "0.00032910",
+            "0.00032960",
+            "160"
+        ],
+        [
+            "2021-10-16 01:45:00",
+            "0.00033061",
+            "0.00033036",
+            "0.00033036",
+            "0.00033086",
+            "122"
+        ],
+        [
+            "2021-10-16 02:00:00",
+            "0.00032986",
+            "0.00032961",
+            "0.00032961",
+            "0.00033012",
+            "102"
+        ],
+        [
+            "2021-10-16 02:15:00",
+            "0.00033062",
+            "0.00033087",
+            "0.00033037",
+            "0.00033088",
+            "198"
+        ],
+        [
+            "2021-10-16 02:30:00",
+            "0.00033187",
+            "0.00033162",
+            "0.00033161",
+            "0.00033212",
+            "193"
+        ],
+        [
+            "2021-10-16 02:45:00",
+            "0.00033162",
+            "0.00033187",
+            "0.00033136",
+            "0.00033187",
+            "159"
+        ],
+        [
+            "2021-10-16 03:00:00",
+            "0.00033287",
+            "0.00033261",
+            "0.00033261",
+            "0.00033312",
+            "175"
+        ],
+        [
+            "2021-10-16 03:15:00",
+            "0.00033313",
+            "0.00033287",
+            "0.00033287",
+            "0.00033338",
+            "97"
+        ],
+        [
+            "2021-10-16 03:30:00",
+            "0.00033288",
+            "0.00033313",
+            "0.00033263",
+            "0.00033314",
+            "168"
+        ],
+        [
+            "2021-10-16 03:45:00",
+            "0.00033415",
+            "0.00033440",
+            "0.00033390",
+            "0.00033440",
+            "57"
+        ],
+        [
+            "2021-10-16 04:00:00",
+            "0.00033287",
+            "0.00033262",
+            "0.00033262",
+            "0.00033312",
+            "105"
+        ],
+        [
+            "2021-10-16 04:15:00",
+            "0.00033312",
+            "0.00033286",
+            "0.00033286",
+            "0.00033337",
+            "59"
+        ],
+        [
+            "2021-10-16 04:30:00",
+            "0.00033388",
+            "0.00033413",
+            "0.00033363",
+            "0.00033414",
+            "44"
+        ],
+        [
+            "2021-10-16 04:45:00",
+            "0.00033362",
+            "0.00033336",
+            "0.00033336",
+            "0.00033387",
+            "85"
+        ],
+        [
+            "2021-10-16 05:00:00",
+            "0.00033489",
+            "0.00033514",
+            "0.00033463",
+            "0.00033514",
+            "62"
+        ],
+        [
+            "2021-10-16 05:15:00",
+            "0.00033515",
+            "0.00033489",
+            "0.00033489",
+            "0.00033541",
+            "93"
+        ],
+        [
+            "2021-10-16 05:30:00",
+            "0.00033492",
+            "0.00033466",
+            "0.00033466",
+            "0.00033517",
+            "192"
+        ],
+        [
+            "2021-10-16 05:45:00",
+            "0.00033518",
+            "0.00033492",
+            "0.00033492",
+            "0.00033493",
+            "134"
+        ],
+        [
+            "2021-10-16 06:00:00",
+            "0.00033593",
+            "0.00033618",
+            "0.00033618",
+            "0.00033618",
+            "128"
+        ],
+        [
+            "2021-10-16 06:15:00",
+            "0.00033516",
+            "0.00033542",
+            "0.00033491",
+            "0.00033542",
+            "169"
+        ],
+        [
+            "2021-10-16 06:30:00",
+            "0.00033542",
+            "0.00033516",
+            "0.00033516",
+            "0.00033568",
+            "128"
+        ],
+        [
+            "2021-10-16 06:45:00",
+            "0.00033364",
+            "0.00033339",
+            "0.00033339",
+            "0.00033390",
+            "74"
+        ],
+        [
+            "2021-10-16 07:00:00",
+            "0.00033441",
+            "0.00033416",
+            "0.00033415",
+            "0.00033466",
+            "147"
+        ],
+        [
+            "2021-10-16 07:15:00",
+            "0.00033366",
+            "0.00033392",
+            "0.00033341",
+            "0.00033392",
+            "75"
+        ],
+        [
+            "2021-10-16 07:30:00",
+            "0.00033239",
+            "0.00033214",
+            "0.00033213",
+            "0.00033264",
+            "198"
+        ],
+        [
+            "2021-10-16 07:45:00",
+            "0.00033213",
+            "0.00033239",
+            "0.00033188",
+            "0.00033239",
+            "22"
+        ],
+        [
+            "2021-10-16 08:00:00",
+            "0.00033443",
+            "0.00033418",
+            "0.00033418",
+            "0.00033469",
+            "97"
+        ],
+        [
+            "2021-10-16 08:15:00",
+            "0.00033520",
+            "0.00033495",
+            "0.00033494",
+            "0.00033495",
+            "177"
+        ],
+        [
+            "2021-10-16 08:30:00",
+            "0.00033494",
+            "0.00033469",
+            "0.00033469",
+            "0.00033520",
+            "111"
+        ],
+        [
+            "2021-10-16 08:45:00",
+            "0.00033470",
+            "0.00033496",
+            "0.00033495",
+            "0.00033496",
+            "113"
+        ],
+        [
+            "2021-10-16 09:00:00",
+            "0.00033495",
+            "0.00033470",
+            "0.00033470",
+            "0.00033522",
+            "130"
+        ],
+        [
+            "2021-10-16 09:15:00",
+            "0.00033470",
+            "0.00033496",
+            "0.00033495",
+            "0.00033496",
+            "131"
+        ],
+        [
+            "2021-10-16 09:30:00",
+            "0.00033343",
+            "0.00033368",
+            "0.00033317",
+            "0.00033369",
+            "68"
+        ],
+        [
+            "2021-10-16 09:45:00",
+            "0.00033217",
+            "0.00033242",
+            "0.00033191",
+            "0.00033242",
+            "147"
+        ],
+        [
+            "2021-10-16 10:00:00",
+            "0.00033293",
+            "0.00033267",
+            "0.00033267",
+            "0.00033318",
+            "35"
+        ],
+        [
+            "2021-10-16 10:15:00",
+            "0.00033115",
+            "0.00033140",
+            "0.00033090",
+            "0.00033140",
+            "25"
+        ],
+        [
+            "2021-10-16 10:30:00",
+            "0.00033241",
+            "0.00033216",
+            "0.00033216",
+            "0.00033267",
+            "162"
+        ],
+        [
+            "2021-10-16 10:45:00",
+            "0.00033217",
+            "0.00033192",
+            "0.00033191",
+            "0.00033242",
+            "176"
+        ],
+        [
+            "2021-10-16 11:00:00",
+            "0.00033294",
+            "0.00033268",
+            "0.00033268",
+            "0.00033319",
+            "38"
+        ],
+        [
+            "2021-10-16 11:15:00",
+            "0.00033268",
+            "0.00033243",
+            "0.00033242",
+            "0.00033293",
+            "158"
+        ],
+        [
+            "2021-10-16 11:30:00",
+            "0.00033041",
+            "0.00033066",
+            "0.00033066",
+            "0.00033066",
+            "176"
+        ],
+        [
+            "2021-10-16 11:45:00",
+            "0.00033015",
+            "0.00032990",
+            "0.00032990",
+            "0.00033041",
+            "23"
+        ],
+        [
+            "2021-10-16 12:00:00",
+            "0.00032887",
+            "0.00032911",
+            "0.00032911",
+            "0.00032912",
+            "43"
+        ],
+        [
+            "2021-10-16 12:15:00",
+            "0.00032962",
+            "0.00032987",
+            "0.00032937",
+            "0.00032987",
+            "66"
+        ],
+        [
+            "2021-10-16 12:30:00",
+            "0.00033036",
+            "0.00033011",
+            "0.00033010",
+            "0.00033061",
+            "108"
+        ],
+        [
+            "2021-10-16 12:45:00",
+            "0.00032911",
+            "0.00032936",
+            "0.00032886",
+            "0.00032936",
+            "185"
+        ],
+        [
+            "2021-10-16 13:00:00",
+            "0.00033187",
+            "0.00033212",
+            "0.00033161",
+            "0.00033212",
+            "28"
+        ],
+        [
+            "2021-10-16 13:15:00",
+            "0.00033265",
+            "0.00033290",
+            "0.00033239",
+            "0.00033291",
+            "55"
+        ],
+        [
+            "2021-10-16 13:30:00",
+            "0.00033239",
+            "0.00033264",
+            "0.00033264",
+            "0.00033264",
+            "53"
+        ],
+        [
+            "2021-10-16 13:45:00",
+            "0.00033314",
+            "0.00033289",
+            "0.00033288",
+            "0.00033339",
+            "73"
+        ],
+        [
+            "2021-10-16 14:00:00",
+            "0.00033187",
+            "0.00033162",
+            "0.00033162",
+            "0.00033212",
+            "32"
+        ],
+        [
+            "2021-10-16 14:15:00",
+            "0.00032909",
+            "0.00032884",
+            "0.00032884",
+            "0.00032935",
+            "62"
+        ],
+        [
+            "2021-10-16 14:30:00",
+            "0.00032935",
+            "0.00032960",
+            "0.00032960",
+            "0.00032960",
+            "142"
+        ],
+        [
+            "2021-10-16 14:45:00",
+            "0.00032860",
+            "0.00032835",
+            "0.00032834",
+            "0.00032835",
+            "102"
+        ],
+        [
+            "2021-10-16 15:00:00",
+            "0.00032886",
+            "0.00032911",
+            "0.00032861",
+            "0.00032912",
+            "181"
+        ],
+        [
+            "2021-10-16 15:15:00",
+            "0.00032962",
+            "0.00032987",
+            "0.00032937",
+            "0.00032987",
+            "189"
+        ],
+        [
+            "2021-10-16 15:30:00",
+            "0.00032836",
+            "0.00032861",
+            "0.00032811",
+            "0.00032862",
+            "25"
+        ],
+        [
+            "2021-10-16 15:45:00",
+            "0.00032962",
+            "0.00032986",
+            "0.00032937",
+            "0.00032987",
+            "139"
+        ],
+        [
+            "2021-10-16 16:00:00",
+            "0.00033037",
+            "0.00033012",
+            "0.00033012",
+            "0.00033063",
+            "181"
+        ],
+        [
+            "2021-10-16 16:15:00",
+            "0.00032962",
+            "0.00032987",
+            "0.00032937",
+            "0.00032987",
+            "104"
+        ],
+        [
+            "2021-10-16 16:30:00",
+            "0.00032987",
+            "0.00032962",
+            "0.00032962",
+            "0.00033012",
+            "21"
+        ],
+        [
+            "2021-10-16 16:45:00",
+            "0.00033196",
+            "0.00033221",
+            "0.00032560",
+            "0.00033620",
+            "47"
+        ],
+        [
+            "2021-10-16 17:00:00",
+            "0.00031600",
+            "0.00031770",
+            "0.00031576",
+            "0.00032020",
+            "131"
+        ],
+        [
+            "2021-10-16 17:15:00",
+            "0.00030860",
+            "0.00030930",
+            "0.00030730",
+            "0.00031230",
+            "121"
+        ],
+        [
+            "2021-10-16 17:30:00",
+            "0.00030560",
+            "0.00030580",
+            "0.00030530",
+            "0.00030630",
+            "113"
+        ],
+        [
+            "2021-10-16 17:45:00",
+            "0.00030960",
+            "0.00030980",
+            "0.00030930",
+            "0.00031130",
+            "111"
+        ],
+        [
+            "2021-10-16 18:00:00",
+            "0.00029860",
+            "0.00030080",
+            "0.00029580",
+            "0.00030130",
+            "181"
+        ],
+        [
+            "2021-10-16 18:15:00",
+            "0.00029510",
+            "0.00029530",
+            "0.00029230",
+            "0.00029530",
+            "68"
+        ],
+        [
+            "2021-10-16 18:30:00",
+            "0.00030410",
+            "0.00030330",
+            "0.00030280",
+            "0.00030730",
+            "169"
+        ],
+        [
+            "2021-10-16 18:45:00",
+            "0.00031160",
+            "0.00031280",
+            "0.00030830",
+            "0.00031430",
+            "169"
+        ],
+        [
+            "2021-10-16 19:00:00",
+            "0.00031110",
+            "0.00031130",
+            "0.00030930",
+            "0.00031330",
+            "74"
+        ],
+        [
+            "2021-10-16 19:15:00",
+            "0.00031460",
+            "0.00031580",
+            "0.00031230",
+            "0.00031730",
+            "167"
+        ],
+        [
+            "2021-10-16 19:30:00",
+            "0.00032760",
+            "0.00032930",
+            "0.00032480",
+            "0.00033080",
+            "127"
+        ],
+        [
+            "2021-10-16 19:45:00",
+            "0.00032360",
+            "0.00032380",
+            "0.00032180",
+            "0.00032380",
+            "58"
+        ],
+        [
+            "2021-10-16 20:00:00",
+            "0.00033160",
+            "0.00033230",
+            "0.00032880",
+            "0.00033380",
+            "146"
+        ],
+        [
+            "2021-10-16 20:15:00",
+            "0.00033460",
+            "0.00033430",
+            "0.00033430",
+            "0.00033480",
+            "194"
+        ],
+        [
+            "2021-10-16 20:30:00",
+            "0.00033710",
+            "0.00033480",
+            "0.00033380",
+            "0.00033580",
+            "41"
+        ],
+        [
+            "2021-10-16 20:45:00",
+            "0.00033210",
+            "0.00032930",
+            "0.00032930",
+            "0.00032980",
+            "200"
+        ],
+        [
+            "2021-10-16 21:00:00",
+            "0.00032860",
+            "0.00033030",
+            "0.00032880",
+            "0.00033130",
+            "190"
+        ],
+        [
+            "2021-10-16 21:15:00",
+            "0.00033460",
+            "0.00033480",
+            "0.00033430",
+            "0.00033730",
+            "43"
+        ],
+        [
+            "2021-10-16 21:30:00",
+            "0.00033360",
+            "0.00033380",
+            "0.00033030",
+            "0.00033630",
+            "156"
+        ],
+        [
+            "2021-10-16 21:45:00",
+            "0.00033110",
+            "0.00033230",
+            "0.00033080",
+            "0.00033430",
+            "161"
+        ],
+        [
+            "2021-10-16 22:00:00",
+            "0.00032810",
+            "0.00033030",
+            "0.00032830",
+            "0.00033080",
+            "94"
+        ],
+        [
+            "2021-10-16 22:15:00",
+            "0.00033410",
+            "0.00033380",
+            "0.00033130",
+            "0.00033430",
+            "56"
+        ],
+        [
+            "2021-10-16 22:30:00",
+            "0.00033510",
+            "0.00033480",
+            "0.00033380",
+            "0.00033480",
+            "122"
+        ],
+        [
+            "2021-10-16 22:45:00",
+            "0.00033160",
+            "0.00033180",
+            "0.00032930",
+            "0.00033380",
+            "94"
+        ],
+        [
+            "2021-10-16 23:00:00",
+            "0.00033510",
+            "0.00033780",
+            "0.00033530",
+            "0.00033780",
+            "190"
+        ],
+        [
+            "2021-10-16 23:15:00",
+            "0.00034610",
+            "0.00034630",
+            "0.00034480",
+            "0.00034780",
+            "65"
+        ],
+        [
+            "2021-10-16 23:30:00",
+            "0.00034110",
+            "0.00034230",
+            "0.00033980",
+            "0.00034230",
+            "58"
+        ],
+        [
+            "2021-10-16 23:45:00",
+            "0.00034960",
+            "0.00035030",
+            "0.00034630",
+            "0.00035130",
+            "121"
+        ],
+        [
+            "2021-10-17 00:00:00",
+            "0.00035760",
+            "0.00035480",
+            "0.00035430",
+            "0.00035830",
+            "136"
+        ],
+        [
+            "2021-10-17 00:15:00",
+            "0.00035710",
+            "0.00035780",
+            "0.00035780",
+            "0.00035930",
+            "72"
+        ],
+        [
+            "2021-10-17 00:30:00",
+            "0.00035760",
+            "0.00035480",
+            "0.00035430",
+            "0.00035680",
+            "118"
+        ],
+        [
+            "2021-10-17 00:45:00",
+            "0.00035060",
+            "0.00035130",
+            "0.00035130",
+            "0.00035230",
+            "29"
+        ],
+        [
+            "2021-10-17 01:00:00",
+            "0.00035260",
+            "0.00035380",
+            "0.00035180",
+            "0.00035580",
+            "171"
+        ],
+        [
+            "2021-10-17 01:15:00",
+            "0.00035460",
+            "0.00035780",
+            "0.00035330",
+            "0.00035780",
+            "46"
+        ],
+        [
+            "2021-10-17 01:30:00",
+            "0.00035410",
+            "0.00035530",
+            "0.00035480",
+            "0.00035580",
+            "140"
+        ],
+        [
+            "2021-10-17 01:45:00",
+            "0.00035110",
+            "0.00035280",
+            "0.00034930",
+            "0.00035330",
+            "42"
+        ],
+        [
+            "2021-10-17 02:00:00",
+            "0.00034610",
+            "0.00034530",
+            "0.00034430",
+            "0.00034730",
+            "168"
+        ],
+        [
+            "2021-10-17 02:15:00",
+            "0.00034510",
+            "0.00034480",
+            "0.00034430",
+            "0.00034530",
+            "88"
+        ],
+        [
+            "2021-10-17 02:30:00",
+            "0.00033960",
+            "0.00033780",
+            "0.00033680",
+            "0.00033880",
+            "173"
+        ],
+        [
+            "2021-10-17 02:45:00",
+            "0.00033760",
+            "0.00033930",
+            "0.00033930",
+            "0.00034030",
+            "89"
+        ],
+        [
+            "2021-10-17 03:00:00",
+            "0.00033860",
+            "0.00034030",
+            "0.00033780",
+            "0.00034080",
+            "148"
+        ],
+        [
+            "2021-10-17 03:15:00",
+            "0.00034010",
+            "0.00034230",
+            "0.00033680",
+            "0.00034230",
+            "110"
+        ],
+        [
+            "2021-10-17 03:30:00",
+            "0.00034060",
+            "0.00034230",
+            "0.00033880",
+            "0.00034280",
+            "81"
+        ],
+        [
+            "2021-10-17 03:45:00",
+            "0.00034110",
+            "0.00034080",
+            "0.00033780",
+            "0.00034280",
+            "27"
+        ],
+        [
+            "2021-10-17 04:00:00",
+            "0.00034510",
+            "0.00034780",
+            "0.00034630",
+            "0.00034780",
+            "28"
+        ],
+        [
+            "2021-10-17 04:15:00",
+            "0.00034960",
+            "0.00034980",
+            "0.00034730",
+            "0.00035180",
+            "191"
+        ],
+        [
+            "2021-10-17 04:30:00",
+            "0.00033960",
+            "0.00033930",
+            "0.00033830",
+            "0.00034180",
+            "42"
+        ],
+        [
+            "2021-10-17 04:45:00",
+            "0.00033160",
+            "0.00033180",
+            "0.00032880",
+            "0.00033380",
+            "20"
+        ],
+        [
+            "2021-10-17 05:00:00",
+            "0.00032860",
+            "0.00032830",
+            "0.00032780",
+            "0.00033180",
+            "71"
+        ],
+        [
+            "2021-10-17 05:15:00",
+            "0.00032660",
+            "0.00032680",
+            "0.00032580",
+            "0.00032880",
+            "80"
+        ],
+        [
+            "2021-10-17 05:30:00",
+            "0.00032360",
+            "0.00032330",
+            "0.00032080",
+            "0.00032380",
+            "151"
+        ],
+        [
+            "2021-10-17 05:45:00",
+            "0.00032660",
+            "0.00032580",
+            "0.00032530",
+            "0.00032980",
+            "34"
+        ],
+        [
+            "2021-10-17 06:00:00",
+            "0.00032410",
+            "0.00032530",
+            "0.00032380",
+            "0.00032630",
+            "197"
+        ],
+        [
+            "2021-10-17 06:15:00",
+            "0.00031860",
+            "0.00031980",
+            "0.00031930",
+            "0.00032180",
+            "112"
+        ],
+        [
+            "2021-10-17 06:30:00",
+            "0.00032560",
+            "0.00032480",
+            "0.00032280",
+            "0.00032880",
+            "150"
+        ],
+        [
+            "2021-10-17 06:45:00",
+            "0.00033460",
+            "0.00033480",
+            "0.00033130",
+            "0.00033780",
+            "65"
+        ],
+        [
+            "2021-10-17 07:00:00",
+            "0.00032610",
+            "0.00032730",
+            "0.00032430",
+            "0.00032930",
+            "173"
+        ],
+        [
+            "2021-10-17 07:15:00",
+            "0.00032860",
+            "0.00032830",
+            "0.00032680",
+            "0.00032880",
+            "45"
+        ],
+        [
+            "2021-10-17 07:30:00",
+            "0.00032710",
+            "0.00032730",
+            "0.00032530",
+            "0.00032980",
+            "96"
+        ],
+        [
+            "2021-10-17 07:45:00",
+            "0.00032560",
+            "0.00032330",
+            "0.00032230",
+            "0.00032430",
+            "161"
+        ],
+        [
+            "2021-10-17 08:00:00",
+            "0.00032410",
+            "0.00032480",
+            "0.00032430",
+            "0.00032730",
+            "88"
+        ],
+        [
+            "2021-10-17 08:15:00",
+            "0.00033160",
+            "0.00033380",
+            "0.00032880",
+            "0.00033480",
+            "117"
+        ],
+        [
+            "2021-10-17 08:30:00",
+            "0.00033660",
+            "0.00033630",
+            "0.00033430",
+            "0.00033680",
+            "172"
+        ],
+        [
+            "2021-10-17 08:45:00",
+            "0.00033960",
+            "0.00033980",
+            "0.00033980",
+            "0.00034080",
+            "143"
+        ],
+        [
+            "2021-10-17 09:00:00",
+            "0.00033860",
+            "0.00033780",
+            "0.00033730",
+            "0.00033880",
+            "174"
+        ],
+        [
+            "2021-10-17 09:15:00",
+            "0.00034110",
+            "0.00034330",
+            "0.00034180",
+            "0.00034380",
+            "79"
+        ],
+        [
+            "2021-10-17 09:30:00",
+            "0.00034060",
+            "0.00034130",
+            "0.00034080",
+            "0.00034330",
+            "47"
+        ],
+        [
+            "2021-10-17 09:45:00",
+            "0.00034510",
+            "0.00034330",
+            "0.00034230",
+            "0.00034630",
+            "173"
+        ],
+        [
+            "2021-10-17 10:00:00",
+            "0.00033110",
+            "0.00033180",
+            "0.00032780",
+            "0.00033230",
+            "157"
+        ],
+        [
+            "2021-10-17 10:15:00",
+            "0.00033160",
+            "0.00033380",
+            "0.00032980",
+            "0.00033380",
+            "138"
+        ],
+        [
+            "2021-10-17 10:30:00",
+            "0.00034110",
+            "0.00034080",
+            "0.00033830",
+            "0.00034180",
+            "98"
+        ],
+        [
+            "2021-10-17 10:45:00",
+            "0.00033760",
+            "0.00033830",
+            "0.00033430",
+            "0.00033880",
+            "152"
+        ],
+        [
+            "2021-10-17 11:00:00",
+            "0.00033160",
+            "0.00032980",
+            "0.00032880",
+            "0.00032980",
+            "176"
+        ],
+        [
+            "2021-10-17 11:15:00",
+            "0.00033010",
+            "0.00033230",
+            "0.00033030",
+            "0.00033330",
+            "75"
+        ],
+        [
+            "2021-10-17 11:30:00",
+            "0.00033060",
+            "0.00032980",
+            "0.00032930",
+            "0.00033080",
+            "97"
+        ],
+        [
+            "2021-10-17 11:45:00",
+            "0.00033210",
+            "0.00033280",
+            "0.00032930",
+            "0.00033430",
+            "197"
+        ],
+        [
+            "2021-10-17 12:00:00",
+            "0.00033610",
+            "0.00033330",
+            "0.00033330",
+            "0.00033630",
+            "56"
+        ],
+        [
+            "2021-10-17 12:15:00",
+            "0.00034510",
+            "0.00034380",
+            "0.00034330",
+            "0.00034530",
+            "112"
+        ],
+        [
+            "2021-10-17 12:30:00",
+            "0.00033210",
+            "0.00033280",
+            "0.00033230",
+            "0.00033430",
+            "158"
+        ],
+        [
+            "2021-10-17 12:45:00",
+            "0.00032460",
+            "0.00032480",
+            "0.00032280",
+            "0.00032630",
+            "55"
+        ],
+        [
+            "2021-10-17 13:00:00",
+            "0.00033060",
+            "0.00032930",
+            "0.00032880",
+            "0.00033230",
+            "101"
+        ],
+        [
+            "2021-10-17 13:15:00",
+            "0.00033260",
+            "0.00033280",
+            "0.00032930",
+            "0.00033380",
+            "182"
+        ],
+        [
+            "2021-10-17 13:30:00",
+            "0.00032460",
+            "0.00032680",
+            "0.00032480",
+            "0.00032680",
+            "88"
+        ],
+        [
+            "2021-10-17 13:45:00",
+            "0.00033560",
+            "0.00033530",
+            "0.00033480",
+            "0.00033580",
+            "161"
+        ],
+        [
+            "2021-10-17 14:00:00",
+            "0.00033660",
+            "0.00033680",
+            "0.00033630",
+            "0.00033780",
+            "33"
+        ],
+        [
+            "2021-10-17 14:15:00",
+            "0.00034860",
+            "0.00035030",
+            "0.00034530",
+            "0.00035180",
+            "66"
+        ],
+        [
+            "2021-10-17 14:30:00",
+            "0.00035560",
+            "0.00035380",
+            "0.00035230",
+            "0.00035580",
+            "103"
+        ],
+        [
+            "2021-10-17 14:45:00",
+            "0.00035510",
+            "0.00035680",
+            "0.00035530",
+            "0.00035830",
+            "126"
+        ],
+        [
+            "2021-10-17 15:00:00",
+            "0.00035260",
+            "0.00035230",
+            "0.00035080",
+            "0.00035480",
+            "43"
+        ],
+        [
+            "2021-10-17 15:15:00",
+            "0.00034960",
+            "0.00034980",
+            "0.00034680",
+            "0.00035180",
+            "113"
+        ],
+        [
+            "2021-10-17 15:30:00",
+            "0.00035510",
+            "0.00035530",
+            "0.00035380",
+            "0.00035830",
+            "91"
+        ],
+        [
+            "2021-10-17 15:45:00",
+            "0.00036260",
+            "0.00036430",
+            "0.00036330",
+            "0.00036480",
+            "24"
+        ],
+        [
+            "2021-10-17 16:00:00",
+            "0.00036160",
+            "0.00036130",
+            "0.00035930",
+            "0.00036180",
+            "137"
+        ],
+        [
+            "2021-10-17 16:15:00",
+            "0.00036060",
+            "0.00035980",
+            "0.00035730",
+            "0.00035980",
+            "129"
+        ],
+        [
+            "2021-10-17 16:30:00",
+            "0.00035460",
+            "0.00035680",
+            "0.00035430",
+            "0.00035680",
+            "195"
+        ],
+        [
+            "2021-10-17 16:45:00",
+            "0.00035960",
+            "0.00035680",
+            "0.00035680",
+            "0.00036230",
+            "154"
+        ],
+        [
+            "2021-10-17 17:00:00",
+            "0.00036160",
+            "0.00036130",
+            "0.00035830",
+            "0.00036180",
+            "184"
+        ],
+        [
+            "2021-10-17 17:15:00",
+            "0.00035410",
+            "0.00035430",
+            "0.00035330",
+            "0.00035630",
+            "74"
+        ],
+        [
+            "2021-10-17 17:30:00",
+            "0.00035510",
+            "0.00035630",
+            "0.00035180",
+            "0.00035780",
+            "145"
+        ],
+        [
+            "2021-10-17 17:45:00",
+            "0.00035860",
+            "0.00035880",
+            "0.00035780",
+            "0.00035930",
+            "38"
+        ],
+        [
+            "2021-10-17 18:00:00",
+            "0.00035110",
+            "0.00034930",
+            "0.00034930",
+            "0.00035130",
+            "30"
+        ],
+        [
+            "2021-10-17 18:15:00",
+            "0.00034510",
+            "0.00034730",
+            "0.00034530",
+            "0.00034830",
+            "71"
+        ],
+        [
+            "2021-10-17 18:30:00",
+            "0.00035210",
+            "0.00034880",
+            "0.00034880",
+            "0.00035130",
+            "157"
+        ],
+        [
+            "2021-10-17 18:45:00",
+            "0.00034810",
+            "0.00034730",
+            "0.00034680",
+            "0.00035080",
+            "96"
+        ],
+        [
+            "2021-10-17 19:00:00",
+            "0.00034710",
+            "0.00034830",
+            "0.00034630",
+            "0.00035030",
+            "100"
+        ],
+        [
+            "2021-10-17 19:15:00",
+            "0.00034210",
+            "0.00034430",
+            "0.00034180",
+            "0.00034480",
+            "22"
+        ],
+        [
+            "2021-10-17 19:30:00",
+            "0.00033910",
+            "0.00033880",
+            "0.00033730",
+            "0.00034180",
+            "164"
+        ],
+        [
+            "2021-10-17 19:45:00",
+            "0.00034710",
+            "0.00034930",
+            "0.00034930",
+            "0.00035030",
+            "90"
+        ],
+        [
+            "2021-10-17 20:00:00",
+            "0.00035110",
+            "0.00034980",
+            "0.00034930",
+            "0.00035230",
+            "52"
+        ],
+        [
+            "2021-10-17 20:15:00",
+            "0.00034410",
+            "0.00034430",
+            "0.00034380",
+            "0.00034580",
+            "191"
+        ],
+        [
+            "2021-10-17 20:30:00",
+            "0.00035210",
+            "0.00035280",
+            "0.00035030",
+            "0.00035530",
+            "159"
+        ],
+        [
+            "2021-10-17 20:45:00",
+            "0.00035960",
+            "0.00036180",
+            "0.00035730",
+            "0.00036230",
+            "170"
+        ],
+        [
+            "2021-10-17 21:00:00",
+            "0.00036410",
+            "0.00036580",
+            "0.00036130",
+            "0.00036680",
+            "143"
+        ],
+        [
+            "2021-10-17 21:15:00",
+            "0.00037010",
+            "0.00037230",
+            "0.00036930",
+            "0.00037280",
+            "54"
+        ],
+        [
+            "2021-10-17 21:30:00",
+            "0.00038010",
+            "0.00037930",
+            "0.00037930",
+            "0.00038030",
+            "64"
+        ],
+        [
+            "2021-10-17 21:45:00",
+            "0.00037760",
+            "0.00037830",
+            "0.00037780",
+            "0.00038080",
+            "32"
+        ],
+        [
+            "2021-10-17 22:00:00",
+            "0.00037110",
+            "0.00036830",
+            "0.00036830",
+            "0.00037180",
+            "25"
+        ],
+        [
+            "2021-10-17 22:15:00",
+            "0.00037560",
+            "0.00037480",
+            "0.00037430",
+            "0.00037880",
+            "139"
+        ],
+        [
+            "2021-10-17 22:30:00",
+            "0.00037560",
+            "0.00037530",
+            "0.00037380",
+            "0.00037680",
+            "48"
+        ],
+        [
+            "2021-10-17 22:45:00",
+            "0.00037310",
+            "0.00037330",
+            "0.00037030",
+            "0.00037330",
+            "78"
+        ],
+        [
+            "2021-10-17 23:00:00",
+            "0.00036160",
+            "0.00036380",
+            "0.00036280",
+            "0.00036430",
+            "166"
+        ],
+        [
+            "2021-10-17 23:15:00",
+            "0.00036960",
+            "0.00037280",
+            "0.00037180",
+            "0.00037280",
+            "180"
+        ],
+        [
+            "2021-10-17 23:30:00",
+            "0.00037260",
+            "0.00037180",
+            "0.00037130",
+            "0.00037380",
+            "30"
+        ],
+        [
+            "2021-10-17 23:45:00",
+            "0.00036660",
+            "0.00036630",
+            "0.00036480",
+            "0.00036880",
+            "26"
+        ],
+        [
+            "2021-10-18 00:00:00",
+            "0.00036910",
+            "0.00036930",
+            "0.00036880",
+            "0.00037030",
+            "172"
+        ],
+        [
+            "2021-10-18 00:15:00",
+            "0.00036260",
+            "0.00036180",
+            "0.00035930",
+            "0.00036480",
+            "58"
+        ],
+        [
+            "2021-10-18 00:30:00",
+            "0.00036760",
+            "0.00036630",
+            "0.00036530",
+            "0.00036930",
+            "139"
+        ],
+        [
+            "2021-10-18 00:45:00",
+            "0.00035760",
+            "0.00035780",
+            "0.00035630",
+            "0.00035980",
+            "81"
+        ],
+        [
+            "2021-10-18 01:00:00",
+            "0.00036110",
+            "0.00035830",
+            "0.00035830",
+            "0.00036130",
+            "21"
+        ],
+        [
+            "2021-10-18 01:15:00",
+            "0.00035960",
+            "0.00035980",
+            "0.00035780",
+            "0.00036030",
+            "161"
+        ],
+        [
+            "2021-10-18 01:30:00",
+            "0.00035260",
+            "0.00035230",
+            "0.00035230",
+            "0.00035280",
+            "32"
+        ],
+        [
+            "2021-10-18 01:45:00",
+            "0.00035560",
+            "0.00035430",
+            "0.00035430",
+            "0.00035480",
+            "189"
+        ],
+        [
+            "2021-10-18 02:00:00",
+            "0.00035310",
+            "0.00035330",
+            "0.00035030",
+            "0.00035630",
+            "111"
+        ],
+        [
+            "2021-10-18 02:15:00",
+            "0.00036560",
+            "0.00036530",
+            "0.00036530",
+            "0.00036580",
+            "54"
+        ],
+        [
+            "2021-10-18 02:30:00",
+            "0.00036510",
+            "0.00036730",
+            "0.00036230",
+            "0.00036780",
+            "54"
+        ],
+        [
+            "2021-10-18 02:45:00",
+            "0.00035910",
+            "0.00035730",
+            "0.00035680",
+            "0.00036230",
+            "153"
+        ],
+        [
+            "2021-10-18 03:00:00",
+            "0.00035510",
+            "0.00035430",
+            "0.00035280",
+            "0.00035580",
+            "112"
+        ],
+        [
+            "2021-10-18 03:15:00",
+            "0.00035510",
+            "0.00035530",
+            "0.00035330",
+            "0.00035580",
+            "71"
+        ],
+        [
+            "2021-10-18 03:30:00",
+            "0.00035860",
+            "0.00035580",
+            "0.00035530",
+            "0.00035780",
+            "46"
+        ],
+        [
+            "2021-10-18 03:45:00",
+            "0.00035810",
+            "0.00035780",
+            "0.00035480",
+            "0.00035880",
+            "88"
+        ],
+        [
+            "2021-10-18 04:00:00",
+            "0.00036210",
+            "0.00036430",
+            "0.00036180",
+            "0.00036480",
+            "194"
+        ],
+        [
+            "2021-10-18 04:15:00",
+            "0.00036960",
+            "0.00036930",
+            "0.00036630",
+            "0.00037080",
+            "117"
+        ],
+        [
+            "2021-10-18 04:30:00",
+            "0.00035460",
+            "0.00035430",
+            "0.00035130",
+            "0.00035730",
+            "141"
+        ],
+        [
+            "2021-10-18 04:45:00",
+            "0.00035310",
+            "0.00035330",
+            "0.00035280",
+            "0.00035430",
+            "166"
+        ],
+        [
+            "2021-10-18 05:00:00",
+            "0.00035910",
+            "0.00036030",
+            "0.00035630",
+            "0.00036130",
+            "131"
+        ],
+        [
+            "2021-10-18 05:15:00",
+            "0.00035260",
+            "0.00035430",
+            "0.00035230",
+            "0.00035530",
+            "148"
+        ],
+        [
+            "2021-10-18 05:30:00",
+            "0.00035610",
+            "0.00035680",
+            "0.00035330",
+            "0.00035930",
+            "64"
+        ],
+        [
+            "2021-10-18 05:45:00",
+            "0.00035510",
+            "0.00035680",
+            "0.00035530",
+            "0.00035830",
+            "38"
+        ],
+        [
+            "2021-10-18 06:00:00",
+            "0.00036660",
+            "0.00036380",
+            "0.00036380",
+            "0.00036880",
+            "153"
+        ],
+        [
+            "2021-10-18 06:15:00",
+            "0.00036810",
+            "0.00036780",
+            "0.00036530",
+            "0.00036930",
+            "55"
+        ],
+        [
+            "2021-10-18 06:30:00",
+            "0.00036710",
+            "0.00036730",
+            "0.00036630",
+            "0.00036830",
+            "190"
+        ],
+        [
+            "2021-10-18 06:45:00",
+            "0.00037860",
+            "0.00037930",
+            "0.00037780",
+            "0.00038080",
+            "58"
+        ],
+        [
+            "2021-10-18 07:00:00",
+            "0.00038210",
+            "0.00038330",
+            "0.00038180",
+            "0.00038380",
+            "167"
+        ],
+        [
+            "2021-10-18 07:15:00",
+            "0.00038610",
+            "0.00038580",
+            "0.00038330",
+            "0.00038830",
+            "54"
+        ],
+        [
+            "2021-10-18 07:30:00",
+            "0.00038610",
+            "0.00038630",
+            "0.00038580",
+            "0.00038930",
+            "104"
+        ],
+        [
+            "2021-10-18 07:45:00",
+            "0.00038260",
+            "0.00038280",
+            "0.00038030",
+            "0.00038380",
+            "149"
+        ],
+        [
+            "2021-10-18 08:00:00",
+            "0.00038660",
+            "0.00038680",
+            "0.00038430",
+            "0.00038880",
+            "96"
+        ],
+        [
+            "2021-10-18 08:15:00",
+            "0.00038770",
+            "0.00038640",
+            "0.00038490",
+            "0.00038990",
+            "191"
+        ],
+        [
+            "2021-10-18 08:30:00",
+            "0.00038640",
+            "0.00038660",
+            "0.00038610",
+            "0.00038910",
+            "49"
+        ],
+        [
+            "2021-10-18 08:45:00",
+            "0.00037800",
+            "0.00037770",
+            "0.00037720",
+            "0.00038070",
+            "67"
+        ],
+        [
+            "2021-10-18 09:00:00",
+            "0.00037600",
+            "0.00037320",
+            "0.00037270",
+            "0.00037770",
+            "124"
+        ],
+        [
+            "2021-10-18 09:15:00",
+            "0.00036900",
+            "0.00036570",
+            "0.00036570",
+            "0.00037220",
+            "84"
+        ],
+        [
+            "2021-10-18 09:30:00",
+            "0.00037200",
+            "0.00037220",
+            "0.00037170",
+            "0.00037420",
+            "184"
+        ],
+        [
+            "2021-10-18 09:45:00",
+            "0.00037500",
+            "0.00037570",
+            "0.00037320",
+            "0.00037620",
+            "54"
+        ],
+        [
+            "2021-10-18 10:00:00",
+            "0.00037150",
+            "0.00037220",
+            "0.00037120",
+            "0.00037270",
+            "70"
+        ],
+        [
+            "2021-10-18 10:15:00",
+            "0.00037750",
+            "0.00037670",
+            "0.00037520",
+            "0.00037820",
+            "143"
+        ],
+        [
+            "2021-10-18 10:30:00",
+            "0.00037650",
+            "0.00037720",
+            "0.00037370",
+            "0.00037870",
+            "38"
+        ],
+        [
+            "2021-10-18 10:45:00",
+            "0.00037950",
+            "0.00037970",
+            "0.00037820",
+            "0.00038270",
+            "117"
+        ],
+        [
+            "2021-10-18 11:00:00",
+            "0.00038150",
+            "0.00038270",
+            "0.00038120",
+            "0.00038470",
+            "67"
+        ],
+        [
+            "2021-10-18 11:15:00",
+            "0.00038100",
+            "0.00038170",
+            "0.00037770",
+            "0.00038370",
+            "109"
+        ],
+        [
+            "2021-10-18 11:30:00",
+            "0.00039050",
+            "0.00039120",
+            "0.00038820",
+            "0.00039270",
+            "162"
+        ],
+        [
+            "2021-10-18 11:45:00",
+            "0.00038800",
+            "0.00038820",
+            "0.00038670",
+            "0.00038920",
+            "157"
+        ],
+        [
+            "2021-10-18 12:00:00",
+            "0.00037900",
+            "0.00037920",
+            "0.00037670",
+            "0.00037920",
+            "58"
+        ],
+        [
+            "2021-10-18 12:15:00",
+            "0.00038000",
+            "0.00037770",
+            "0.00037720",
+            "0.00038120",
+            "148"
+        ],
+        [
+            "2021-10-18 12:30:00",
+            "0.00037950",
+            "0.00037670",
+            "0.00037620",
+            "0.00037670",
+            "138"
+        ],
+        [
+            "2021-10-18 12:45:00",
+            "0.00037450",
+            "0.00037470",
+            "0.00037170",
+            "0.00037770",
+            "119"
+        ],
+        [
+            "2021-10-18 13:00:00",
+            "0.00037800",
+            "0.00037770",
+            "0.00037570",
+            "0.00038020",
+            "46"
+        ],
+        [
+            "2021-10-18 13:15:00",
+            "0.00037850",
+            "0.00037870",
+            "0.00037670",
+            "0.00038170",
+            "63"
+        ],
+        [
+            "2021-10-18 13:30:00",
+            "0.00038550",
+            "0.00038570",
+            "0.00038370",
+            "0.00038670",
+            "186"
+        ],
+        [
+            "2021-10-18 13:45:00",
+            "0.00039100",
+            "0.00038920",
+            "0.00038820",
+            "0.00039120",
+            "54"
+        ],
+        [
+            "2021-10-18 14:00:00",
+            "0.00039700",
+            "0.00039460",
+            "0.00039360",
+            "0.00040020",
+            "36"
+        ],
+        [
+            "2021-10-18 14:15:00",
+            "0.00038400",
+            "0.00038430",
+            "0.00038160",
+            "0.00038670",
+            "86"
+        ],
+        [
+            "2021-10-18 14:30:00",
+            "0.00038080",
+            "0.00038100",
+            "0.00037810",
+            "0.00038350",
+            "105"
+        ],
+        [
+            "2021-10-18 14:45:00",
+            "0.00037720",
+            "0.00037450",
+            "0.00037440",
+            "0.00037550",
+            "73"
+        ],
+        [
+            "2021-10-18 15:00:00",
+            "0.00037510",
+            "0.00037630",
+            "0.00037180",
+            "0.00037830",
+            "93"
+        ],
+        [
+            "2021-10-18 15:15:00",
+            "0.00037910",
+            "0.00037780",
+            "0.00037680",
+            "0.00037780",
+            "66"
+        ],
+        [
+            "2021-10-18 15:30:00",
+            "0.00038010",
+            "0.00037880",
+            "0.00037730",
+            "0.00037930",
+            "152"
+        ],
+        [
+            "2021-10-18 15:45:00",
+            "0.00038460",
+            "0.00038480",
+            "0.00038380",
+            "0.00038580",
+            "200"
+        ],
+        [
+            "2021-10-18 16:00:00",
+            "0.00039060",
+            "0.00038780",
+            "0.00038780",
+            "0.00038990",
+            "22"
+        ],
+        [
+            "2021-10-18 16:15:00",
+            "0.00038290",
+            "0.00038060",
+            "0.00038010",
+            "0.00038310",
+            "108"
+        ],
+        [
+            "2021-10-18 16:30:00",
+            "0.00038140",
+            "0.00038160",
+            "0.00038060",
+            "0.00038160",
+            "53"
+        ],
+        [
+            "2021-10-18 16:45:00",
+            "0.00038640",
+            "0.00038510",
+            "0.00038300",
+            "0.00038670",
+            "122"
+        ],
+        [
+            "2021-10-18 17:00:00",
+            "0.00038370",
+            "0.00038390",
+            "0.00038340",
+            "0.00038590",
+            "66"
+        ],
+        [
+            "2021-10-18 17:15:00",
+            "0.00038520",
+            "0.00038640",
+            "0.00038490",
+            "0.00038740",
+            "98"
+        ],
+        [
+            "2021-10-18 17:30:00",
+            "0.00038070",
+            "0.00038090",
+            "0.00037840",
+            "0.00038090",
+            "88"
+        ],
+        [
+            "2021-10-18 17:45:00",
+            "0.00038920",
+            "0.00038890",
+            "0.00038590",
+            "0.00039140",
+            "147"
+        ],
+        [
+            "2021-10-18 18:00:00",
+            "0.00038520",
+            "0.00038640",
+            "0.00038540",
+            "0.00038840",
+            "77"
+        ],
+        [
+            "2021-10-18 18:15:00",
+            "0.00038970",
+            "0.00039090",
+            "0.00038990",
+            "0.00039190",
+            "177"
+        ],
+        [
+            "2021-10-18 18:30:00",
+            "0.00039020",
+            "0.00038890",
+            "0.00038890",
+            "0.00038990",
+            "39"
+        ],
+        [
+            "2021-10-18 18:45:00",
+            "0.00039170",
+            "0.00039190",
+            "0.00039140",
+            "0.00039340",
+            "188"
+        ],
+        [
+            "2021-10-18 19:00:00",
+            "0.00039020",
+            "0.00039190",
+            "0.00039040",
+            "0.00039340",
+            "91"
+        ],
+        [
+            "2021-10-18 19:15:00",
+            "0.00038720",
+            "0.00038790",
+            "0.00038490",
+            "0.00039040",
+            "186"
+        ],
+        [
+            "2021-10-18 19:30:00",
+            "0.00039310",
+            "0.00039240",
+            "0.00038980",
+            "0.00039340",
+            "198"
+        ],
+        [
+            "2021-10-18 19:45:00",
+            "0.00038980",
+            "0.00038900",
+            "0.00038850",
+            "0.00039100",
+            "79"
+        ],
+        [
+            "2021-10-18 20:00:00",
+            "0.00038550",
+            "0.00038520",
+            "0.00038270",
+            "0.00038820",
+            "170"
+        ],
+        [
+            "2021-10-18 20:15:00",
+            "0.00038850",
+            "0.00038820",
+            "0.00038520",
+            "0.00038870",
+            "77"
+        ],
+        [
+            "2021-10-18 20:30:00",
+            "0.00038700",
+            "0.00038920",
+            "0.00038470",
+            "0.00039020",
+            "157"
+        ],
+        [
+            "2021-10-18 20:45:00",
+            "0.00037750",
+            "0.00037820",
+            "0.00037670",
+            "0.00037970",
+            "43"
+        ],
+        [
+            "2021-10-18 21:00:00",
+            "0.00037400",
+            "0.00037220",
+            "0.00037220",
+            "0.00037420",
+            "173"
+        ],
+        [
+            "2021-10-18 21:15:00",
+            "0.00037850",
+            "0.00037770",
+            "0.00037670",
+            "0.00037970",
+            "102"
+        ],
+        [
+            "2021-10-18 21:30:00",
+            "0.00037500",
+            "0.00037520",
+            "0.00037270",
+            "0.00037620",
+            "131"
+        ],
+        [
+            "2021-10-18 21:45:00",
+            "0.00037350",
+            "0.00037470",
+            "0.00037420",
+            "0.00037670",
+            "71"
+        ],
+        [
+            "2021-10-18 22:00:00",
+            "0.00037050",
+            "0.00037320",
+            "0.00037170",
+            "0.00037320",
+            "200"
+        ],
+        [
+            "2021-10-18 22:15:00",
+            "0.00037320",
+            "0.00036870",
+            "0.00036620",
+            "0.00036970",
+            "177"
+        ],
+        [
+            "2021-10-18 22:30:00",
+            "0.00037450",
+            "0.00036870",
+            "0.00037170",
+            "0.00037770",
+            "30"
+        ],
+        [
+            "2021-10-18 22:45:00",
+            "0.00037520",
+            "0.00037470",
+            "0.00037170",
+            "0.00037620",
+            "39"
+        ],
+        [
+            "2021-10-18 23:00:00",
+            "0.00037470",
+            "0.00036720",
+            "0.00036570",
+            "0.00036820",
+            "185"
+        ],
+        [
+            "2021-10-18 23:15:00",
+            "0.00036720",
+            "0.00036420",
+            "0.00036370",
+            "0.00036470",
+            "56"
+        ],
+        [
+            "2021-10-18 23:30:00",
+            "0.00036420",
+            "0.00036820",
+            "0.00036720",
+            "0.00037320",
+            "136"
+        ],
+        [
+            "2021-10-18 23:45:00",
+            "0.00036820",
+            "0.00036320",
+            "0.00036220",
+            "0.00036620",
+            "46"
+        ]
+    ];
+    var currentDate = [
+        "10-16 00:00",
+        "10-16 00:15",
+        "10-16 00:30",
+        "10-16 00:45",
+        "10-16 01:00",
+        "10-16 01:15",
+        "10-16 01:30",
+        "10-16 01:45",
+        "10-16 02:00",
+        "10-16 02:15",
+        "10-16 02:30",
+        "10-16 02:45",
+        "10-16 03:00",
+        "10-16 03:15",
+        "10-16 03:30",
+        "10-16 03:45",
+        "10-16 04:00",
+        "10-16 04:15",
+        "10-16 04:30",
+        "10-16 04:45",
+        "10-16 05:00",
+        "10-16 05:15",
+        "10-16 05:30",
+        "10-16 05:45",
+        "10-16 06:00",
+        "10-16 06:15",
+        "10-16 06:30",
+        "10-16 06:45",
+        "10-16 07:00",
+        "10-16 07:15",
+        "10-16 07:30",
+        "10-16 07:45",
+        "10-16 08:00",
+        "10-16 08:15",
+        "10-16 08:30",
+        "10-16 08:45",
+        "10-16 09:00",
+        "10-16 09:15",
+        "10-16 09:30",
+        "10-16 09:45",
+        "10-16 10:00",
+        "10-16 10:15",
+        "10-16 10:30",
+        "10-16 10:45",
+        "10-16 11:00",
+        "10-16 11:15",
+        "10-16 11:30",
+        "10-16 11:45",
+        "10-16 12:00",
+        "10-16 12:15",
+        "10-16 12:30",
+        "10-16 12:45",
+        "10-16 13:00",
+        "10-16 13:15",
+        "10-16 13:30",
+        "10-16 13:45",
+        "10-16 14:00",
+        "10-16 14:15",
+        "10-16 14:30",
+        "10-16 14:45",
+        "10-16 15:00",
+        "10-16 15:15",
+        "10-16 15:30",
+        "10-16 15:45",
+        "10-16 16:00",
+        "10-16 16:15",
+        "10-16 16:30",
+        "10-16 16:45",
+        "10-16 17:00",
+        "10-16 17:15",
+        "10-16 17:30",
+        "10-16 17:45",
+        "10-16 18:00",
+        "10-16 18:15",
+        "10-16 18:30",
+        "10-16 18:45",
+        "10-16 19:00",
+        "10-16 19:15",
+        "10-16 19:30",
+        "10-16 19:45",
+        "10-16 20:00",
+        "10-16 20:15",
+        "10-16 20:30",
+        "10-16 20:45",
+        "10-16 21:00",
+        "10-16 21:15",
+        "10-16 21:30",
+        "10-16 21:45",
+        "10-16 22:00",
+        "10-16 22:15",
+        "10-16 22:30",
+        "10-16 22:45",
+        "10-16 23:00",
+        "10-16 23:15",
+        "10-16 23:30",
+        "10-16 23:45",
+        "10-17 00:00",
+        "10-17 00:15",
+        "10-17 00:30",
+        "10-17 00:45",
+        "10-17 01:00",
+        "10-17 01:15",
+        "10-17 01:30",
+        "10-17 01:45",
+        "10-17 02:00",
+        "10-17 02:15",
+        "10-17 02:30",
+        "10-17 02:45",
+        "10-17 03:00",
+        "10-17 03:15",
+        "10-17 03:30",
+        "10-17 03:45",
+        "10-17 04:00",
+        "10-17 04:15",
+        "10-17 04:30",
+        "10-17 04:45",
+        "10-17 05:00",
+        "10-17 05:15",
+        "10-17 05:30",
+        "10-17 05:45",
+        "10-17 06:00",
+        "10-17 06:15",
+        "10-17 06:30",
+        "10-17 06:45",
+        "10-17 07:00",
+        "10-17 07:15",
+        "10-17 07:30",
+        "10-17 07:45",
+        "10-17 08:00",
+        "10-17 08:15",
+        "10-17 08:30",
+        "10-17 08:45",
+        "10-17 09:00",
+        "10-17 09:15",
+        "10-17 09:30",
+        "10-17 09:45",
+        "10-17 10:00",
+        "10-17 10:15",
+        "10-17 10:30",
+        "10-17 10:45",
+        "10-17 11:00",
+        "10-17 11:15",
+        "10-17 11:30",
+        "10-17 11:45",
+        "10-17 12:00",
+        "10-17 12:15",
+        "10-17 12:30",
+        "10-17 12:45",
+        "10-17 13:00",
+        "10-17 13:15",
+        "10-17 13:30",
+        "10-17 13:45",
+        "10-17 14:00",
+        "10-17 14:15",
+        "10-17 14:30",
+        "10-17 14:45",
+        "10-17 15:00",
+        "10-17 15:15",
+        "10-17 15:30",
+        "10-17 15:45",
+        "10-17 16:00",
+        "10-17 16:15",
+        "10-17 16:30",
+        "10-17 16:45",
+        "10-17 17:00",
+        "10-17 17:15",
+        "10-17 17:30",
+        "10-17 17:45",
+        "10-17 18:00",
+        "10-17 18:15",
+        "10-17 18:30",
+        "10-17 18:45",
+        "10-17 19:00",
+        "10-17 19:15",
+        "10-17 19:30",
+        "10-17 19:45",
+        "10-17 20:00",
+        "10-17 20:15",
+        "10-17 20:30",
+        "10-17 20:45",
+        "10-17 21:00",
+        "10-17 21:15",
+        "10-17 21:30",
+        "10-17 21:45",
+        "10-17 22:00",
+        "10-17 22:15",
+        "10-17 22:30",
+        "10-17 22:45",
+        "10-17 23:00",
+        "10-17 23:15",
+        "10-17 23:30",
+        "10-17 23:45",
+        "10-18 00:00",
+        "10-18 00:15",
+        "10-18 00:30",
+        "10-18 00:45",
+        "10-18 01:00",
+        "10-18 01:15",
+        "10-18 01:30",
+        "10-18 01:45",
+        "10-18 02:00",
+        "10-18 02:15",
+        "10-18 02:30",
+        "10-18 02:45",
+        "10-18 03:00",
+        "10-18 03:15",
+        "10-18 03:30",
+        "10-18 03:45",
+        "10-18 04:00",
+        "10-18 04:15",
+        "10-18 04:30",
+        "10-18 04:45",
+        "10-18 05:00",
+        "10-18 05:15",
+        "10-18 05:30",
+        "10-18 05:45",
+        "10-18 06:00",
+        "10-18 06:15",
+        "10-18 06:30",
+        "10-18 06:45",
+        "10-18 07:00",
+        "10-18 07:15",
+        "10-18 07:30",
+        "10-18 07:45",
+        "10-18 08:00",
+        "10-18 08:15",
+        "10-18 08:30",
+        "10-18 08:45",
+        "10-18 09:00",
+        "10-18 09:15",
+        "10-18 09:30",
+        "10-18 09:45",
+        "10-18 10:00",
+        "10-18 10:15",
+        "10-18 10:30",
+        "10-18 10:45",
+        "10-18 11:00",
+        "10-18 11:15",
+        "10-18 11:30",
+        "10-18 11:45",
+        "10-18 12:00",
+        "10-18 12:15",
+        "10-18 12:30",
+        "10-18 12:45",
+        "10-18 13:00",
+        "10-18 13:15",
+        "10-18 13:30",
+        "10-18 13:45",
+        "10-18 14:00",
+        "10-18 14:15",
+        "10-18 14:30",
+        "10-18 14:45",
+        "10-18 15:00",
+        "10-18 15:15",
+        "10-18 15:30",
+        "10-18 15:45",
+        "10-18 16:00",
+        "10-18 16:15",
+        "10-18 16:30",
+        "10-18 16:45",
+        "10-18 17:00",
+        "10-18 17:15",
+        "10-18 17:30",
+        "10-18 17:45",
+        "10-18 18:00",
+        "10-18 18:15",
+        "10-18 18:30",
+        "10-18 18:45",
+        "10-18 19:00",
+        "10-18 19:15",
+        "10-18 19:30",
+        "10-18 19:45",
+        "10-18 20:00",
+        "10-18 20:15",
+        "10-18 20:30",
+        "10-18 20:45",
+        "10-18 21:00",
+        "10-18 21:15",
+        "10-18 21:30",
+        "10-18 21:45",
+        "10-18 22:00",
+        "10-18 22:15",
+        "10-18 22:30",
+        "10-18 22:45",
+        "10-18 23:00",
+        "10-18 23:15",
+        "10-18 23:30",
+        "10-18 23:45"
+    ];
+    var currentData = [
+        [
+            "2021-10-16 00:00:00",
+            "0.00032543",
+            "0.00032567",
+            "0.00032518",
+            "0.00032567",
+            "141"
+        ],
+        [
+            "2021-10-16 00:15:00",
+            "0.00032766",
+            "0.00032790",
+            "0.00032741",
+            "0.00032791",
+            "76"
+        ],
+        [
+            "2021-10-16 00:30:00",
+            "0.00032988",
+            "0.00033013",
+            "0.00032963",
+            "0.00033013",
+            "70"
+        ],
+        [
+            "2021-10-16 00:45:00",
+            "0.00033062",
+            "0.00033087",
+            "0.00033038",
+            "0.00033087",
+            "114"
+        ],
+        [
+            "2021-10-16 01:00:00",
+            "0.00033038",
+            "0.00033013",
+            "0.00033012",
+            "0.00033063",
+            "61"
+        ],
+        [
+            "2021-10-16 01:15:00",
+            "0.00033061",
+            "0.00033036",
+            "0.00033035",
+            "0.00033036",
+            "184"
+        ],
+        [
+            "2021-10-16 01:30:00",
+            "0.00032935",
+            "0.00032910",
+            "0.00032910",
+            "0.00032960",
+            "160"
+        ],
+        [
+            "2021-10-16 01:45:00",
+            "0.00033061",
+            "0.00033036",
+            "0.00033036",
+            "0.00033086",
+            "122"
+        ],
+        [
+            "2021-10-16 02:00:00",
+            "0.00032986",
+            "0.00032961",
+            "0.00032961",
+            "0.00033012",
+            "102"
+        ],
+        [
+            "2021-10-16 02:15:00",
+            "0.00033062",
+            "0.00033087",
+            "0.00033037",
+            "0.00033088",
+            "198"
+        ],
+        [
+            "2021-10-16 02:30:00",
+            "0.00033187",
+            "0.00033162",
+            "0.00033161",
+            "0.00033212",
+            "193"
+        ],
+        [
+            "2021-10-16 02:45:00",
+            "0.00033162",
+            "0.00033187",
+            "0.00033136",
+            "0.00033187",
+            "159"
+        ],
+        [
+            "2021-10-16 03:00:00",
+            "0.00033287",
+            "0.00033261",
+            "0.00033261",
+            "0.00033312",
+            "175"
+        ],
+        [
+            "2021-10-16 03:15:00",
+            "0.00033313",
+            "0.00033287",
+            "0.00033287",
+            "0.00033338",
+            "97"
+        ],
+        [
+            "2021-10-16 03:30:00",
+            "0.00033288",
+            "0.00033313",
+            "0.00033263",
+            "0.00033314",
+            "168"
+        ],
+        [
+            "2021-10-16 03:45:00",
+            "0.00033415",
+            "0.00033440",
+            "0.00033390",
+            "0.00033440",
+            "57"
+        ],
+        [
+            "2021-10-16 04:00:00",
+            "0.00033287",
+            "0.00033262",
+            "0.00033262",
+            "0.00033312",
+            "105"
+        ],
+        [
+            "2021-10-16 04:15:00",
+            "0.00033312",
+            "0.00033286",
+            "0.00033286",
+            "0.00033337",
+            "59"
+        ],
+        [
+            "2021-10-16 04:30:00",
+            "0.00033388",
+            "0.00033413",
+            "0.00033363",
+            "0.00033414",
+            "44"
+        ],
+        [
+            "2021-10-16 04:45:00",
+            "0.00033362",
+            "0.00033336",
+            "0.00033336",
+            "0.00033387",
+            "85"
+        ],
+        [
+            "2021-10-16 05:00:00",
+            "0.00033489",
+            "0.00033514",
+            "0.00033463",
+            "0.00033514",
+            "62"
+        ],
+        [
+            "2021-10-16 05:15:00",
+            "0.00033515",
+            "0.00033489",
+            "0.00033489",
+            "0.00033541",
+            "93"
+        ],
+        [
+            "2021-10-16 05:30:00",
+            "0.00033492",
+            "0.00033466",
+            "0.00033466",
+            "0.00033517",
+            "192"
+        ],
+        [
+            "2021-10-16 05:45:00",
+            "0.00033518",
+            "0.00033492",
+            "0.00033492",
+            "0.00033493",
+            "134"
+        ],
+        [
+            "2021-10-16 06:00:00",
+            "0.00033593",
+            "0.00033618",
+            "0.00033618",
+            "0.00033618",
+            "128"
+        ],
+        [
+            "2021-10-16 06:15:00",
+            "0.00033516",
+            "0.00033542",
+            "0.00033491",
+            "0.00033542",
+            "169"
+        ],
+        [
+            "2021-10-16 06:30:00",
+            "0.00033542",
+            "0.00033516",
+            "0.00033516",
+            "0.00033568",
+            "128"
+        ],
+        [
+            "2021-10-16 06:45:00",
+            "0.00033364",
+            "0.00033339",
+            "0.00033339",
+            "0.00033390",
+            "74"
+        ],
+        [
+            "2021-10-16 07:00:00",
+            "0.00033441",
+            "0.00033416",
+            "0.00033415",
+            "0.00033466",
+            "147"
+        ],
+        [
+            "2021-10-16 07:15:00",
+            "0.00033366",
+            "0.00033392",
+            "0.00033341",
+            "0.00033392",
+            "75"
+        ],
+        [
+            "2021-10-16 07:30:00",
+            "0.00033239",
+            "0.00033214",
+            "0.00033213",
+            "0.00033264",
+            "198"
+        ],
+        [
+            "2021-10-16 07:45:00",
+            "0.00033213",
+            "0.00033239",
+            "0.00033188",
+            "0.00033239",
+            "22"
+        ],
+        [
+            "2021-10-16 08:00:00",
+            "0.00033443",
+            "0.00033418",
+            "0.00033418",
+            "0.00033469",
+            "97"
+        ],
+        [
+            "2021-10-16 08:15:00",
+            "0.00033520",
+            "0.00033495",
+            "0.00033494",
+            "0.00033495",
+            "177"
+        ],
+        [
+            "2021-10-16 08:30:00",
+            "0.00033494",
+            "0.00033469",
+            "0.00033469",
+            "0.00033520",
+            "111"
+        ],
+        [
+            "2021-10-16 08:45:00",
+            "0.00033470",
+            "0.00033496",
+            "0.00033495",
+            "0.00033496",
+            "113"
+        ],
+        [
+            "2021-10-16 09:00:00",
+            "0.00033495",
+            "0.00033470",
+            "0.00033470",
+            "0.00033522",
+            "130"
+        ],
+        [
+            "2021-10-16 09:15:00",
+            "0.00033470",
+            "0.00033496",
+            "0.00033495",
+            "0.00033496",
+            "131"
+        ],
+        [
+            "2021-10-16 09:30:00",
+            "0.00033343",
+            "0.00033368",
+            "0.00033317",
+            "0.00033369",
+            "68"
+        ],
+        [
+            "2021-10-16 09:45:00",
+            "0.00033217",
+            "0.00033242",
+            "0.00033191",
+            "0.00033242",
+            "147"
+        ],
+        [
+            "2021-10-16 10:00:00",
+            "0.00033293",
+            "0.00033267",
+            "0.00033267",
+            "0.00033318",
+            "35"
+        ],
+        [
+            "2021-10-16 10:15:00",
+            "0.00033115",
+            "0.00033140",
+            "0.00033090",
+            "0.00033140",
+            "25"
+        ],
+        [
+            "2021-10-16 10:30:00",
+            "0.00033241",
+            "0.00033216",
+            "0.00033216",
+            "0.00033267",
+            "162"
+        ],
+        [
+            "2021-10-16 10:45:00",
+            "0.00033217",
+            "0.00033192",
+            "0.00033191",
+            "0.00033242",
+            "176"
+        ],
+        [
+            "2021-10-16 11:00:00",
+            "0.00033294",
+            "0.00033268",
+            "0.00033268",
+            "0.00033319",
+            "38"
+        ],
+        [
+            "2021-10-16 11:15:00",
+            "0.00033268",
+            "0.00033243",
+            "0.00033242",
+            "0.00033293",
+            "158"
+        ],
+        [
+            "2021-10-16 11:30:00",
+            "0.00033041",
+            "0.00033066",
+            "0.00033066",
+            "0.00033066",
+            "176"
+        ],
+        [
+            "2021-10-16 11:45:00",
+            "0.00033015",
+            "0.00032990",
+            "0.00032990",
+            "0.00033041",
+            "23"
+        ],
+        [
+            "2021-10-16 12:00:00",
+            "0.00032887",
+            "0.00032911",
+            "0.00032911",
+            "0.00032912",
+            "43"
+        ],
+        [
+            "2021-10-16 12:15:00",
+            "0.00032962",
+            "0.00032987",
+            "0.00032937",
+            "0.00032987",
+            "66"
+        ],
+        [
+            "2021-10-16 12:30:00",
+            "0.00033036",
+            "0.00033011",
+            "0.00033010",
+            "0.00033061",
+            "108"
+        ],
+        [
+            "2021-10-16 12:45:00",
+            "0.00032911",
+            "0.00032936",
+            "0.00032886",
+            "0.00032936",
+            "185"
+        ],
+        [
+            "2021-10-16 13:00:00",
+            "0.00033187",
+            "0.00033212",
+            "0.00033161",
+            "0.00033212",
+            "28"
+        ],
+        [
+            "2021-10-16 13:15:00",
+            "0.00033265",
+            "0.00033290",
+            "0.00033239",
+            "0.00033291",
+            "55"
+        ],
+        [
+            "2021-10-16 13:30:00",
+            "0.00033239",
+            "0.00033264",
+            "0.00033264",
+            "0.00033264",
+            "53"
+        ],
+        [
+            "2021-10-16 13:45:00",
+            "0.00033314",
+            "0.00033289",
+            "0.00033288",
+            "0.00033339",
+            "73"
+        ],
+        [
+            "2021-10-16 14:00:00",
+            "0.00033187",
+            "0.00033162",
+            "0.00033162",
+            "0.00033212",
+            "32"
+        ],
+        [
+            "2021-10-16 14:15:00",
+            "0.00032909",
+            "0.00032884",
+            "0.00032884",
+            "0.00032935",
+            "62"
+        ],
+        [
+            "2021-10-16 14:30:00",
+            "0.00032935",
+            "0.00032960",
+            "0.00032960",
+            "0.00032960",
+            "142"
+        ],
+        [
+            "2021-10-16 14:45:00",
+            "0.00032860",
+            "0.00032835",
+            "0.00032834",
+            "0.00032835",
+            "102"
+        ],
+        [
+            "2021-10-16 15:00:00",
+            "0.00032886",
+            "0.00032911",
+            "0.00032861",
+            "0.00032912",
+            "181"
+        ],
+        [
+            "2021-10-16 15:15:00",
+            "0.00032962",
+            "0.00032987",
+            "0.00032937",
+            "0.00032987",
+            "189"
+        ],
+        [
+            "2021-10-16 15:30:00",
+            "0.00032836",
+            "0.00032861",
+            "0.00032811",
+            "0.00032862",
+            "25"
+        ],
+        [
+            "2021-10-16 15:45:00",
+            "0.00032962",
+            "0.00032986",
+            "0.00032937",
+            "0.00032987",
+            "139"
+        ],
+        [
+            "2021-10-16 16:00:00",
+            "0.00033037",
+            "0.00033012",
+            "0.00033012",
+            "0.00033063",
+            "181"
+        ],
+        [
+            "2021-10-16 16:15:00",
+            "0.00032962",
+            "0.00032987",
+            "0.00032937",
+            "0.00032987",
+            "104"
+        ],
+        [
+            "2021-10-16 16:30:00",
+            "0.00032987",
+            "0.00032962",
+            "0.00032962",
+            "0.00033012",
+            "21"
+        ],
+        [
+            "2021-10-16 16:45:00",
+            "0.00033196",
+            "0.00033221",
+            "0.00032560",
+            "0.00033620",
+            "47"
+        ],
+        [
+            "2021-10-16 17:00:00",
+            "0.00031600",
+            "0.00031770",
+            "0.00031576",
+            "0.00032020",
+            "131"
+        ],
+        [
+            "2021-10-16 17:15:00",
+            "0.00030860",
+            "0.00030930",
+            "0.00030730",
+            "0.00031230",
+            "121"
+        ],
+        [
+            "2021-10-16 17:30:00",
+            "0.00030560",
+            "0.00030580",
+            "0.00030530",
+            "0.00030630",
+            "113"
+        ],
+        [
+            "2021-10-16 17:45:00",
+            "0.00030960",
+            "0.00030980",
+            "0.00030930",
+            "0.00031130",
+            "111"
+        ],
+        [
+            "2021-10-16 18:00:00",
+            "0.00029860",
+            "0.00030080",
+            "0.00029580",
+            "0.00030130",
+            "181"
+        ],
+        [
+            "2021-10-16 18:15:00",
+            "0.00029510",
+            "0.00029530",
+            "0.00029230",
+            "0.00029530",
+            "68"
+        ],
+        [
+            "2021-10-16 18:30:00",
+            "0.00030410",
+            "0.00030330",
+            "0.00030280",
+            "0.00030730",
+            "169"
+        ],
+        [
+            "2021-10-16 18:45:00",
+            "0.00031160",
+            "0.00031280",
+            "0.00030830",
+            "0.00031430",
+            "169"
+        ],
+        [
+            "2021-10-16 19:00:00",
+            "0.00031110",
+            "0.00031130",
+            "0.00030930",
+            "0.00031330",
+            "74"
+        ],
+        [
+            "2021-10-16 19:15:00",
+            "0.00031460",
+            "0.00031580",
+            "0.00031230",
+            "0.00031730",
+            "167"
+        ],
+        [
+            "2021-10-16 19:30:00",
+            "0.00032760",
+            "0.00032930",
+            "0.00032480",
+            "0.00033080",
+            "127"
+        ],
+        [
+            "2021-10-16 19:45:00",
+            "0.00032360",
+            "0.00032380",
+            "0.00032180",
+            "0.00032380",
+            "58"
+        ],
+        [
+            "2021-10-16 20:00:00",
+            "0.00033160",
+            "0.00033230",
+            "0.00032880",
+            "0.00033380",
+            "146"
+        ],
+        [
+            "2021-10-16 20:15:00",
+            "0.00033460",
+            "0.00033430",
+            "0.00033430",
+            "0.00033480",
+            "194"
+        ],
+        [
+            "2021-10-16 20:30:00",
+            "0.00033710",
+            "0.00033480",
+            "0.00033380",
+            "0.00033580",
+            "41"
+        ],
+        [
+            "2021-10-16 20:45:00",
+            "0.00033210",
+            "0.00032930",
+            "0.00032930",
+            "0.00032980",
+            "200"
+        ],
+        [
+            "2021-10-16 21:00:00",
+            "0.00032860",
+            "0.00033030",
+            "0.00032880",
+            "0.00033130",
+            "190"
+        ],
+        [
+            "2021-10-16 21:15:00",
+            "0.00033460",
+            "0.00033480",
+            "0.00033430",
+            "0.00033730",
+            "43"
+        ],
+        [
+            "2021-10-16 21:30:00",
+            "0.00033360",
+            "0.00033380",
+            "0.00033030",
+            "0.00033630",
+            "156"
+        ],
+        [
+            "2021-10-16 21:45:00",
+            "0.00033110",
+            "0.00033230",
+            "0.00033080",
+            "0.00033430",
+            "161"
+        ],
+        [
+            "2021-10-16 22:00:00",
+            "0.00032810",
+            "0.00033030",
+            "0.00032830",
+            "0.00033080",
+            "94"
+        ],
+        [
+            "2021-10-16 22:15:00",
+            "0.00033410",
+            "0.00033380",
+            "0.00033130",
+            "0.00033430",
+            "56"
+        ],
+        [
+            "2021-10-16 22:30:00",
+            "0.00033510",
+            "0.00033480",
+            "0.00033380",
+            "0.00033480",
+            "122"
+        ],
+        [
+            "2021-10-16 22:45:00",
+            "0.00033160",
+            "0.00033180",
+            "0.00032930",
+            "0.00033380",
+            "94"
+        ],
+        [
+            "2021-10-16 23:00:00",
+            "0.00033510",
+            "0.00033780",
+            "0.00033530",
+            "0.00033780",
+            "190"
+        ],
+        [
+            "2021-10-16 23:15:00",
+            "0.00034610",
+            "0.00034630",
+            "0.00034480",
+            "0.00034780",
+            "65"
+        ],
+        [
+            "2021-10-16 23:30:00",
+            "0.00034110",
+            "0.00034230",
+            "0.00033980",
+            "0.00034230",
+            "58"
+        ],
+        [
+            "2021-10-16 23:45:00",
+            "0.00034960",
+            "0.00035030",
+            "0.00034630",
+            "0.00035130",
+            "121"
+        ],
+        [
+            "2021-10-17 00:00:00",
+            "0.00035760",
+            "0.00035480",
+            "0.00035430",
+            "0.00035830",
+            "136"
+        ],
+        [
+            "2021-10-17 00:15:00",
+            "0.00035710",
+            "0.00035780",
+            "0.00035780",
+            "0.00035930",
+            "72"
+        ],
+        [
+            "2021-10-17 00:30:00",
+            "0.00035760",
+            "0.00035480",
+            "0.00035430",
+            "0.00035680",
+            "118"
+        ],
+        [
+            "2021-10-17 00:45:00",
+            "0.00035060",
+            "0.00035130",
+            "0.00035130",
+            "0.00035230",
+            "29"
+        ],
+        [
+            "2021-10-17 01:00:00",
+            "0.00035260",
+            "0.00035380",
+            "0.00035180",
+            "0.00035580",
+            "171"
+        ],
+        [
+            "2021-10-17 01:15:00",
+            "0.00035460",
+            "0.00035780",
+            "0.00035330",
+            "0.00035780",
+            "46"
+        ],
+        [
+            "2021-10-17 01:30:00",
+            "0.00035410",
+            "0.00035530",
+            "0.00035480",
+            "0.00035580",
+            "140"
+        ],
+        [
+            "2021-10-17 01:45:00",
+            "0.00035110",
+            "0.00035280",
+            "0.00034930",
+            "0.00035330",
+            "42"
+        ],
+        [
+            "2021-10-17 02:00:00",
+            "0.00034610",
+            "0.00034530",
+            "0.00034430",
+            "0.00034730",
+            "168"
+        ],
+        [
+            "2021-10-17 02:15:00",
+            "0.00034510",
+            "0.00034480",
+            "0.00034430",
+            "0.00034530",
+            "88"
+        ],
+        [
+            "2021-10-17 02:30:00",
+            "0.00033960",
+            "0.00033780",
+            "0.00033680",
+            "0.00033880",
+            "173"
+        ],
+        [
+            "2021-10-17 02:45:00",
+            "0.00033760",
+            "0.00033930",
+            "0.00033930",
+            "0.00034030",
+            "89"
+        ],
+        [
+            "2021-10-17 03:00:00",
+            "0.00033860",
+            "0.00034030",
+            "0.00033780",
+            "0.00034080",
+            "148"
+        ],
+        [
+            "2021-10-17 03:15:00",
+            "0.00034010",
+            "0.00034230",
+            "0.00033680",
+            "0.00034230",
+            "110"
+        ],
+        [
+            "2021-10-17 03:30:00",
+            "0.00034060",
+            "0.00034230",
+            "0.00033880",
+            "0.00034280",
+            "81"
+        ],
+        [
+            "2021-10-17 03:45:00",
+            "0.00034110",
+            "0.00034080",
+            "0.00033780",
+            "0.00034280",
+            "27"
+        ],
+        [
+            "2021-10-17 04:00:00",
+            "0.00034510",
+            "0.00034780",
+            "0.00034630",
+            "0.00034780",
+            "28"
+        ],
+        [
+            "2021-10-17 04:15:00",
+            "0.00034960",
+            "0.00034980",
+            "0.00034730",
+            "0.00035180",
+            "191"
+        ],
+        [
+            "2021-10-17 04:30:00",
+            "0.00033960",
+            "0.00033930",
+            "0.00033830",
+            "0.00034180",
+            "42"
+        ],
+        [
+            "2021-10-17 04:45:00",
+            "0.00033160",
+            "0.00033180",
+            "0.00032880",
+            "0.00033380",
+            "20"
+        ],
+        [
+            "2021-10-17 05:00:00",
+            "0.00032860",
+            "0.00032830",
+            "0.00032780",
+            "0.00033180",
+            "71"
+        ],
+        [
+            "2021-10-17 05:15:00",
+            "0.00032660",
+            "0.00032680",
+            "0.00032580",
+            "0.00032880",
+            "80"
+        ],
+        [
+            "2021-10-17 05:30:00",
+            "0.00032360",
+            "0.00032330",
+            "0.00032080",
+            "0.00032380",
+            "151"
+        ],
+        [
+            "2021-10-17 05:45:00",
+            "0.00032660",
+            "0.00032580",
+            "0.00032530",
+            "0.00032980",
+            "34"
+        ],
+        [
+            "2021-10-17 06:00:00",
+            "0.00032410",
+            "0.00032530",
+            "0.00032380",
+            "0.00032630",
+            "197"
+        ],
+        [
+            "2021-10-17 06:15:00",
+            "0.00031860",
+            "0.00031980",
+            "0.00031930",
+            "0.00032180",
+            "112"
+        ],
+        [
+            "2021-10-17 06:30:00",
+            "0.00032560",
+            "0.00032480",
+            "0.00032280",
+            "0.00032880",
+            "150"
+        ],
+        [
+            "2021-10-17 06:45:00",
+            "0.00033460",
+            "0.00033480",
+            "0.00033130",
+            "0.00033780",
+            "65"
+        ],
+        [
+            "2021-10-17 07:00:00",
+            "0.00032610",
+            "0.00032730",
+            "0.00032430",
+            "0.00032930",
+            "173"
+        ],
+        [
+            "2021-10-17 07:15:00",
+            "0.00032860",
+            "0.00032830",
+            "0.00032680",
+            "0.00032880",
+            "45"
+        ],
+        [
+            "2021-10-17 07:30:00",
+            "0.00032710",
+            "0.00032730",
+            "0.00032530",
+            "0.00032980",
+            "96"
+        ],
+        [
+            "2021-10-17 07:45:00",
+            "0.00032560",
+            "0.00032330",
+            "0.00032230",
+            "0.00032430",
+            "161"
+        ],
+        [
+            "2021-10-17 08:00:00",
+            "0.00032410",
+            "0.00032480",
+            "0.00032430",
+            "0.00032730",
+            "88"
+        ],
+        [
+            "2021-10-17 08:15:00",
+            "0.00033160",
+            "0.00033380",
+            "0.00032880",
+            "0.00033480",
+            "117"
+        ],
+        [
+            "2021-10-17 08:30:00",
+            "0.00033660",
+            "0.00033630",
+            "0.00033430",
+            "0.00033680",
+            "172"
+        ],
+        [
+            "2021-10-17 08:45:00",
+            "0.00033960",
+            "0.00033980",
+            "0.00033980",
+            "0.00034080",
+            "143"
+        ],
+        [
+            "2021-10-17 09:00:00",
+            "0.00033860",
+            "0.00033780",
+            "0.00033730",
+            "0.00033880",
+            "174"
+        ],
+        [
+            "2021-10-17 09:15:00",
+            "0.00034110",
+            "0.00034330",
+            "0.00034180",
+            "0.00034380",
+            "79"
+        ],
+        [
+            "2021-10-17 09:30:00",
+            "0.00034060",
+            "0.00034130",
+            "0.00034080",
+            "0.00034330",
+            "47"
+        ],
+        [
+            "2021-10-17 09:45:00",
+            "0.00034510",
+            "0.00034330",
+            "0.00034230",
+            "0.00034630",
+            "173"
+        ],
+        [
+            "2021-10-17 10:00:00",
+            "0.00033110",
+            "0.00033180",
+            "0.00032780",
+            "0.00033230",
+            "157"
+        ],
+        [
+            "2021-10-17 10:15:00",
+            "0.00033160",
+            "0.00033380",
+            "0.00032980",
+            "0.00033380",
+            "138"
+        ],
+        [
+            "2021-10-17 10:30:00",
+            "0.00034110",
+            "0.00034080",
+            "0.00033830",
+            "0.00034180",
+            "98"
+        ],
+        [
+            "2021-10-17 10:45:00",
+            "0.00033760",
+            "0.00033830",
+            "0.00033430",
+            "0.00033880",
+            "152"
+        ],
+        [
+            "2021-10-17 11:00:00",
+            "0.00033160",
+            "0.00032980",
+            "0.00032880",
+            "0.00032980",
+            "176"
+        ],
+        [
+            "2021-10-17 11:15:00",
+            "0.00033010",
+            "0.00033230",
+            "0.00033030",
+            "0.00033330",
+            "75"
+        ],
+        [
+            "2021-10-17 11:30:00",
+            "0.00033060",
+            "0.00032980",
+            "0.00032930",
+            "0.00033080",
+            "97"
+        ],
+        [
+            "2021-10-17 11:45:00",
+            "0.00033210",
+            "0.00033280",
+            "0.00032930",
+            "0.00033430",
+            "197"
+        ],
+        [
+            "2021-10-17 12:00:00",
+            "0.00033610",
+            "0.00033330",
+            "0.00033330",
+            "0.00033630",
+            "56"
+        ],
+        [
+            "2021-10-17 12:15:00",
+            "0.00034510",
+            "0.00034380",
+            "0.00034330",
+            "0.00034530",
+            "112"
+        ],
+        [
+            "2021-10-17 12:30:00",
+            "0.00033210",
+            "0.00033280",
+            "0.00033230",
+            "0.00033430",
+            "158"
+        ],
+        [
+            "2021-10-17 12:45:00",
+            "0.00032460",
+            "0.00032480",
+            "0.00032280",
+            "0.00032630",
+            "55"
+        ],
+        [
+            "2021-10-17 13:00:00",
+            "0.00033060",
+            "0.00032930",
+            "0.00032880",
+            "0.00033230",
+            "101"
+        ],
+        [
+            "2021-10-17 13:15:00",
+            "0.00033260",
+            "0.00033280",
+            "0.00032930",
+            "0.00033380",
+            "182"
+        ],
+        [
+            "2021-10-17 13:30:00",
+            "0.00032460",
+            "0.00032680",
+            "0.00032480",
+            "0.00032680",
+            "88"
+        ],
+        [
+            "2021-10-17 13:45:00",
+            "0.00033560",
+            "0.00033530",
+            "0.00033480",
+            "0.00033580",
+            "161"
+        ],
+        [
+            "2021-10-17 14:00:00",
+            "0.00033660",
+            "0.00033680",
+            "0.00033630",
+            "0.00033780",
+            "33"
+        ],
+        [
+            "2021-10-17 14:15:00",
+            "0.00034860",
+            "0.00035030",
+            "0.00034530",
+            "0.00035180",
+            "66"
+        ],
+        [
+            "2021-10-17 14:30:00",
+            "0.00035560",
+            "0.00035380",
+            "0.00035230",
+            "0.00035580",
+            "103"
+        ],
+        [
+            "2021-10-17 14:45:00",
+            "0.00035510",
+            "0.00035680",
+            "0.00035530",
+            "0.00035830",
+            "126"
+        ],
+        [
+            "2021-10-17 15:00:00",
+            "0.00035260",
+            "0.00035230",
+            "0.00035080",
+            "0.00035480",
+            "43"
+        ],
+        [
+            "2021-10-17 15:15:00",
+            "0.00034960",
+            "0.00034980",
+            "0.00034680",
+            "0.00035180",
+            "113"
+        ],
+        [
+            "2021-10-17 15:30:00",
+            "0.00035510",
+            "0.00035530",
+            "0.00035380",
+            "0.00035830",
+            "91"
+        ],
+        [
+            "2021-10-17 15:45:00",
+            "0.00036260",
+            "0.00036430",
+            "0.00036330",
+            "0.00036480",
+            "24"
+        ],
+        [
+            "2021-10-17 16:00:00",
+            "0.00036160",
+            "0.00036130",
+            "0.00035930",
+            "0.00036180",
+            "137"
+        ],
+        [
+            "2021-10-17 16:15:00",
+            "0.00036060",
+            "0.00035980",
+            "0.00035730",
+            "0.00035980",
+            "129"
+        ],
+        [
+            "2021-10-17 16:30:00",
+            "0.00035460",
+            "0.00035680",
+            "0.00035430",
+            "0.00035680",
+            "195"
+        ],
+        [
+            "2021-10-17 16:45:00",
+            "0.00035960",
+            "0.00035680",
+            "0.00035680",
+            "0.00036230",
+            "154"
+        ],
+        [
+            "2021-10-17 17:00:00",
+            "0.00036160",
+            "0.00036130",
+            "0.00035830",
+            "0.00036180",
+            "184"
+        ],
+        [
+            "2021-10-17 17:15:00",
+            "0.00035410",
+            "0.00035430",
+            "0.00035330",
+            "0.00035630",
+            "74"
+        ],
+        [
+            "2021-10-17 17:30:00",
+            "0.00035510",
+            "0.00035630",
+            "0.00035180",
+            "0.00035780",
+            "145"
+        ],
+        [
+            "2021-10-17 17:45:00",
+            "0.00035860",
+            "0.00035880",
+            "0.00035780",
+            "0.00035930",
+            "38"
+        ],
+        [
+            "2021-10-17 18:00:00",
+            "0.00035110",
+            "0.00034930",
+            "0.00034930",
+            "0.00035130",
+            "30"
+        ],
+        [
+            "2021-10-17 18:15:00",
+            "0.00034510",
+            "0.00034730",
+            "0.00034530",
+            "0.00034830",
+            "71"
+        ],
+        [
+            "2021-10-17 18:30:00",
+            "0.00035210",
+            "0.00034880",
+            "0.00034880",
+            "0.00035130",
+            "157"
+        ],
+        [
+            "2021-10-17 18:45:00",
+            "0.00034810",
+            "0.00034730",
+            "0.00034680",
+            "0.00035080",
+            "96"
+        ],
+        [
+            "2021-10-17 19:00:00",
+            "0.00034710",
+            "0.00034830",
+            "0.00034630",
+            "0.00035030",
+            "100"
+        ],
+        [
+            "2021-10-17 19:15:00",
+            "0.00034210",
+            "0.00034430",
+            "0.00034180",
+            "0.00034480",
+            "22"
+        ],
+        [
+            "2021-10-17 19:30:00",
+            "0.00033910",
+            "0.00033880",
+            "0.00033730",
+            "0.00034180",
+            "164"
+        ],
+        [
+            "2021-10-17 19:45:00",
+            "0.00034710",
+            "0.00034930",
+            "0.00034930",
+            "0.00035030",
+            "90"
+        ],
+        [
+            "2021-10-17 20:00:00",
+            "0.00035110",
+            "0.00034980",
+            "0.00034930",
+            "0.00035230",
+            "52"
+        ],
+        [
+            "2021-10-17 20:15:00",
+            "0.00034410",
+            "0.00034430",
+            "0.00034380",
+            "0.00034580",
+            "191"
+        ],
+        [
+            "2021-10-17 20:30:00",
+            "0.00035210",
+            "0.00035280",
+            "0.00035030",
+            "0.00035530",
+            "159"
+        ],
+        [
+            "2021-10-17 20:45:00",
+            "0.00035960",
+            "0.00036180",
+            "0.00035730",
+            "0.00036230",
+            "170"
+        ],
+        [
+            "2021-10-17 21:00:00",
+            "0.00036410",
+            "0.00036580",
+            "0.00036130",
+            "0.00036680",
+            "143"
+        ],
+        [
+            "2021-10-17 21:15:00",
+            "0.00037010",
+            "0.00037230",
+            "0.00036930",
+            "0.00037280",
+            "54"
+        ],
+        [
+            "2021-10-17 21:30:00",
+            "0.00038010",
+            "0.00037930",
+            "0.00037930",
+            "0.00038030",
+            "64"
+        ],
+        [
+            "2021-10-17 21:45:00",
+            "0.00037760",
+            "0.00037830",
+            "0.00037780",
+            "0.00038080",
+            "32"
+        ],
+        [
+            "2021-10-17 22:00:00",
+            "0.00037110",
+            "0.00036830",
+            "0.00036830",
+            "0.00037180",
+            "25"
+        ],
+        [
+            "2021-10-17 22:15:00",
+            "0.00037560",
+            "0.00037480",
+            "0.00037430",
+            "0.00037880",
+            "139"
+        ],
+        [
+            "2021-10-17 22:30:00",
+            "0.00037560",
+            "0.00037530",
+            "0.00037380",
+            "0.00037680",
+            "48"
+        ],
+        [
+            "2021-10-17 22:45:00",
+            "0.00037310",
+            "0.00037330",
+            "0.00037030",
+            "0.00037330",
+            "78"
+        ],
+        [
+            "2021-10-17 23:00:00",
+            "0.00036160",
+            "0.00036380",
+            "0.00036280",
+            "0.00036430",
+            "166"
+        ],
+        [
+            "2021-10-17 23:15:00",
+            "0.00036960",
+            "0.00037280",
+            "0.00037180",
+            "0.00037280",
+            "180"
+        ],
+        [
+            "2021-10-17 23:30:00",
+            "0.00037260",
+            "0.00037180",
+            "0.00037130",
+            "0.00037380",
+            "30"
+        ],
+        [
+            "2021-10-17 23:45:00",
+            "0.00036660",
+            "0.00036630",
+            "0.00036480",
+            "0.00036880",
+            "26"
+        ],
+        [
+            "2021-10-18 00:00:00",
+            "0.00036910",
+            "0.00036930",
+            "0.00036880",
+            "0.00037030",
+            "172"
+        ],
+        [
+            "2021-10-18 00:15:00",
+            "0.00036260",
+            "0.00036180",
+            "0.00035930",
+            "0.00036480",
+            "58"
+        ],
+        [
+            "2021-10-18 00:30:00",
+            "0.00036760",
+            "0.00036630",
+            "0.00036530",
+            "0.00036930",
+            "139"
+        ],
+        [
+            "2021-10-18 00:45:00",
+            "0.00035760",
+            "0.00035780",
+            "0.00035630",
+            "0.00035980",
+            "81"
+        ],
+        [
+            "2021-10-18 01:00:00",
+            "0.00036110",
+            "0.00035830",
+            "0.00035830",
+            "0.00036130",
+            "21"
+        ],
+        [
+            "2021-10-18 01:15:00",
+            "0.00035960",
+            "0.00035980",
+            "0.00035780",
+            "0.00036030",
+            "161"
+        ],
+        [
+            "2021-10-18 01:30:00",
+            "0.00035260",
+            "0.00035230",
+            "0.00035230",
+            "0.00035280",
+            "32"
+        ],
+        [
+            "2021-10-18 01:45:00",
+            "0.00035560",
+            "0.00035430",
+            "0.00035430",
+            "0.00035480",
+            "189"
+        ],
+        [
+            "2021-10-18 02:00:00",
+            "0.00035310",
+            "0.00035330",
+            "0.00035030",
+            "0.00035630",
+            "111"
+        ],
+        [
+            "2021-10-18 02:15:00",
+            "0.00036560",
+            "0.00036530",
+            "0.00036530",
+            "0.00036580",
+            "54"
+        ],
+        [
+            "2021-10-18 02:30:00",
+            "0.00036510",
+            "0.00036730",
+            "0.00036230",
+            "0.00036780",
+            "54"
+        ],
+        [
+            "2021-10-18 02:45:00",
+            "0.00035910",
+            "0.00035730",
+            "0.00035680",
+            "0.00036230",
+            "153"
+        ],
+        [
+            "2021-10-18 03:00:00",
+            "0.00035510",
+            "0.00035430",
+            "0.00035280",
+            "0.00035580",
+            "112"
+        ],
+        [
+            "2021-10-18 03:15:00",
+            "0.00035510",
+            "0.00035530",
+            "0.00035330",
+            "0.00035580",
+            "71"
+        ],
+        [
+            "2021-10-18 03:30:00",
+            "0.00035860",
+            "0.00035580",
+            "0.00035530",
+            "0.00035780",
+            "46"
+        ],
+        [
+            "2021-10-18 03:45:00",
+            "0.00035810",
+            "0.00035780",
+            "0.00035480",
+            "0.00035880",
+            "88"
+        ],
+        [
+            "2021-10-18 04:00:00",
+            "0.00036210",
+            "0.00036430",
+            "0.00036180",
+            "0.00036480",
+            "194"
+        ],
+        [
+            "2021-10-18 04:15:00",
+            "0.00036960",
+            "0.00036930",
+            "0.00036630",
+            "0.00037080",
+            "117"
+        ],
+        [
+            "2021-10-18 04:30:00",
+            "0.00035460",
+            "0.00035430",
+            "0.00035130",
+            "0.00035730",
+            "141"
+        ],
+        [
+            "2021-10-18 04:45:00",
+            "0.00035310",
+            "0.00035330",
+            "0.00035280",
+            "0.00035430",
+            "166"
+        ],
+        [
+            "2021-10-18 05:00:00",
+            "0.00035910",
+            "0.00036030",
+            "0.00035630",
+            "0.00036130",
+            "131"
+        ],
+        [
+            "2021-10-18 05:15:00",
+            "0.00035260",
+            "0.00035430",
+            "0.00035230",
+            "0.00035530",
+            "148"
+        ],
+        [
+            "2021-10-18 05:30:00",
+            "0.00035610",
+            "0.00035680",
+            "0.00035330",
+            "0.00035930",
+            "64"
+        ],
+        [
+            "2021-10-18 05:45:00",
+            "0.00035510",
+            "0.00035680",
+            "0.00035530",
+            "0.00035830",
+            "38"
+        ],
+        [
+            "2021-10-18 06:00:00",
+            "0.00036660",
+            "0.00036380",
+            "0.00036380",
+            "0.00036880",
+            "153"
+        ],
+        [
+            "2021-10-18 06:15:00",
+            "0.00036810",
+            "0.00036780",
+            "0.00036530",
+            "0.00036930",
+            "55"
+        ],
+        [
+            "2021-10-18 06:30:00",
+            "0.00036710",
+            "0.00036730",
+            "0.00036630",
+            "0.00036830",
+            "190"
+        ],
+        [
+            "2021-10-18 06:45:00",
+            "0.00037860",
+            "0.00037930",
+            "0.00037780",
+            "0.00038080",
+            "58"
+        ],
+        [
+            "2021-10-18 07:00:00",
+            "0.00038210",
+            "0.00038330",
+            "0.00038180",
+            "0.00038380",
+            "167"
+        ],
+        [
+            "2021-10-18 07:15:00",
+            "0.00038610",
+            "0.00038580",
+            "0.00038330",
+            "0.00038830",
+            "54"
+        ],
+        [
+            "2021-10-18 07:30:00",
+            "0.00038610",
+            "0.00038630",
+            "0.00038580",
+            "0.00038930",
+            "104"
+        ],
+        [
+            "2021-10-18 07:45:00",
+            "0.00038260",
+            "0.00038280",
+            "0.00038030",
+            "0.00038380",
+            "149"
+        ],
+        [
+            "2021-10-18 08:00:00",
+            "0.00038660",
+            "0.00038680",
+            "0.00038430",
+            "0.00038880",
+            "96"
+        ],
+        [
+            "2021-10-18 08:15:00",
+            "0.00038770",
+            "0.00038640",
+            "0.00038490",
+            "0.00038990",
+            "191"
+        ],
+        [
+            "2021-10-18 08:30:00",
+            "0.00038640",
+            "0.00038660",
+            "0.00038610",
+            "0.00038910",
+            "49"
+        ],
+        [
+            "2021-10-18 08:45:00",
+            "0.00037800",
+            "0.00037770",
+            "0.00037720",
+            "0.00038070",
+            "67"
+        ],
+        [
+            "2021-10-18 09:00:00",
+            "0.00037600",
+            "0.00037320",
+            "0.00037270",
+            "0.00037770",
+            "124"
+        ],
+        [
+            "2021-10-18 09:15:00",
+            "0.00036900",
+            "0.00036570",
+            "0.00036570",
+            "0.00037220",
+            "84"
+        ],
+        [
+            "2021-10-18 09:30:00",
+            "0.00037200",
+            "0.00037220",
+            "0.00037170",
+            "0.00037420",
+            "184"
+        ],
+        [
+            "2021-10-18 09:45:00",
+            "0.00037500",
+            "0.00037570",
+            "0.00037320",
+            "0.00037620",
+            "54"
+        ],
+        [
+            "2021-10-18 10:00:00",
+            "0.00037150",
+            "0.00037220",
+            "0.00037120",
+            "0.00037270",
+            "70"
+        ],
+        [
+            "2021-10-18 10:15:00",
+            "0.00037750",
+            "0.00037670",
+            "0.00037520",
+            "0.00037820",
+            "143"
+        ],
+        [
+            "2021-10-18 10:30:00",
+            "0.00037650",
+            "0.00037720",
+            "0.00037370",
+            "0.00037870",
+            "38"
+        ],
+        [
+            "2021-10-18 10:45:00",
+            "0.00037950",
+            "0.00037970",
+            "0.00037820",
+            "0.00038270",
+            "117"
+        ],
+        [
+            "2021-10-18 11:00:00",
+            "0.00038150",
+            "0.00038270",
+            "0.00038120",
+            "0.00038470",
+            "67"
+        ],
+        [
+            "2021-10-18 11:15:00",
+            "0.00038100",
+            "0.00038170",
+            "0.00037770",
+            "0.00038370",
+            "109"
+        ],
+        [
+            "2021-10-18 11:30:00",
+            "0.00039050",
+            "0.00039120",
+            "0.00038820",
+            "0.00039270",
+            "162"
+        ],
+        [
+            "2021-10-18 11:45:00",
+            "0.00038800",
+            "0.00038820",
+            "0.00038670",
+            "0.00038920",
+            "157"
+        ],
+        [
+            "2021-10-18 12:00:00",
+            "0.00037900",
+            "0.00037920",
+            "0.00037670",
+            "0.00037920",
+            "58"
+        ],
+        [
+            "2021-10-18 12:15:00",
+            "0.00038000",
+            "0.00037770",
+            "0.00037720",
+            "0.00038120",
+            "148"
+        ],
+        [
+            "2021-10-18 12:30:00",
+            "0.00037950",
+            "0.00037670",
+            "0.00037620",
+            "0.00037670",
+            "138"
+        ],
+        [
+            "2021-10-18 12:45:00",
+            "0.00037450",
+            "0.00037470",
+            "0.00037170",
+            "0.00037770",
+            "119"
+        ],
+        [
+            "2021-10-18 13:00:00",
+            "0.00037800",
+            "0.00037770",
+            "0.00037570",
+            "0.00038020",
+            "46"
+        ],
+        [
+            "2021-10-18 13:15:00",
+            "0.00037850",
+            "0.00037870",
+            "0.00037670",
+            "0.00038170",
+            "63"
+        ],
+        [
+            "2021-10-18 13:30:00",
+            "0.00038550",
+            "0.00038570",
+            "0.00038370",
+            "0.00038670",
+            "186"
+        ],
+        [
+            "2021-10-18 13:45:00",
+            "0.00039100",
+            "0.00038920",
+            "0.00038820",
+            "0.00039120",
+            "54"
+        ],
+        [
+            "2021-10-18 14:00:00",
+            "0.00039700",
+            "0.00039460",
+            "0.00039360",
+            "0.00040020",
+            "36"
+        ],
+        [
+            "2021-10-18 14:15:00",
+            "0.00038400",
+            "0.00038430",
+            "0.00038160",
+            "0.00038670",
+            "86"
+        ],
+        [
+            "2021-10-18 14:30:00",
+            "0.00038080",
+            "0.00038100",
+            "0.00037810",
+            "0.00038350",
+            "105"
+        ],
+        [
+            "2021-10-18 14:45:00",
+            "0.00037720",
+            "0.00037450",
+            "0.00037440",
+            "0.00037550",
+            "73"
+        ],
+        [
+            "2021-10-18 15:00:00",
+            "0.00037510",
+            "0.00037630",
+            "0.00037180",
+            "0.00037830",
+            "93"
+        ],
+        [
+            "2021-10-18 15:15:00",
+            "0.00037910",
+            "0.00037780",
+            "0.00037680",
+            "0.00037780",
+            "66"
+        ],
+        [
+            "2021-10-18 15:30:00",
+            "0.00038010",
+            "0.00037880",
+            "0.00037730",
+            "0.00037930",
+            "152"
+        ],
+        [
+            "2021-10-18 15:45:00",
+            "0.00038460",
+            "0.00038480",
+            "0.00038380",
+            "0.00038580",
+            "200"
+        ],
+        [
+            "2021-10-18 16:00:00",
+            "0.00039060",
+            "0.00038780",
+            "0.00038780",
+            "0.00038990",
+            "22"
+        ],
+        [
+            "2021-10-18 16:15:00",
+            "0.00038290",
+            "0.00038060",
+            "0.00038010",
+            "0.00038310",
+            "108"
+        ],
+        [
+            "2021-10-18 16:30:00",
+            "0.00038140",
+            "0.00038160",
+            "0.00038060",
+            "0.00038160",
+            "53"
+        ],
+        [
+            "2021-10-18 16:45:00",
+            "0.00038640",
+            "0.00038510",
+            "0.00038300",
+            "0.00038670",
+            "122"
+        ],
+        [
+            "2021-10-18 17:00:00",
+            "0.00038370",
+            "0.00038390",
+            "0.00038340",
+            "0.00038590",
+            "66"
+        ],
+        [
+            "2021-10-18 17:15:00",
+            "0.00038520",
+            "0.00038640",
+            "0.00038490",
+            "0.00038740",
+            "98"
+        ],
+        [
+            "2021-10-18 17:30:00",
+            "0.00038070",
+            "0.00038090",
+            "0.00037840",
+            "0.00038090",
+            "88"
+        ],
+        [
+            "2021-10-18 17:45:00",
+            "0.00038920",
+            "0.00038890",
+            "0.00038590",
+            "0.00039140",
+            "147"
+        ],
+        [
+            "2021-10-18 18:00:00",
+            "0.00038520",
+            "0.00038640",
+            "0.00038540",
+            "0.00038840",
+            "77"
+        ],
+        [
+            "2021-10-18 18:15:00",
+            "0.00038970",
+            "0.00039090",
+            "0.00038990",
+            "0.00039190",
+            "177"
+        ],
+        [
+            "2021-10-18 18:30:00",
+            "0.00039020",
+            "0.00038890",
+            "0.00038890",
+            "0.00038990",
+            "39"
+        ],
+        [
+            "2021-10-18 18:45:00",
+            "0.00039170",
+            "0.00039190",
+            "0.00039140",
+            "0.00039340",
+            "188"
+        ],
+        [
+            "2021-10-18 19:00:00",
+            "0.00039020",
+            "0.00039190",
+            "0.00039040",
+            "0.00039340",
+            "91"
+        ],
+        [
+            "2021-10-18 19:15:00",
+            "0.00038720",
+            "0.00038790",
+            "0.00038490",
+            "0.00039040",
+            "186"
+        ],
+        [
+            "2021-10-18 19:30:00",
+            "0.00039310",
+            "0.00039240",
+            "0.00038980",
+            "0.00039340",
+            "198"
+        ],
+        [
+            "2021-10-18 19:45:00",
+            "0.00038980",
+            "0.00038900",
+            "0.00038850",
+            "0.00039100",
+            "79"
+        ],
+        [
+            "2021-10-18 20:00:00",
+            "0.00038550",
+            "0.00038520",
+            "0.00038270",
+            "0.00038820",
+            "170"
+        ],
+        [
+            "2021-10-18 20:15:00",
+            "0.00038850",
+            "0.00038820",
+            "0.00038520",
+            "0.00038870",
+            "77"
+        ],
+        [
+            "2021-10-18 20:30:00",
+            "0.00038700",
+            "0.00038920",
+            "0.00038470",
+            "0.00039020",
+            "157"
+        ],
+        [
+            "2021-10-18 20:45:00",
+            "0.00037750",
+            "0.00037820",
+            "0.00037670",
+            "0.00037970",
+            "43"
+        ],
+        [
+            "2021-10-18 21:00:00",
+            "0.00037400",
+            "0.00037220",
+            "0.00037220",
+            "0.00037420",
+            "173"
+        ],
+        [
+            "2021-10-18 21:15:00",
+            "0.00037850",
+            "0.00037770",
+            "0.00037670",
+            "0.00037970",
+            "102"
+        ],
+        [
+            "2021-10-18 21:30:00",
+            "0.00037500",
+            "0.00037520",
+            "0.00037270",
+            "0.00037620",
+            "131"
+        ],
+        [
+            "2021-10-18 21:45:00",
+            "0.00037350",
+            "0.00037470",
+            "0.00037420",
+            "0.00037670",
+            "71"
+        ],
+        [
+            "2021-10-18 22:00:00",
+            "0.00037050",
+            "0.00037320",
+            "0.00037170",
+            "0.00037320",
+            "200"
+        ],
+        [
+            "2021-10-18 22:15:00",
+            "0.00036850",
+            "0.00036870",
+            "0.00036620",
+            "0.00036970",
+            "177"
+        ],
+        [
+            "2021-10-18 22:30:00",
+            "0.00037450",
+            "0.00037520",
+            "0.00037170",
+            "0.00037770",
+            "30"
+        ],
+        [
+            "2021-10-18 22:45:00",
+            "0.00037450",
+            "0.00037470",
+            "0.00037170",
+            "0.00037620",
+            "39"
+        ],
+        [
+            "2021-10-18 23:00:00",
+            "0.00036800",
+            "0.00036720",
+            "0.00036570",
+            "0.00036820",
+            "185"
+        ],
+        [
+            "2021-10-18 23:15:00",
+            "0.00036400",
+            "0.00036420",
+            "0.00036370",
+            "0.00036470",
+            "56"
+        ],
+        [
+            "2021-10-18 23:30:00",
+            "0.00037050",
+            "0.00036820",
+            "0.00036720",
+            "0.00037320",
+            "136"
+        ],
+        [
+            "2021-10-18 23:45:00",
+            "0.00036500",
+            "0.00036320",
+            "0.00036220",
+            "0.00036620",
+            "46"
+        ]
+    ];
+
+    //刷新数据
+    var option = chart.getOption();
+
+    var NowData = splitData(min1Data);
+    option.series[0].data = NowData.values;
+    option.series[1].data = calculateMA(5, NowData.values);
+    option.series[2].data = calculateMA(10, NowData.values);
+    option.series[3].data = calculateMA(20, NowData.values);
+    option.series[4].data = calculateMA(30, NowData.values);
+    option.series[5].data = setVolumeData(NowData.volumes, currentDate, currentData);
+    option.xAxis[0].data  = currentDate;
+    option.xAxis[1].data  = currentDate;
+    option.dataZoom[0].start = (100-(10/(currentData.length/100)));
+    // 这个的意思是页面只展示30条数据，然后用数据总长度-30再除以总长度可以得到最后一栏数据的初始位置
+    option.dataZoom[0].start = (currentData.length-30)/currentData.length * 100;
+    option.dataZoom[0].end   = 100;
+    option.dataZoom[0].endValue = 100-(50/(currentData.length/100));
+
+    // myChart.setOption(option);
+    chart.setOption(option);
+
+
+</script>
+<script>
+
+
+
+</script>
+</body>
+
+</html>

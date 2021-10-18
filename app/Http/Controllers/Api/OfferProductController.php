@@ -76,6 +76,18 @@ class OfferProductController extends Controller
             $result->day = $this->getOfferProductDataByDays($id, $days['days']);
             $result->week = $this->getOfferProductDataByDays($id, $days['weeks']);
             $result->month = $this->getOfferProductDataByDays($id, $days['months']);
+
+
+            $lastOpenPriceFor5 = 0;
+            $lastClosePriceFor5 = 0;
+            $lastOpenPriceFor15 = 0;
+            $lastClosePriceFor15 = 0;
+            $lastOpenPriceFor30 = 0;
+            $lastClosePriceFor30 = 0;
+            $lastOpenPriceFor60 = 0;
+            $lastClosePriceFor60 = 0;
+
+
             foreach ($getDbData as $k => $v) {
                 $simpleMin = substr($v->minute, 5, 11);
 
@@ -84,20 +96,26 @@ class OfferProductController extends Controller
                 $min = date('i', strtotime($v->minute));
                 if (($min % 5) == 0) {
                     $result->min5->date[] = $simpleMin;
-                    $result->min5->data[] = [$v->minute, $v->open_price, $v->close_price, $v->lowest_price, $v->highest_price, $v->volume];
+                    $result->min5->data[] = [$v->minute, $lastClosePriceFor5 ?? $v->open_price, $v->close_price, $v->lowest_price, $v->highest_price, $v->volume];
+                    $lastClosePriceFor5 = $v->close_price;
                 }
                 if (($min % 15) == 0) {
                     $result->min15->date[] = $simpleMin;
-                    $result->min15->data[] = [$v->minute, $v->open_price, $v->close_price, $v->lowest_price, $v->highest_price, $v->volume];
+                    $result->min15->data[] = [$v->minute, $lastClosePriceFor15 ?? $v->open_price, $v->close_price, $v->lowest_price, $v->highest_price, $v->volume];
+                    $lastClosePriceFor15 = $v->close_price;
                 }
                 if (($min % 30) == 0) {
                     $result->min30->date[] = $simpleMin;
-                    $result->min30->data[] = [$v->minute, $v->open_price, $v->close_price, $v->lowest_price, $v->highest_price, $v->volume];
+                    $result->min30->data[] = [$v->minute, $lastClosePriceFor30 ?? $v->open_price, $v->close_price, $v->lowest_price, $v->highest_price, $v->volume];
+                    $lastClosePriceFor30 = $v->close_price;
                 }
                 if (($min % 60) == 0) {
                     $result->hour->date[] = $simpleMin;
-                    $result->hour->data[] = [$v->minute, $v->open_price, $v->close_price, $v->lowest_price, $v->highest_price, $v->volume];
+                    $result->hour->data[] = [$v->minute, $lastClosePriceFor60 ?? $v->open_price, $v->close_price, $v->lowest_price, $v->highest_price, $v->volume];
+                    $lastClosePriceFor60 = $v->close_price;
                 }
+
+
             }
         }catch (\Exception $e){
             return $this->error($e->getMessage());
