@@ -52,17 +52,17 @@
                                     ,{field:'micro_balance',title:'秒合约余额', width:150}
                                     ,{field:'lock_micro_balance',title:'秒合约锁定余额', width:150}
 
-                                    ,{field:'lever_balance',title:'杠杆余额', width:150}
-                                    ,{field:'lock_lever_balance',title:'杠杆锁定余额', width:150}
+                                    // ,{field:'lever_balance',title:'杠杆余额', width:150}
+                                    // ,{field:'lock_lever_balance',title:'杠杆锁定余额', width:150}
+                                    //
+                                    // ,{field:'legal_balance',title:'法币余额', width:150}
+                                    // ,{field:'lock_legal_balance',title:'法币锁定余额', width:150}
 
-                                    ,{field:'legal_balance',title:'法币余额', width:150}
-                                    ,{field:'lock_legal_balance',title:'法币锁定余额', width:150}
-
-                                    ,{field:'change_balance',title:'闪兑余额', width:150}
-                                    ,{field:'lock_change_balance',title:'闪兑锁定余额', width:150}
+                                    ,{field:'change_balance',title:'币币余额', width:150}
+                                    ,{field:'lock_change_balance',title:'币币锁定余额', width:150}
 
 
-                                    ,{field:'old_balance',title:'链上余额', width:150}
+                                    // ,{field:'old_balance',title:'链上余额', width:150}
                                     ,{field:'create_time',title:'时间', width:200}
                                     ,{fixed: 'right', title: '操作', width: 280, align: 'center', toolbar: '#barDemo'}
                                 ]]

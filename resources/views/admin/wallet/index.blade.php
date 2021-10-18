@@ -87,7 +87,7 @@
     </div>
 </div>
 <div class="layui-row">
-    <div class="layui-col-md4" hide>
+    <div class="layui-col-md4" style="display: none;">
         <div class="block">
             <div class="block-icon">
                 <p class="main-icon">
@@ -100,7 +100,7 @@
             </div>
         </div>
     </div>
-    <div class="layui-col-md4">
+    <div class="layui-col-md4"  style="display: none;">
         <div class="block">
             <div class="block-icon">
                 <p class="main-icon">
@@ -113,7 +113,7 @@
             </div>
         </div>
     </div>
-    <div class="layui-col-md4" hide>
+    <div class="layui-col-md4"  style="display: none;">
         <div class="block">
             <div class="block-icon">
                 <p class="main-icon">
