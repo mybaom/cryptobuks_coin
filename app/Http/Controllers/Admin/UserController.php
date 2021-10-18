@@ -414,7 +414,7 @@ class UserController extends Controller
             ->get()->toArray();
 
         $offerWalletList = DB::table('offer_product_wallet')
-            ->select(DB::raw('concat("o_", id) as id'), 'offer_buy_product.name')
+            ->select(DB::raw('concat("o_", id) as offer_product_wallet.id'), 'offer_buy_product.name')
             ->join('offer_buy_product', 'offer_buy_product.id', '=', 'offer_product_wallet.obp_id')
             ->where('offer_product_wallet.user_id', '=', $walletInfo->user_id)
             ->get()->toArray();
