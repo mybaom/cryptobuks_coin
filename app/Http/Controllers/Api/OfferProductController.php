@@ -77,16 +77,10 @@ class OfferProductController extends Controller
             $result->week = $this->getOfferProductDataByDays($id, $days['weeks']);
             $result->month = $this->getOfferProductDataByDays($id, $days['months']);
 
-
-            $lastOpenPriceFor5 = 0;
             $lastClosePriceFor5 = 0;
-            $lastOpenPriceFor15 = 0;
             $lastClosePriceFor15 = 0;
-            $lastOpenPriceFor30 = 0;
             $lastClosePriceFor30 = 0;
-            $lastOpenPriceFor60 = 0;
             $lastClosePriceFor60 = 0;
-
 
             foreach ($getDbData as $k => $v) {
                 $simpleMin = substr($v->minute, 5, 11);
@@ -143,10 +137,12 @@ class OfferProductController extends Controller
             ->toArray();
 
         $result = new \stdClass();
+        $lastClosePrice = 0;
         foreach ($getDbData as $k => $v) {
             $simpleMin = substr($v->minute, 5, 11);
             $result->date[] = $simpleMin;
-            $result->data[] = [$v->minute, $v->open_price, $v->close_price, $v->lowest_price, $v->highest_price, $v->volume];
+            $result->data[] = [$v->minute, $lastClosePrice ?? $v->open_price, $v->close_price, $v->lowest_price, $v->highest_price, $v->volume];
+            $lastClosePrice = $v->close_price;
         }
 
         return $result;
