@@ -87,7 +87,7 @@
     </div>
 </div>
 <div class="layui-row">
-    <div class="layui-col-md4">
+    <div class="layui-col-md4" hide>
         <div class="block">
             <div class="block-icon">
                 <p class="main-icon">
@@ -113,7 +113,7 @@
             </div>
         </div>
     </div>
-    <div class="layui-col-md4">
+    <div class="layui-col-md4" hide>
         <div class="block">
             <div class="block-icon">
                 <p class="main-icon">
@@ -122,7 +122,7 @@
             </div>
             <div class="block-content" id="lever_total">
                 <p class="title">杠杆币总额:</p>
-                <p class="num-value"></p>  
+                <p class="num-value"></p>
             </div>
         </div>
     </div>

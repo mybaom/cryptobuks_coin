@@ -129,6 +129,8 @@ class AccountLog extends Model
     const LH_LOAN = 45;
     const COIN_TRADE_FROZEN = 50;
     const COIN_TRADE = 51;
+    const OFFER_BALANCE_ADD = 52;
+    const OFFER_BALANCE_MUL = 53;
     const WALLETOUT = 99; //用户申请提币
     const WALLETOUTDONE = 100; //用户提币成功
     const WALLETOUTBACK = 101; //用户提币失败
@@ -478,6 +480,10 @@ class AccountLog extends Model
                 return '余币宝提现';
             case self::LH_LOAN:
                 return '质押';
+            case self::OFFER_BALANCE_ADD:
+                return '认购账户充值';
+            case self::OFFER_BALANCE_MUL:
+                return '认购账户扣除';
             default:
                 return '暂无此类型';
                 break;
