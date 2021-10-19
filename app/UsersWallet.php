@@ -84,7 +84,10 @@ class UsersWallet extends Model
         return $this->belongsTo(Currency::class, 'currency', 'id');
     }
 
-
+    public function currencyQuotation()
+    {
+        return $this->belongsTo(CurrencyQuotation::class, 'currency', 'currency_id');
+    }
 
     public static function makeWallet($user_id)
     {

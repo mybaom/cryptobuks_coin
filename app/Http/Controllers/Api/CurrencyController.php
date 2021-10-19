@@ -408,9 +408,15 @@ class CurrencyController extends Controller
 
         $todayCacheKey = 'offer_product_data_' . $minute . '_' . $id;
         $yestedayCacheKey = 'offer_product_data_' . $yesteDayMinute . '_' . $id;
+        $getOfferNewDataCacheKey = 'offer_product_new_data_' . $id;
         $currentDataString = $redis->get($todayCacheKey);
         $yesteDayDataString = $redis->get($yestedayCacheKey);
+        $offerNewDataString = $redis->get($getOfferNewDataCacheKey);
 
+        if(!empty($offerNewDataString)){
+            $result = json_decode($offerNewDataString, true);
+            return $result;
+        }
         if(empty($currentDataString)){
             $getCurrentMinuteData = DB::table('offer_product_increase_record')
                 ->where('obp_id', $id)
@@ -445,8 +451,6 @@ class CurrencyController extends Controller
         $currentData = json_decode($currentDataString, true);
         $yesteDayData = json_decode($yesteDayDataString, true);
 
-
-
         $nowPrice = $this->subPrice(rand($currentData['lowest_price'] * 10000000000
                 , $currentData['highest_price'] * 10000000000) / 10000000000);
         $nowPrice = $this->subPrice($this->numberAddSubRand($nowPrice, $currentData['open_price'] < $currentData['close_price'] ? true : false));
@@ -457,6 +461,13 @@ class CurrencyController extends Controller
             'now_price' => $nowPrice,
             'proportion' => $rise_fall_symbol.$proportion,
         ];
+        // 设置当前数据缓存，为了多处展示的数据同步问题，不然都是随机变化的
+        $setCacheResult = $redis->set($getOfferNewDataCacheKey, json_encode($result, JSON_UNESCAPED_UNICODE));
+        $redis->expire($getOfferNewDataCacheKey, 5);
+        if(! $setCacheResult)
+        {
+            throw new \Exception('set redis fail.');
+        }
 
         return $result;
     }

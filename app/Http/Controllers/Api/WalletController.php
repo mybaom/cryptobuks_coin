@@ -65,7 +65,9 @@ class WalletController extends Controller
         $change_wallet['balance'] = UsersWallet::where('user_id', $user_id)
             ->whereHas('currencyCoin', function ($query) use ($currency_name) {
                 empty($currency_name) || $query->where('name', 'like', '%' . $currency_name . '%');
-            })->get(['id', 'currency', 'change_balance', 'lock_change_balance'])
+            })
+            ->whereHas('currencyQuotation')
+            ->get(['id', 'currency', 'change_balance', 'lock_change_balance'])
             ->toArray();
 
         // 查询认购钱包
