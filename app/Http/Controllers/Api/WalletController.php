@@ -66,8 +66,8 @@ class WalletController extends Controller
             ->whereHas('currencyCoin', function ($query) use ($currency_name) {
                 empty($currency_name) || $query->where('name', 'like', '%' . $currency_name . '%');
             })
-            ->whereHas('currencyQuotation')
-            ->get(['id', 'currency', 'change_balance', 'lock_change_balance'])
+            ->join('currency_quotation', 'Users_wallet.currency', '=', 'currency_quotation.id', 'left')
+            ->get(['users_wallet.id', 'currency', 'change_balance', 'lock_change_balance', 'currency_quotation.now_price'])
             ->toArray();
 
         // 查询认购钱包
@@ -109,7 +109,7 @@ class WalletController extends Controller
             $newChaneWallet[] = $v;
             $num = $v['change_balance'] + $v['lock_change_balance'];
            // $change_wallet['totle'] += $num * $v['cny_price'];
-            $change_wallet['usdt_totle'] += $num * $v['usdt_price'];
+            $change_wallet['usdt_totle'] += $num * $v['now_price'];
         }
         $change_wallet['balance'] = $newChaneWallet;
         
