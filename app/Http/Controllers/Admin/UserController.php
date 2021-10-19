@@ -682,41 +682,45 @@ class UserController extends Controller
             $way = $request->get('way', 'increment');
             $type = $request->get('type', 1);
             $conf_value = $request->get('conf_value', 0);
-            if ($type == 1 && $way == 'decrement') {
-                if ($wallet->legal_balance < $conf_value) {
-                    return $validator->errors()->add('isBalance', '此钱包法币交易余额不足' . $conf_value . '元');
+            if(strpos($request->get('id'), 'o_') !== false) {
+                if ($wallet->balance < $conf_value) {
+                    return $validator->errors()->add('isBalance', '此钱包币币账户余额不足' . $conf_value . '元');
                 }
-            } elseif ($type == 2 && $way == 'decrement') {
-                if ($wallet->lock_legal_balance < $conf_value) {
-                    return $validator->errors()->add('isBalance', '此钱包法币交易锁定余额不足' . $conf_value . '元');
-                }
-            } elseif ($type == 3 && $way == 'decrement') {
-                if ($wallet->change_balance < $conf_value) {
-                    return $validator->errors()->add('isBalance', '此钱包币币交易余额不足' . $conf_value . '元');
-                }
-            } elseif ($type == 4 && $way == 'decrement') {
-                if ($wallet->lock_change_balance < $conf_value) {
-                    return $validator->errors()->add('isBalance', '此钱包币币交易锁定余额不足' . $conf_value . '元');
-                }
-            } elseif ($type == 5 && $way == 'decrement') {
-                if ($wallet->lever_balance < $conf_value) {
-                    return $validator->errors()->add('isBalance', '此钱包闪兑交易余额不足' . $conf_value . '元');
-                }
-            } elseif ($type == 6 && $way == 'decrement') {
-                if ($wallet->lock_lever_balance < $conf_value) {
-                    return $validator->errors()->add('isBalance', '此钱包闪兑交易锁定余额不足' . $conf_value . '元');
-                }
-            } elseif ($type == 7 && $way == 'decrement') {
-                if ($wallet->micro_balance < $conf_value) {
-                    return $validator->errors()->add('isBalance', '此钱包秒合约余额不足' . $conf_value . '元');
-                }
-            } elseif ($type == 8 && $way == 'decrement') {
-                if ($wallet->lock_micro_balance < $conf_value) {
-                    return $validator->errors()->add('isBalance', '此钱包秒合约锁定余额不足' . $conf_value . '元');
+            }else{
+                if ($type == 1 && $way == 'decrement') {
+                    if ($wallet->legal_balance < $conf_value) {
+                        return $validator->errors()->add('isBalance', '此钱包法币交易余额不足' . $conf_value . '元');
+                    }
+                } elseif ($type == 2 && $way == 'decrement') {
+                    if ($wallet->lock_legal_balance < $conf_value) {
+                        return $validator->errors()->add('isBalance', '此钱包法币交易锁定余额不足' . $conf_value . '元');
+                    }
+                } elseif ($type == 3 && $way == 'decrement') {
+                    if ($wallet->change_balance < $conf_value) {
+                        return $validator->errors()->add('isBalance', '此钱包币币交易余额不足' . $conf_value . '元');
+                    }
+                } elseif ($type == 4 && $way == 'decrement') {
+                    if ($wallet->lock_change_balance < $conf_value) {
+                        return $validator->errors()->add('isBalance', '此钱包币币交易锁定余额不足' . $conf_value . '元');
+                    }
+                } elseif ($type == 5 && $way == 'decrement') {
+                    if ($wallet->lever_balance < $conf_value) {
+                        return $validator->errors()->add('isBalance', '此钱包闪兑交易余额不足' . $conf_value . '元');
+                    }
+                } elseif ($type == 6 && $way == 'decrement') {
+                    if ($wallet->lock_lever_balance < $conf_value) {
+                        return $validator->errors()->add('isBalance', '此钱包闪兑交易锁定余额不足' . $conf_value . '元');
+                    }
+                } elseif ($type == 7 && $way == 'decrement') {
+                    if ($wallet->micro_balance < $conf_value) {
+                        return $validator->errors()->add('isBalance', '此钱包秒合约余额不足' . $conf_value . '元');
+                    }
+                } elseif ($type == 8 && $way == 'decrement') {
+                    if ($wallet->lock_micro_balance < $conf_value) {
+                        return $validator->errors()->add('isBalance', '此钱包秒合约锁定余额不足' . $conf_value . '元');
+                    }
                 }
             }
-
-
         });
         //如果验证不通过
         if ($validator->fails()) {
