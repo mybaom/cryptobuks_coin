@@ -66,7 +66,7 @@ class WalletController extends Controller
             ->whereHas('currencyCoin', function ($query) use ($currency_name) {
                 empty($currency_name) || $query->where('name', 'like', '%' . $currency_name . '%');
             })
-            ->join('currency_quotation', 'Users_wallet.currency', '=', 'currency_quotation.id', 'left')
+            ->join('currency_quotation', 'users_wallet.currency', '=', 'currency_quotation.id', 'left')
             ->get(['users_wallet.id', 'currency', 'change_balance', 'lock_change_balance', 'currency_quotation.now_price'])
             ->toArray();
 
