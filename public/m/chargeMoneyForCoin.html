@@ -113,7 +113,7 @@
 	    	<input id="number" type="number" :value="quantity" v-model="quantity"  style="background: #FFF; border:solid 1px #bbb;" />
 	    </div>
         <div class="qb-box">
-            <aside data-localize="assets.currencyName">交易币种</aside>
+            <aside data-localize="contract.currencyName">交易币种</aside>
             <select @change="currencyChange" id="currency" v-on:change="" style="width: 100%; height: 40px; margin-top: 20px;">
                 <option v-for="currency in currencyList" :value="currency.name">{{currency.name}}</option>
             </select>
@@ -240,6 +240,9 @@
                 currentChangeName: "USDT",
                 nowPrice: 1,
                 chargeAddress: [],
+            },
+            mounted() {
+                changeLg();
             },
             methods: {
                 currencyChange: function(e){

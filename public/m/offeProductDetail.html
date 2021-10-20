@@ -172,7 +172,7 @@
                 <span id="zj">{{info.now_price * inputValue}}</span>
             </div>
             <div class="tradeorder-buy tradeorder-bili">
-                <span data-localize="td.transnum">划转数量</span>
+                <span data-localize="assets.transnum">划转数量</span>
                 <span id="hznum" v-if="typeof detailList.quotation != 'undefined'">{{toNonExponential(info.now_price * inputValue / detailList.quotation[selectId].now_price)}}</span>
                 <span id="hznum" v-if="typeof detailList.quotation == 'undefined'">0</span>
             </div>
@@ -236,7 +236,7 @@
     </div>
 
     <div style="height:10px;background-color:#f4f8fb;"></div>
-    <div id="entrust" style="margin-bottom: 50px;" class="bgColor mt10">
+    <div id="entrust" style="margin-bottom: 50px;" class="bgColor mt10" v-cloak>
         <div>
             <h3 style="display: inline-block;" class="pull-left " data-localize="deals.currentPosition">
                 {{getlg('balance')}}
@@ -667,8 +667,9 @@
                 colorList: ['#c23531', '#2f4554', '#61a0a8', '#d48265', '#91c7ae', '#749f83', '#ca8622', '#bda29a', '#6e7074', '#546570', '#c4ccd3'],
             },
             mounted() {
-                chart = echarts.init(document.getElementById('echart'))
+                chart = echarts.init(document.getElementById('echart'));
                 chart.setOption(option);
+                changeLg();
                 let that = this;
                 get_user_login();
                 setInterval(this.getNowData, 3000);
