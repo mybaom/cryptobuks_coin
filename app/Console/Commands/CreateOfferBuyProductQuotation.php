@@ -66,8 +66,9 @@ class CreateOfferBuyProductQuotation extends Command{
                     )
                 , true);
 
-                list($highestPrice, $closePrice, $lowestPrice) = $this->getSortList([$price1, $price2, $price3]);
+                list($highestPrice, $lowestPrice) = $this->getSortList([$price1, $price3]);
                 $openPrice = (float)$v->now_price;
+                $closePrice = $price2;
 
                 $data = ['obp_id' => $v->id,
                     'highest_price' => $highestPrice,
