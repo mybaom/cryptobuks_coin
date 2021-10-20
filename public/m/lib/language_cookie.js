@@ -62,21 +62,25 @@ function changeLg() {
         setLocal('language', 'zh');
     }
     var urls = JSON.stringify(window.location);
-    if (urls.indexOf('black') != -1) {
-        $("[data-localize]").localize("text", {
-            pathPrefix: "../lang",
-            language: lang
-        });
-    } else {
-        $("[data-localize]").localize("text", {
-            pathPrefix: "lang",
-            language: lang
-        });
-    }
-    // $("[data-localize]").localize("text", {
-    //     pathPrefix: "lang",
-    //     language: lang
-    // });
+    // if (urls.indexOf('black') != -1) {
+    //     $("[data-localize]").localize("text", {
+    //         pathPrefix: "../lang",
+    //         language: lang
+    //     });
+    // } else {
+    //     $("[data-localize]").localize("text", {
+    //         pathPrefix: "lang",
+    //         language: lang
+    //     });
+    // }
+    $("[data-localize]").localize("text", {
+        pathPrefix: "../lang",
+        language: lang
+    });
+    $("[data-localize]").localize("text", {
+        pathPrefix: "lang",
+        language: lang
+    });
     setLang(lang)
 
 }
