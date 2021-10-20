@@ -48,16 +48,14 @@ class CreateOfferBuyProductQuotation extends Command{
                         $v->min_increase / 100,
                         $v->max_increase / 100
                     )
-                );
-                $price2 = $this->getReasonablePrice(
-                    $this->getNowPrice(
+                , false);
+                $price2 = $this->getNowPrice(
                         $todayPrice,
                         $v->now_price,
                         $v->rise_fall_probability / 100,
                         $v->min_increase / 100,
                         $v->max_increase / 100
-                    )
-                );
+                    );
                 $price3 = $this->getReasonablePrice(
                     $this->getNowPrice(
                         $todayPrice,
@@ -66,7 +64,7 @@ class CreateOfferBuyProductQuotation extends Command{
                         $v->min_increase / 100,
                         $v->max_increase / 100
                     )
-                );
+                , true);
 
                 list($highestPrice, $closePrice, $lowestPrice) = $this->getSortList([$price1, $price2, $price3]);
                 $openPrice = (float)$v->now_price;
@@ -118,7 +116,7 @@ class CreateOfferBuyProductQuotation extends Command{
      * @param $nowPrice
      * @return string
      */
-    public function getReasonablePrice($nowPrice)
+    public function getReasonablePrice($nowPrice, $addOrSub = true)
     {
         $nowPrice = $this->subPrice($nowPrice);
         // 获取当前价格在什么价位
@@ -172,10 +170,10 @@ class CreateOfferBuyProductQuotation extends Command{
 //        // 裁剪出合理的显示价位
 //        $subNowPrice = substr($nowPrice, 0, $subLength);
         // 计算增加的价格
-        $addNumber = $this->convert_scientific_number_to_normal(pow(10, strlen($beforeInt) - $subLength + 1) * rand(0, 3));
+        $addNumber = $this->convert_scientific_number_to_normal(pow(10, strlen($beforeInt) - $subLength + 1) * rand(0, 2));
 
         // 随机概率为增加或是减少
-        $addOrSub = rand(0, 1);
+//        $addOrSub = rand(0, 1);
         if($addOrSub) {
             return $this->convert_scientific_number_to_normal($nowPrice + $addNumber);
         }else{
