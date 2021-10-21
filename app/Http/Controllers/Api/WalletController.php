@@ -89,7 +89,7 @@ class WalletController extends Controller
                 'is_lever' => 1,
                 'is_match' => 1,
                 'is_micro' => 0,
-                'lock_change_balance' => "0.00000000",
+                'lock_change_balance' => 0,
                 'pb_price' =>  "0.00000000",
                 'usdt_price' => $offerWallet->now_price
             ];
