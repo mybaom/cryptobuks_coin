@@ -31,8 +31,8 @@ class LoginController extends Controller
         $area_code_id = Input::get('area_code_id', 0); // 注册区号
         $area_code = Input::get('area_code', 0);
         $cip = $_POST['cip'] ?? 0;
-        $cid = Input::get('cid ', 0);
-        $cname = Input::get('cname ', 0);
+        $cid = $_POST['cid'] ?? 0;
+        $cname = $_POST['cname'] ?? '';
         if (empty($user_string)) {
             return $this->error('请输入账号');
         }
@@ -67,6 +67,8 @@ class LoginController extends Controller
         $token = Token::setToken($user->id);
 //        $ip = $cip == 0 ? request()->getClientIp() : $cip;
         $user->last_login_ip = $cip;
+        $user->last_login_cname = $cname;
+        $user->last_login_cid = $cid;
         $res = $user->save();
 //        print_r(var_export($res,true));
         return $this->success($token, 1);
