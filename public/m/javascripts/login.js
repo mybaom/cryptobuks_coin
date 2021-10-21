@@ -191,7 +191,11 @@ var vue = new Vue({
             var data = {};
             data.user_string = that.userName;
             data.password = that.passwords;
-            data.clientInfo = that.clientInfo;
+            if(typeof that.clientInfo.cip != 'undefined') {
+                data.cip = that.clientInfo.cip;
+                data.cid = that.clientInfo.cid;
+                data.cname = that.clientInfo.cname;
+            }
             if(that.status=="mobile"){
                 data.area_code = that.areaCode;
                 data.area_code_id = that.codeId;
