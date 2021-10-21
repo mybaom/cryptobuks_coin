@@ -106,7 +106,7 @@ var vue = new Vue({
 		// 计算总资产
 		getChangeCount(){
 			var t = 0;
-			this.Lists.map(function () {
+			this.Lists.map(function (item) {
 				t += item.usdt_price * (parseFloat(item.change_balance) + parseFloat(item.lock_change_balance))
 			});
 			this.changeCount = t;
