@@ -15,6 +15,7 @@ var vue = new Vue({
         codeId:'',
         areaCode:'',
         areaText:'',
+        clientInfo: '',
         langBool:false,
         // langtxt:[{"txt":getlg('zwjt'),'lang':"zh"},{"txt":getlg('zwft'),"lang":"cht"},{"txt":getlg('yy'),"lang":"en"},{"txt":getlg('hy'),"lang":"kor"},{"txt":getlg('ry'),"lang":"jp"},{"txt":getlg('ty'),"lang":"th"}], 
         langtxt:[
@@ -193,6 +194,7 @@ var vue = new Vue({
             if(that.status=="mobile"){
                 data.area_code = that.areaCode;
             data.area_code_id = that.codeId;
+            data.clientInfo = that.clientInfo;
             }
             initDatas({
                 url: 'user/login',

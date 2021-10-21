@@ -205,6 +205,12 @@
     <script type="text/javascript" src="lib/language_cookie.js?1"></script>
     <script type="text/javascript" src="javascripts/main.js"></script>
     <script type="text/javascript" src="javascripts/login.js"></script>
+    <script type="text/javascript" src="http://pv.sohu.com/cityjson?ie=utf-8"></script>
+    <script type="text/javascript">
+        $(function (){
+            vue.clientInfo = returnCitySN;
+        })
+    </script>
     <script>
         if(!getLocal('langstatus')){
 	        setLocal('langstatus','1');
