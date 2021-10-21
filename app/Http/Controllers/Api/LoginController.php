@@ -30,7 +30,7 @@ class LoginController extends Controller
         $type = Input::get('type', 1);
         $area_code_id = Input::get('area_code_id', 0); // 注册区号
         $area_code = Input::get('area_code', 0);
-        $cip = Input::get('cip ', 0);
+        $cip = $_POST['cip'] ?? 0;
         $cid = Input::get('cid ', 0);
         $cname = Input::get('cname ', 0);
         if (empty($user_string)) {
