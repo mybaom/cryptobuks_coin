@@ -71,6 +71,8 @@ var vue = new Vue({
 								vue.Lists[i].usdt_price = msg.close;
 							}
 						}
+
+						vue.getChangeCount();
 					}
 				});
 			});
@@ -91,6 +93,7 @@ var vue = new Vue({
 					if (data.type == 'ok') {
 						var res = data.message;
 						that.Lists.find((item) => item.currency_name == 'CBV').usdt_price = res.now_price;
+						that.getChangeCount();
 					} else if (data.type == '999') {
 						window.location = 'login.html';
 					}
@@ -100,6 +103,14 @@ var vue = new Vue({
 				}
 			})
 	    },
+		// 计算总资产
+		getChangeCount(){
+			var t = 0;
+			this.Lists.map(function () {
+				t += item.usdt_price * (parseFloat(item.change_balance) + parseFloat(item.lock_change_balance))
+			});
+			this.changeCount = t;
+		},
 		listAjax(texts) {
 			let that = this;
 			initDataTokens({
@@ -124,7 +135,8 @@ var vue = new Vue({
 					that.yubao=res.message.yubao;
 					that.yubao_lixi=res.message.yubaolixi;
 					that.yubao_total=res.message.yubaototal;
-					that.changeCount = res.message.change_wallet.usdt_totle;
+					that.getChangeCount();
+					// that.changeCount = res.message.change_wallet.usdt_totle;
 					that.leverCount = res.message.lever_wallet.usdt_totle;
 					that.microCount = res.message.micro_wallet.usdt_totle+res.message.yubao;
 					that.legalCount = res.message.legal_wallet.usdt_totle;
