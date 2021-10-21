@@ -127,6 +127,7 @@
     "limit": "가격제한", 
     "avaiable":"사용 가능", 
     "turnover": "거래액",
+    "24hturnover": "24H 시간 거래액 (10K)",
     "handicap":"디스크", 
     "number":" 개수", 
     "nonumber":" 개설 수량", 
