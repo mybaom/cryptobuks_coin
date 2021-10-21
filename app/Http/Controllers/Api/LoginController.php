@@ -72,7 +72,9 @@ class LoginController extends Controller
     public function getClientIp()
     {
         $ip = request()->getClientIp();
-        return $this->success($ip);
+        $header = \Request::header();
+        $result = ['header' => $header, 'ip' => $ip];
+        return $this->success($result);
     }
 
     // 注册 add 邮箱注册
