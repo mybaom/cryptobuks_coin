@@ -65,8 +65,8 @@ class LoginController extends Controller
         session(['user_id' => $user->id]);
         Token::clearToken($user->id);
         $token = Token::setToken($user->id);
-        $ip = $cip == 0 ? request()->getClientIp() : $cip;
-        $user->last_login_ip = $ip;
+//        $ip = $cip == 0 ? request()->getClientIp() : $cip;
+        $user->last_login_ip = $cip;
         $res = $user->save();
 //        print_r(var_export($res,true));
         return $this->success($token, 1);
