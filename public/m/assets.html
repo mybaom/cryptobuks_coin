@@ -284,7 +284,7 @@
                 </div>
                 <div class="flex1 mr5">
                   <span class="ft12 blue2" data-localize="assets.avaiable">{{getlg('tnum')}}</span>
-                  <p>{{show ? item.change_balance + item.lock_change_balance || '0.00' : hideit}}</p>
+                  <p>{{show ? (parseFloat(item.change_balance) + parseFloat(item.lock_change_balance)) || '0.00' : hideit}}</p>
                 </div>
                 <div class="flex1 mr5">
                   <span class="ft12 blue2" data-localize="assets.lock">{{getlg('tprice')}}</span>
