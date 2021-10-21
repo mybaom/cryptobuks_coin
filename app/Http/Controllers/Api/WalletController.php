@@ -102,7 +102,7 @@ class WalletController extends Controller
             if($k == 3 && $cbvWallet)
             {
                 $newChaneWallet[] = $cbvWallet;
-                $num = $cbvWallet['change_balance'] + $cbvWallet['lock_change_balance'];
+                $num = $cbvWallet['change_balance'];
                 // $change_wallet['totle'] += $num * $v['cny_price'];
                 $change_wallet['usdt_totle'] += $num * $cbvWallet['usdt_price'];
             }
