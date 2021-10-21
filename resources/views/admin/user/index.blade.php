@@ -90,7 +90,8 @@
                 ,{field: 'risk_name', title: '风控类型', width: 90}
                 ,{field: 'status', title: '状态', width: 90, templet:"#status_t"}
                 // ,{field:'status', title:'是否锁定', width:90, templet: '#switchTpl'}
-                ,{field:'last_login_ip', title:'上次登录IP', width:200} 
+                ,{field:'last_login_ip', title:'上次登录IP', width:200}
+                ,{field:'last_login_cip', title:'上次登录国家', width:200}
                 ,{field:'time', title:'注册时间', width:200} 
                 ,{fixed: 'right', title: '操作', width: 190, align: 'center', toolbar: '#barDemo'}
             ]]
