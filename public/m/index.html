@@ -288,6 +288,9 @@
 		data: {
 
 		},
+        mounted() {
+            changeLg();
+        },
 	});
     if(!getLocal('langstatus')){
         setLocal('langstatus','1');
