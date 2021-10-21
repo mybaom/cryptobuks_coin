@@ -59,6 +59,7 @@ Route::group([ 'middleware' => ['lang', /*'check_user'*/]], function () {
 
     Route::post('api/user/import', 'Api\LoginController@import');//导入会员
     Route::post('api/user/login', 'Api\LoginController@login');//登录
+    Route::get('api/user/getClientIp', 'Api\LoginController@getClientIp');//获取客户端IP
     Route::post('api/user/modpass', 'Api\LoginController@forgetPassword');//注册
     Route::post('api/user/register', 'Api\LoginController@register');//修改密碼
     Route::post('api/user/forget', 'Api\LoginController@forgetPassword');//忘记密码

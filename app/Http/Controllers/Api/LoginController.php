@@ -59,7 +59,7 @@ class LoginController extends Controller
         if ($user->status == 1) {
             return $this->error('您好，您的账户已被冻结，详情请咨询客服。');
         }
-         session(['user_id' => $user->id]);
+        session(['user_id' => $user->id]);
         Token::clearToken($user->id);
         $token = Token::setToken($user->id);
         $ip = request()->getClientIp();
@@ -67,6 +67,12 @@ class LoginController extends Controller
         $res = $user->save();
 //        print_r(var_export($res,true));
         return $this->success($token, 1);
+    }
+
+    public function getClientIp()
+    {
+        $ip = request()->getClientIp();
+        return $this->success($ip);
     }
 
     // 注册 add 邮箱注册
