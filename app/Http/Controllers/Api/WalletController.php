@@ -89,7 +89,7 @@ class WalletController extends Controller
                 'is_lever' => 1,
                 'is_match' => 1,
                 'is_micro' => 0,
-                'lock_change_balance' => 0,
+                'lock_change_balance' => '0.000000',
                 'pb_price' =>  "0.00000000",
                 'usdt_price' => $offerWallet->now_price
             ];
@@ -102,7 +102,7 @@ class WalletController extends Controller
             if($k == 3 && $cbvWallet)
             {
                 $newChaneWallet[] = $cbvWallet;
-                $num = $cbvWallet['change_balance'];
+                $num = $cbvWallet['change_balance'] + $cbvWallet['lock_change_balance'];
                 // $change_wallet['totle'] += $num * $v['cny_price'];
                 $change_wallet['usdt_totle'] += $num * $cbvWallet['usdt_price'];
             }
