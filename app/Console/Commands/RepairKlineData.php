@@ -27,10 +27,10 @@ class RepairKlineData extends Command
 //        7 => "30min",
 //        2 => "60min",
 //        3 => "1hour",
-//        4 => "1day",
-        8 => "1week",
-        9 => "1mon",
-        10 => "1year",
+        4 => "1day",
+//        8 => "1week",
+//        9 => "1mon",
+//        10 => "1year",
     ];
 
     public function handle()
