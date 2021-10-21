@@ -191,10 +191,10 @@ var vue = new Vue({
             var data = {};
             data.user_string = that.userName;
             data.password = that.passwords;
+            data.clientInfo = that.clientInfo;
             if(that.status=="mobile"){
                 data.area_code = that.areaCode;
-            data.area_code_id = that.codeId;
-            data.clientInfo = that.clientInfo;
+                data.area_code_id = that.codeId;
             }
             initDatas({
                 url: 'user/login',
