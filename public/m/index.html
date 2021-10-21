@@ -519,7 +519,7 @@
                             		
                             		<b class="tc" style="color:${(phDataTwo[i].change - 0) >= 0 ? '#00c087' : '#ff3e60'}">${phDataTwo[i].now_price}</b>
                             		
-                            		<button class="btn btn-default" style="background:${(phDataTwo[i].change - 0) >= 0 ? '#00c087' : '#ff3e60'}">${iTofixed(phDataTwo[i].volume/1000,2)}K</button>
+                            		<button class="btn btn-default" style="background:${(phDataTwo[i].change - 0) >= 0 ? '#00c087' : '#ff3e60'}">${iTofixed(phDataTwo[i].volume/10000,2)}</button>
                             		</a>
                             		</li>
                             		`
