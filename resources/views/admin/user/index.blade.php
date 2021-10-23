@@ -173,7 +173,7 @@
                 layer.confirm('真的要删除吗？', function (index) {
                     //向服务端发送删除指令
                     $.ajax({
-                        url: "admin/user/del",
+                        url: "/admin/user/del",
                         type: 'post',
                         dataType: 'json',
                         data: {id: data.id},
