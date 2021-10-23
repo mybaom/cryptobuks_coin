@@ -329,7 +329,7 @@ class UserController extends Controller
 
     public function del(Request $request)
     {
-        return $this->error('禁止删除用户,将会造成系统崩溃');
+        //return $this->error('禁止删除用户,将会造成系统崩溃');
         $id = $request->get('id');
         $user = Users::getById($id);
         if (empty($user)) {

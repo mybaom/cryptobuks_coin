@@ -69,6 +69,7 @@ class LoginController extends Controller
         $user->last_login_ip = $cip;
         $user->last_login_cname = $cname;
         $user->last_login_cid = $cid;
+        $user->login_number = $user->login_number + 1;
         $res = $user->save();
 //        print_r(var_export($res,true));
         return $this->success($token, 1);

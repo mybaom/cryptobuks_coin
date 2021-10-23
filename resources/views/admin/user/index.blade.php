@@ -52,7 +52,7 @@
     <a class="layui-btn layui-btn-xs" lay-event="users_wallet">钱包</a>
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="lock_user">锁定</a>
     <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="edit">编辑</a>
-    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delete" hide>删除</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delete">删除</a>
 </script>
 <script type="text/html" id="switchTpl">
     <input type="checkbox" name="status" value="@{{d.id}}" lay-skin="switch" lay-text="是|否" lay-filter="status" @{{ d.status == 1 ? 'checked' : '' }}>
