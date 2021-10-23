@@ -50,7 +50,7 @@
 @section('scripts')
 <script type="text/html" id="barDemo">
     <a class="layui-btn layui-btn-xs" lay-event="users_wallet">钱包</a>
-    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="lock_user">锁定</a>
+{{--    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="lock_user">锁定</a>--}}
     <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="edit">编辑</a>
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
 </script>
