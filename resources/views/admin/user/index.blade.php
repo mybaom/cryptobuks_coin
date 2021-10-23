@@ -92,6 +92,7 @@
                 // ,{field:'status', title:'是否锁定', width:90, templet: '#switchTpl'}
                 ,{field:'last_login_ip', title:'上次登录IP', width:200}
                 ,{field:'last_login_cid', title:'上次登录国家', width:200}
+                ,{field:'login_number', title:'登录次数', width:200}
                 ,{field:'time', title:'注册时间', width:200} 
                 ,{fixed: 'right', title: '操作', width: 190, align: 'center', toolbar: '#barDemo'}
             ]]
