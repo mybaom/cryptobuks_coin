@@ -52,7 +52,7 @@
     <a class="layui-btn layui-btn-xs" lay-event="users_wallet">钱包</a>
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="lock_user">锁定</a>
     <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="edit">编辑</a>
-    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delete">删除</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
 </script>
 <script type="text/html" id="switchTpl">
     <input type="checkbox" name="status" value="@{{d.id}}" lay-skin="switch" lay-text="是|否" lay-filter="status" @{{ d.status == 1 ? 'checked' : '' }}>
@@ -169,7 +169,7 @@
             var data = obj.data;
             var layEvent = obj.event;
             var tr = obj.tr;
-            if (layEvent === 'delete') { //删除
+            if (layEvent === 'del') { //删除
                 layer.confirm('真的要删除吗？', function (index) {
                     //向服务端发送删除指令
                     $.ajax({
