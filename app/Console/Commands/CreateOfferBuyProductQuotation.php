@@ -48,23 +48,23 @@ class CreateOfferBuyProductQuotation extends Command{
                         $v->min_increase / 100,
                         $v->max_increase / 100
                     )
-                , false);
-                $price2 = $this->getNowPrice(
-                        $todayPrice,
-                        $v->now_price,
-                        $v->rise_fall_probability / 100,
-                        $v->min_increase / 100,
-                        $v->max_increase / 100
-                    );
-//                $price2 = $this->getReasonablePrice(
-//                    $this->getNowPrice(
+                , rand(0, 1));
+//                $price2 = $this->getNowPrice(
 //                        $todayPrice,
 //                        $v->now_price,
 //                        $v->rise_fall_probability / 100,
 //                        $v->min_increase / 100,
 //                        $v->max_increase / 100
-//                    )
-//                );
+//                    );
+                $price2 = $this->getReasonablePrice(
+                    $this->getNowPrice(
+                        $todayPrice,
+                        $v->now_price,
+                        $v->rise_fall_probability / 100,
+                        $v->min_increase / 100,
+                        $v->max_increase / 100
+                    ),
+                rand(0, 1));
                 $price3 = $this->getReasonablePrice(
                     $this->getNowPrice(
                         $todayPrice,
@@ -73,12 +73,12 @@ class CreateOfferBuyProductQuotation extends Command{
                         $v->min_increase / 100,
                         $v->max_increase / 100
                     )
-                , true);
+                , rand(0, 1));
 
-                list($highestPrice, $lowestPrice) = $this->getSortList([$price1, $price3]);
-//                list($highestPrice, $closePrice, $lowestPrice) = $this->getSortList([$price1, $price2, $price3]);
+//                list($highestPrice, $lowestPrice) = $this->getSortList([$price1, $price3]);
+                list($highestPrice, $closePrice, $lowestPrice) = $this->getSortList([$price1, $price2, $price3]);
                 $openPrice = (float)$v->now_price;
-                $closePrice = $price2;
+                //$closePrice = $price2;
 
                 $data = ['obp_id' => $v->id,
                     'highest_price' => $highestPrice,
