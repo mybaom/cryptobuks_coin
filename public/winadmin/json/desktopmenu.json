@@ -262,7 +262,17 @@
       "extend": false,
       "childs": null,
       "id": 49
+    },
+    {
+      "title": "代理管理",
+      "pageURL": "/admin/agent/list",
+      "name": "代理管理",
+      "icon": "fa-user-circle-o",
+      "openType": 2,
+      "maxOpen": -1,
+      "extend": false,
+      "childs": null,
+      "id": 49
     }
-
   ]
 }

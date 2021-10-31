@@ -837,6 +837,12 @@ Route::group([ 'middleware' => ['lang', /*'check_user'*/]], function () {
         Route::any('offerproduct/goodslist_data', 'Admin\OfferProduct@goodsListData');//认购产品列表数据
         Route::any('offerproduct/goodsadd', 'Admin\OfferProduct@goodsAdd');//新增认购产品数据
         Route::any('offerproduct/goodsstart', 'Admin\OfferProduct@goodsStart');//修改认购产品状态
+
+        // 代理
+        Route::any('agent/list', 'Admin\AgentController@list');//代理列表
+        Route::any('agent/list_data', 'Admin\AgentController@listData');//代理列表数据
+        Route::any('agent/add', 'Admin\AgentController@add');//新增代理数据
+        Route::any('agent/start', 'Admin\AgentController@start');//修改代理状态
         
         Route::any('ulipai/orderlist', 'Admin\UlipaiController@orderList');//U利派订单
         Route::any('ulipai/orderlist_data', 'Admin\UlipaiController@orderListData');//U利派列表数据

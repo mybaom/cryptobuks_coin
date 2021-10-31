@@ -72,7 +72,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label">状态</label>
             <div class="layui-input-inline">
-                <select name="type" lay-verify="required">
+                <select name="status" lay-verify="required">
                     <option value="0" <?php if($result->status =='0'): ?> selected <?php endif; ?>>关闭</option>
                     <option value="1" <?php if($result->status =='1'): ?> selected <?php endif; ?>>启用</option>
                 </select>

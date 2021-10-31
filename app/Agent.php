@@ -78,6 +78,11 @@ class Agent extends Model
             return self::hasOne(Users::class, 'id', 'user_id')->value('nickname');
         }
     }
+//
+//    public function user()
+//    {
+//        return self::hasOne(Users::class, 'id', 'user_id');
+//    }
 
     public function getRegTimeAttribute()
     {
