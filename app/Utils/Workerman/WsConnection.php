@@ -335,7 +335,7 @@ class WsConnection
             'volume' => sctonum($tick->amount),
             'time' => $tick->id * 1000,
         ];
-        EsearchMarket::dispatch($market_data)->onQueue('esearch:market');
+        EsearchMarket::dispatch($market_data)->onQueue('esearchMarket');
         $key = $currency_match->currency_name . '.' . $currency_match->legal_name;
         self::$marketKlineData[$period][$key] = [
             'market_data' => $market_data,
