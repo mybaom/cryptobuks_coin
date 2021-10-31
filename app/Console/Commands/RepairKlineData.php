@@ -21,12 +21,12 @@ class RepairKlineData extends Command
     protected static $resoucesUrl = 'https://zitzoom.com/Json/temp/Chain/Line/{{period}}/{{name}}.json';
 
     protected static $period = [
-//        5 => "1min",
-//        6 => "5min",
-//        1 => "15min",
-//        7 => "30min",
-//        2 => "60min",
-//        3 => "1hour",
+        5 => "1min",
+        6 => "5min",
+        1 => "15min",
+        7 => "30min",
+        2 => "60min",
+        3 => "1hour",
         4 => "1day",
 //        8 => "1week",
 //        9 => "1mon",
