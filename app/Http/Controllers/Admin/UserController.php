@@ -156,10 +156,28 @@ class UserController extends Controller
 
         $result = new Users();
         $result = $result->leftjoin("user_real", "users.id", "=", "user_real.user_id")->select("users.*", "user_real.card_id")->find($id);
-        //var_dump($result->toArray());die;
         $res = UserCashInfo::where('user_id', $id)->first();
+        $agentInfo = Agent::select(
+            'agent.level',
+            'p.id',
+            'agent.is_admin',
+            'agent.username',
+            'agent.parent_agent_id',
+            'agent.pro_loss',
+            'agent.pro_ser'
+        )->where('agent.user_id', $id)
+            ->where('agent.status', 1)
+            ->leftjoin('agent as p', 'p.id', '=', 'agent.parent_agent_id')
+            ->first();
 
-        return view('admin.user.edit', ['result' => $result, 'res' => $res]);
+        $agentList = DB::table('agent')
+            ->select('u.account_number', 'agent.id')
+            ->join('users as u', 'agent.user_id', '=', 'u.id')
+            ->where('agent.level', '=', 1)
+            ->where('agent.status', '=', 1)
+            ->get()->toArray();
+
+        return view('admin.user.edit', ['result' => $result, 'res' => $res, 'agent' => $agentInfo, 'agent_list' => $agentList]);
     }
 
     public function doadd()
@@ -236,6 +254,8 @@ class UserController extends Controller
         $wechat_account = Input::get("wechat_account");
         $is_service = Input::get("is_service", 0) ?? 0;
         $risk = Input::get('risk', 0);
+        $agent_level = Input::get('agent_level');
+        $parent_agent = Input::get('parent_agent');
 
         $id = Input::get("id");
         if (empty($id)) return $this->error("参数错误");
@@ -261,6 +281,19 @@ class UserController extends Controller
             $user->is_service = $is_service;
         }
         $user->risk = $risk;
+        // 查询用户的代理账号
+        $agentInfo = Agent::select(
+            'agent.level',
+            'agent.id',
+            'agent.is_admin',
+            'agent.username',
+            'agent.parent_agent_id',
+            'agent.pro_loss',
+            'agent.pro_ser'
+        )->where('agent.user_id', $id)
+            ->leftjoin('agent as p', 'p.id', '=', 'agent.parent_agent_id')
+            ->first();
+
         DB::beginTransaction();
 
         try {
@@ -283,6 +316,80 @@ class UserController extends Controller
                 $real->card_id = $card_id;
                 $real->save();
             }
+            // 修改代理信息
+            // 如果是非代理，并且有代理信息则关闭代理状态
+            if($agent_level == 0 && $agentInfo)
+            {
+                DB::table('agent')->where('user_id', $id)->update([
+                    'status' => 0
+                ]);
+            // 如果是一级代理则修改代理等级和清除上级代理
+            }else if($agent_level == 1){
+                // 查询顶级代理账户
+                $topAgentInfo = Agent::select(
+                    'agent.level',
+                    'agent.agent_path',
+                    'agent.id',
+                    'agent.username',
+                    'agent.parent_agent_id',
+                    'agent.pro_loss',
+                    'agent.pro_ser'
+                )->where('agent.level', 0)->first();
+                if($agentInfo) {
+                    DB::table('agent')->where('user_id', $id)->update([
+                        'level' => 1,
+                        'status' => 1,
+                        'parent_agent_id' => 0,
+                        'agent_path' => "$agentInfo->id,$topAgentInfo->id"
+                    ]);
+                }else{
+                    $insertId = DB::table('agent')->insertGetId([
+                        'user_id' => $id,
+                        'username' => $user->account_number,
+                        'password' => $user->password,
+                        'parent_agent_id' => 0,
+                        'level' => 1,
+                        'is_addson' => 0,
+                    ]);
+                    DB::table('agent')->where('id', $insertId)->update([
+                        'agent_path' => "$insertId,$topAgentInfo->id"
+                    ]);
+                }
+            }else if($agent_level == 2){
+                // 查询上级代理账户
+                $parentAgentInfo = Agent::select(
+                    'agent.level',
+                    'agent.agent_path',
+                    'agent.id',
+                    'agent.username',
+                    'agent.parent_agent_id',
+                    'agent.pro_loss',
+                    'agent.pro_ser'
+                )->where('agent.id', $parent_agent)->first();
+                if($agentInfo) {
+                    DB::table('agent')->where('user_id', $id)->update([
+                        'level' => 2,
+                        'status' => 1,
+                        'parent_agent_id' => $parent_agent,
+                        'agent_path' => "$agentInfo->id,$parentAgentInfo->agent_path",
+                        'is_addson' => 0,
+                    ]);
+                }else{
+                    $insertId = DB::table('agent')->insertGetId([
+                        'user_id' => $id,
+                        'username' => $user->account_number,
+                        'password' => $user->password,
+                        'parent_agent_id' => $parent_agent,
+                        'level' => 2,
+                        'is_addson' => 0,
+                    ]);
+                    DB::table('agent')->where('id', $insertId)->update([
+                        'agent_path' => "$insertId,$parentAgentInfo->agent_path"
+                    ]);
+                }
+            }
+
+
             DB::commit();
             return $this->success('编辑成功');
         } catch (\Exception $ex) {

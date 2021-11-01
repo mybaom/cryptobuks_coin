@@ -34,6 +34,30 @@
         </div>
 
         <div class="layui-form-item">
+            <label class="layui-form-label">是否代理</label>
+            <div class="layui-input-block">
+                <select lay-filter="agent_level" name="agent_level" lay-verify="required" lay-filter="risk_mode">
+                    <option value=""></option>
+                    <option value="0" {{ (!$agent) ? 'selected' : '' }} >非代理</option>
+                    <option value="1" {{ ($agent['level'] == 1) ? 'selected' : '' }} >一级代理</option>
+                    <option value="2" {{ ($agent['level'] == 2) ? 'selected' : '' }} >二级代理</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item" id="parent_agent_box" style="display: {{$agent && $agent['level'] == 2 ? '' : 'none'}};">
+            <label class="layui-form-label">上级代理</label>
+            <div class="layui-input-block">
+                <select name="parent_agent" id="parent_agent" lay-verify="required" lay-filter="parent_agent">
+                    <option value=""></option>
+                    @foreach($agent_list as $item)
+                        <option value="{{$item->id}}" {{ ($agent['parent_agent_id'] && $agent['parent_agent_id'] == $item->id) ? 'selected' : '' }} >{{$item->account_number}}</option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
             <label class="layui-form-label">风控类型</label>
             <div class="layui-input-block">
                 <select name="risk" lay-verify="required" lay-filter="risk_mode">
@@ -118,8 +142,18 @@
 
 @section('scripts')
     <script>
-        layui.use('upload', function(){
-            var upload = layui.upload;
+        layui.use(['upload', 'form'], function(){
+            var upload = layui.upload,
+            form = layui.form;
+            form.on('select(agent_level)', function(data) {
+                $('#parent_agent').val('');
+                $('#parent_agent_box').hide();
+                $('#parent_agent').attr('lay-verify', '');
+                if(data.value == 2) {
+                    $('#parent_agent').attr('lay-verify', 'required');
+                    $('#parent_agent_box').show();
+                }
+            });
 
             //执行实例
             var uploadInst = upload.render({
@@ -149,6 +183,7 @@
                 ,index = parent.layer.getFrameIndex(window.name);
             //监听提交
             form.on('submit(demo1)', function(data){
+                console.log(data.field);
                 var data = data.field;
                 $.ajax({
                     url:'{{url('admin/user/edit')}}'
