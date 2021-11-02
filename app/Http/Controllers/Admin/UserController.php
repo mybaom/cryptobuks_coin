@@ -294,6 +294,8 @@ class UserController extends Controller
             ->leftjoin('agent as p', 'p.id', '=', 'agent.parent_agent_id')
             ->first();
 
+        $agentRole = DB::table('agent_role')->where('is_super', 0)->get()->first();
+
         DB::beginTransaction();
 
         try {
@@ -335,6 +337,10 @@ class UserController extends Controller
                     'agent.pro_loss',
                     'agent.pro_ser'
                 )->where('agent.level', 0)->first();
+                if(! $topAgentInfo){
+                    $topAgentInfo = new \stdClass();
+                    $topAgentInfo->id = 0;
+                }
                 if($agentInfo) {
                     DB::table('agent')->where('user_id', $id)->update([
                         'level' => 1,
@@ -350,6 +356,12 @@ class UserController extends Controller
                         'parent_agent_id' => 0,
                         'level' => 1,
                         'is_addson' => 0,
+                    ]);
+                    DB::table('agent_admin')->insertGetId([
+                        'agent_id' => $insertId,
+                        'username' => $user->account_number,
+                        'password' => $user->password,
+                        'role_id' => $agentRole->id
                     ]);
                     DB::table('agent')->where('id', $insertId)->update([
                         'agent_path' => "$insertId,$topAgentInfo->id"
@@ -382,6 +394,12 @@ class UserController extends Controller
                         'parent_agent_id' => $parent_agent,
                         'level' => 2,
                         'is_addson' => 0,
+                    ]);
+                    DB::table('agent_admin')->insertGetId([
+                        'agent_id' => $insertId,
+                        'username' => $user->account_number,
+                        'password' => $user->password,
+                        'role_id' => $agentRole->id
                     ]);
                     DB::table('agent')->where('id', $insertId)->update([
                         'agent_path' => "$insertId,$parentAgentInfo->agent_path"
@@ -557,7 +575,8 @@ class UserController extends Controller
         $type = $request->get('type', 1);
         $conf_value = $request->get('conf_value', 0);
         $info = $request->get('info', ':');
-
+        $amount = $request->get('amount', 0);
+        $chargeReqId = $request->get('charge_req_id', 0);
 
         $data_wallet['wallet_id'] = $id;
         $data_wallet['create_time'] = time();
@@ -744,6 +763,12 @@ class UserController extends Controller
 
                     }
                 }
+                // 用户充值（目前只支持币币账户充值），给代理分佣
+                if($type == 3 && $way == 'increment' && $amount)
+                {
+                    $this->agentCommission($user->id, $amount, $chargeReqId);
+                }
+
                 //$wallet->save();
                 //$user->save();
                 DB::commit();
@@ -755,6 +780,196 @@ class UserController extends Controller
         }
 
     }
+
+    /**
+     * 代理分佣
+     * @param $userId
+     * @param $amount
+     * @param $chargeReqId
+     * @return bool
+     * @throws \Exception
+     */
+    private function agentCommission($userId, $amount, $chargeReqId)
+    {
+        $userInfo = DB::table('agent')
+            ->select(
+                'agent.user_id',
+                'agent.level',
+                'agent.id as agent_id',
+                'a2.user_id as parent_user_id',
+                'a2.level as parent_level',
+                'a2.id as parent_agent_id'
+            )
+            ->join('users', 'agent.user_id', '=', 'users.parent_id', 'inner')
+            ->join('agent as a2', 'a2.id', '=', 'agent.parent_agent_id', 'left')
+            ->where('users.id', $userId)
+            ->get()->first();
+
+        // usdt
+        $usdtInfo = Currency::find(3);
+
+        $rechargeDistributionI  = Setting::getValueByKey('recharge_distribution_I', '');
+        $rechargeDistributionII = Setting::getValueByKey('recharge_distribution_II', '');
+
+        if(! $userInfo || !$rechargeDistributionI || !$rechargeDistributionII || !$usdtInfo){
+            return false;
+        }
+
+        $time = time();
+
+        if($userInfo->level == 1)
+        {
+            $changeNum = number_format($rechargeDistributionI * $amount / $usdtInfo->price / 100, 5);
+            $userWallet = UsersWallet::where('user_id', $userInfo->user_id)
+                ->lockForUpdate()
+                ->where('currency', $usdtInfo->id)
+                ->first();
+            if(!$userWallet){
+                throw new \Exception('user wallet not found.');
+            }
+            // 增加余额
+            $userWallet->increment('change_balance', $changeNum);
+            $walletBefore = $userWallet->change_balance;
+            // 增加账户变动记录
+            AccountLog::insertLog(
+                [
+                    'user_id' => $userInfo->user_id,
+                    'value' => $changeNum,
+                    'info' => AccountLog::getTypeInfo(AccountLog::AGENT_COMMISSION),
+                    'type' => AccountLog::AGENT_COMMISSION,
+                    'currency' => $userWallet->currency
+                ],
+                [
+                    'balance_type' => 2,
+                    'wallet_id' => $userWallet->id,
+                    'lock_type' => 0,
+                    'before' => $walletBefore,
+                    'change' => $changeNum,
+                    'after' => bc_add($userWallet->change_balance, $changeNum, 5),
+                    'info' => '',
+                    'create_time' => $time,
+                ]
+            );
+            // 添加代理入金记录
+            DB::table('agent_commission')->insert([
+                'charge_req_id' => $chargeReqId,
+                'user_id' => $userId,
+                'agent_id' => $userInfo->agent_id,
+                'agent_user_id' => $userInfo->user_id,
+                'charge_amount' => $amount,
+                'commission' => $changeNum,
+                'commission_proportion' => $rechargeDistributionI,
+                'currency_id' => $usdtInfo->id,
+                'agent_level' => $userInfo->level,
+                'parent_agent_id' => 0,
+                'parent_level_id' => 0
+            ]);
+        }
+
+        if($userInfo->level == 2)
+        {
+            $changeNum = number_format($rechargeDistributionII * $amount / $usdtInfo->price / 100, 5);
+            $userWallet = UsersWallet::where('user_id', $userInfo->user_id)
+                ->lockForUpdate()
+                ->where('currency', $usdtInfo->id)
+                ->first();
+            if(!$userWallet){
+                throw new \Exception('user wallet not found.');
+            }
+
+            // 增加余额
+            $userWallet->increment('change_balance', $changeNum);
+            $walletBefore = $userWallet->change_balance;
+            // 增加账户变动记录
+            AccountLog::insertLog(
+                [
+                    'user_id' => $userInfo->user_id,
+                    'value' => $changeNum,
+                    'info' => AccountLog::getTypeInfo(AccountLog::AGENT_COMMISSION),
+                    'type' => AccountLog::AGENT_COMMISSION,
+                    'currency' => $userWallet->currency
+                ],
+                [
+                    'balance_type' => 2,
+                    'wallet_id' => $userWallet->id,
+                    'lock_type' => 0,
+                    'before' => $walletBefore,
+                    'change' => $changeNum,
+                    'after' => bc_add($userWallet->change_balance, $changeNum, 5),
+                    'info' => '',
+                    'create_time' => $time,
+                ]
+            );
+            // 添加代理入金记录
+            DB::table('agent_commission')->insert([
+                'charge_req_id' => $chargeReqId,
+                'user_id' => $userId,
+                'agent_id' => $userInfo->agent_id,
+                'agent_user_id' => $userInfo->user_id,
+                'charge_amount' => $amount,
+                'commission' => $changeNum,
+                'commission_proportion' => $rechargeDistributionII,
+                'currency_id' => $usdtInfo->id,
+                'agent_level' => $userInfo->level,
+                'parent_agent_id' => 0,
+                'parent_level_id' => 0
+            ]);
+        }
+
+        if($userInfo->parent_level == 1)
+        {
+            $changeNum = number_format($rechargeDistributionI * $amount / $usdtInfo->price / 100, 5);
+            $parentUserWallet = UsersWallet::where('user_id', $userInfo->parent_user_id)
+                ->lockForUpdate()
+                ->where('currency', $usdtInfo->id)
+                ->first();
+            if(!$parentUserWallet){
+                throw new \Exception('user wallet not found.');
+            }
+
+            // 增加余额
+            $parentUserWallet->increment('change_balance', $changeNum);
+            $walletBefore = $parentUserWallet->change_balance;
+            // 增加账户变动记录
+            AccountLog::insertLog(
+                [
+                    'user_id' => $userInfo->parent_user_id,
+                    'value' => $changeNum,
+                    'info' => AccountLog::getTypeInfo(AccountLog::AGENT_COMMISSION),
+                    'type' => AccountLog::AGENT_COMMISSION,
+                    'currency' => $parentUserWallet->currency
+                ],
+                [
+                    'balance_type' => 2,
+                    'wallet_id' => $parentUserWallet->id,
+                    'lock_type' => 0,
+                    'before' => $walletBefore,
+                    'change' => $changeNum,
+                    'after' => bc_add($parentUserWallet->change_balance, $changeNum, 5),
+                    'info' => '',
+                    'create_time' => $time,
+                ]
+            );
+
+            // 添加代理入金记录
+            DB::table('agent_commission')->insert([
+                'charge_req_id' => $chargeReqId,
+                'user_id' => $userId,
+                'agent_id' => $userInfo->parent_agent_id,
+                'agent_user_id' => $userInfo->parent_user_id,
+                'charge_amount' => $amount,
+                'commission' => $changeNum,
+                'commission_proportion' => $rechargeDistributionI,
+                'currency_id' => $usdtInfo->id,
+                'agent_level' => $userInfo->parent_level,
+                'parent_agent_id' => 0,
+                'parent_level_id' => 0
+            ]);
+        }
+
+        return true;
+    }
+
     //调节账号  type  1法币交易余额  2法币交易锁定余额 3币币交易余额 4币币交易锁定余额  5杠杆交易余额 6杠杆交易锁定余额
     public function postConf(Request $request)
     {
@@ -1361,6 +1576,8 @@ class UserController extends Controller
         $request->put('conf_value',$req->number);
         $request->put('info',"充值");
         $request->put('id', $userWallet->id);
+        $request->put('amount', $req->amount);
+        $request->put('charge_req_id', $id);
         $this->postConfService($request);
         return $this->success('充值成功');
     }

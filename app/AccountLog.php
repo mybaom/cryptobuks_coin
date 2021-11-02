@@ -211,6 +211,7 @@ class AccountLog extends Model
 
     const  LOWER_REBATE = 250;//下级返利
     const  INSURANCE_MONEY=251;//持币生币
+    const AGENT_COMMISSION=252;//用户充值给代理的分佣
 
     public function getAccountNumberAttribute()
     {
@@ -485,6 +486,8 @@ class AccountLog extends Model
                 return '认购账户充值';
             case self::OFFER_BALANCE_MUL:
                 return '认购账户扣除';
+            case self::AGENT_COMMISSION:
+                return '用户充值代理分佣';
             default:
                 return '暂无此类型';
                 break;

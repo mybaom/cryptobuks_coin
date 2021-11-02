@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+{{--    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">--}}
     <title>后台管理</title>
     <link rel="stylesheet" href="/admin/plugins/layui/css/layui.css" media="all" />
     <link rel="stylesheet" href="/admin/plugins/font-awesome/css/font-awesome.min.css" media="all" />
