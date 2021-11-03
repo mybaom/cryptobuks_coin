@@ -34,50 +34,76 @@
                 </dl>
             </li>
          
+{{--            <li data-name="template" class="layui-nav-item">--}}
+{{--                <a href="javascript:;" lay-tips="订单管理" lay-direction="2">--}}
+{{--                    <i class="layui-icon layui-icon-template"></i>--}}
+{{--                    <cite>订单管理</cite>--}}
+{{--                </a>--}}
+{{--                <dl class="layui-nav-child">--}}
+{{--                    <dd data-name="button">--}}
+{{--                        <a lay-href="/agent/order/lever_index">杠杆订单列表</a>--}}
+{{--                    </dd>--}}
+{{--                </dl>--}}
+{{--                <!-- <dl class="layui-nav-child">--}}
+{{--                    <dd data-name="button">--}}
+{{--                        <a lay-href="/agent/order/transaction_index">币币完成单列表</a>--}}
+{{--                    </dd>--}}
+{{--                </dl> -->--}}
+{{--                <dl class="layui-nav-child">--}}
+{{--                    <dd data-name="button">--}}
+{{--                        <a lay-href="/agent/order/micro_index">秒合约订单列表</a>--}}
+{{--                    </dd>--}}
+{{--                </dl>--}}
+
+{{--                <dl class="layui-nav-child">--}}
+{{--                    <dd data-name="button">--}}
+{{--                        <a lay-href="/agent/order/jie_index">杠杆结算/对账</a>--}}
+{{--                    </dd>--}}
+{{--                </dl>--}}
+{{--            </li>--}}
+{{--            <li data-name="template" class="layui-nav-item">--}}
+{{--                <a href="javascript:;" lay-tips="出入金管理" lay-direction="2">--}}
+{{--                    <i class="layui-icon layui-icon-template"></i>--}}
+{{--                    <cite>出入金管理</cite>--}}
+{{--                </a>--}}
+{{--                --}}
+{{--                <dl class="layui-nav-child">--}}
+{{--                    <dd data-name="button">--}}
+{{--                        <a lay-href="/agent/recharge/index">充币列表</a>--}}
+{{--                    </dd>--}}
+{{--                </dl>--}}
+{{--                <dl class="layui-nav-child">--}}
+{{--                    <dd data-name="button">--}}
+{{--                        <a lay-href="/agent/withdraw/index">提币列表</a>--}}
+{{--                    </dd>--}}
+{{--                </dl>--}}
+{{--                --}}
+{{--            </li>--}}
+
             <li data-name="template" class="layui-nav-item">
-                <a href="javascript:;" lay-tips="订单管理" lay-direction="2">
+                <a href="javascript:;" lay-tips="在线留言" lay-direction="2">
                     <i class="layui-icon layui-icon-template"></i>
-                    <cite>订单管理</cite>
+                    <cite>在线留言</cite>
                 </a>
-                <dl class="layui-nav-child">
-                    <dd data-name="button">
-                        <a lay-href="/agent/order/lever_index">杠杆订单列表</a>
-                    </dd>
-                </dl>
-                <!-- <dl class="layui-nav-child">
-                    <dd data-name="button">
-                        <a lay-href="/agent/order/transaction_index">币币完成单列表</a>
-                    </dd>
-                </dl> -->
-                <dl class="layui-nav-child">
-                    <dd data-name="button">
-                        <a lay-href="/agent/order/micro_index">秒合约订单列表</a>
-                    </dd>
-                </dl>
 
                 <dl class="layui-nav-child">
                     <dd data-name="button">
-                        <a lay-href="/agent/order/jie_index">杠杆结算/对账</a>
+                        <a lay-href="/agent/feedback/index">留言记录</a>
                     </dd>
                 </dl>
             </li>
+
             <li data-name="template" class="layui-nav-item">
-                <a href="javascript:;" lay-tips="出入金管理" lay-direction="2">
-                    <i class="layui-icon layui-icon-template"></i>
-                    <cite>出入金管理</cite>
+                <a href="javascript:;" lay-tips="佣金记录" lay-direction="2">
+                    <i class="layui-icon layui-icon-chart"></i>
+                    <cite>佣金管理</cite>
                 </a>
-                
+
                 <dl class="layui-nav-child">
                     <dd data-name="button">
-                        <a lay-href="/agent/recharge/index">充币列表</a>
+                        <a lay-href="/agent/agent_commission/index">充值佣金记录</a>
                     </dd>
                 </dl>
-                <dl class="layui-nav-child">
-                    <dd data-name="button">
-                        <a lay-href="/agent/withdraw/index">提币列表</a>
-                    </dd>
-                </dl>
-                
             </li>
 
             <li data-name="template" class="layui-nav-item" style="display:none">

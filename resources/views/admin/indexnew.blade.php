@@ -3,7 +3,7 @@
 <head>
     <meta http-equiv="content-type" content="text/html;charset=utf-8" />
     <meta name="renderer" content="webkit">
-{{--    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">--}}
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     <title>管理系统</title>
     <link href="{{URL("winadmin/lib/layui/css/layui.css")}}" rel="stylesheet" />
     <link href="{{URL("winadmin/lib/animate/animate.min.css")}}" rel="stylesheet" />

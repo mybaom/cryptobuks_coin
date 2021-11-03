@@ -11,6 +11,8 @@ namespace App\Http\Controllers\Agent;
 
 use App\Agent;
 use App\Users;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class AgentController extends Controller
 {
@@ -43,6 +45,21 @@ class AgentController extends Controller
         $agent = $agent->first();
 
         return $this->success($agent);
+    }
+
+    /**
+     * 下级代理列表
+     */
+    public function subordinateAgentList(Request $request)
+    {
+        $agentId = Agent::getAgentId();
+        $list = DB::table('agent')
+            ->select('id', 'username', DB::raw('FROM_UNIXTIME(reg_time) as reg_time'))
+            ->where('parent_agent_id', $agentId)
+            ->paginate(15);
+
+
+        return $this->layuiData($list);
     }
 
 }

@@ -256,6 +256,7 @@ class UserController extends Controller
         $risk = Input::get('risk', 0);
         $agent_level = Input::get('agent_level');
         $parent_agent = Input::get('parent_agent');
+        $time = time();
 
         $id = Input::get("id");
         if (empty($id)) return $this->error("参数错误");
@@ -346,6 +347,7 @@ class UserController extends Controller
                         'level' => 1,
                         'status' => 1,
                         'parent_agent_id' => 0,
+                        'reg_time' => $time,
                         'agent_path' => "$agentInfo->id,$topAgentInfo->id"
                     ]);
                 }else{
@@ -355,6 +357,7 @@ class UserController extends Controller
                         'password' => $user->password,
                         'parent_agent_id' => 0,
                         'level' => 1,
+                        'reg_time' => $time,
                         'is_addson' => 0,
                     ]);
                     DB::table('agent_admin')->insertGetId([
@@ -383,6 +386,7 @@ class UserController extends Controller
                         'level' => 2,
                         'status' => 1,
                         'parent_agent_id' => $parent_agent,
+                        'reg_time' => $time,
                         'agent_path' => "$agentInfo->id,$parentAgentInfo->agent_path",
                         'is_addson' => 0,
                     ]);
@@ -393,6 +397,7 @@ class UserController extends Controller
                         'password' => $user->password,
                         'parent_agent_id' => $parent_agent,
                         'level' => 2,
+                        'reg_time' => $time,
                         'is_addson' => 0,
                     ]);
                     DB::table('agent_admin')->insertGetId([
@@ -862,7 +867,8 @@ class UserController extends Controller
                 'currency_id' => $usdtInfo->id,
                 'agent_level' => $userInfo->level,
                 'parent_agent_id' => 0,
-                'parent_level_id' => 0
+                'parent_level_id' => 0,
+                'type' => 1,
             ]);
         }
 
@@ -912,7 +918,8 @@ class UserController extends Controller
                 'currency_id' => $usdtInfo->id,
                 'agent_level' => $userInfo->level,
                 'parent_agent_id' => 0,
-                'parent_level_id' => 0
+                'parent_level_id' => 0,
+                'type' => 1,
             ]);
         }
 
@@ -963,7 +970,8 @@ class UserController extends Controller
                 'currency_id' => $usdtInfo->id,
                 'agent_level' => $userInfo->parent_level,
                 'parent_agent_id' => 0,
-                'parent_level_id' => 0
+                'parent_level_id' => 0,
+                'type' => 2,
             ]);
         }
 

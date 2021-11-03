@@ -24,67 +24,20 @@
                         </div>
                     </div>
                     <div class="layui-inline">
-                        <label class="layui-form-label">ID</label>
-                        <div class="layui-input-block">
-                            <input type="text" name="id" placeholder="请输入" autocomplete="off" class="layui-input">
-                        </div>
-                    </div>
-                    <div class="layui-inline">
-                        <label class="layui-form-label">用户名</label>
+                        <label class="layui-form-label">用户账户</label>
                         <div class="layui-input-block">
                             <input type="text" name="account_number" placeholder="请输入" autocomplete="off"
                                    class="layui-input">
                         </div>
                     </div>
-                    <div class="layui-inline">
-                        <label class="layui-form-label">币种</label>
-                        <div class="layui-input-block" style="width:130px;">
-                            <select name="currency_id" >
-                                <option value="-1" class="ww">全部</option>
-                                @foreach ($legal_currencies as $currency)
-                                    <option value="{{$currency->id}}" class="ww">{{$currency->name}}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                   </div>
+
                     <div class="layui-inline">
                         <button class="layui-btn layuiadmin-btn-useradmin" lay-submit lay-filter="san-user-search">
                             <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
                         </button>
-                        <!-- <button class="layui-btn layuiadmin-btn-useradmin"  onclick="javascript:window.location.href='/order/users_excel'">导出Excel</button> -->
-                        <button class="layui-btn layui-btn-normal dao" lay-event="excel">导出表格</button>
                     </div>
-                </div>
-            </div>
-            <div class="layui-card-body">
-                <div class="layui-carousel layadmin-backlog" style="display: none; background-color: #fff">
-                    <ul class="layui-row layui-col-space10 layui-this">
-                        <li class="layui-col-xs3">
-                            <a href="javascript:;" onclick="layer.tips('总用户数', this, {tips: 3});" class="layadmin-backlog-body" style="color: #fff;background-color: #01AAED;">
-                                <h3>总用户数：</h3>
-                                <p><cite style="color:#fff" id="_num">0</cite></p>
-                            </a>
-                        </li>
-                        <li class="layui-col-xs3">
-                            <a href="javascript:;" onclick="layer.tips('代理商用户数', this, {tips: 3});" class="layadmin-backlog-body" style="color: #fff;background-color: #01AAED;">
-                                <h3>代理商用户数</h3>
-                                <p><cite style="color:#fff" id="_daili">0</cite></p>
-                            </a>
-                        </li>
-                        <li class="layui-col-xs3">
-                            <a href="javascript:;" onclick="layer.tips('总入金', this, {tips: 3});" class="layadmin-backlog-body" style="color: #fff;background-color: #01AAED;">
-                                <h3>总入金</h3>
-                                <p><cite style="color:#fff" id="_ru">0</cite></p>
-                            </a>
-                        </li>
-                        <li class="layui-col-xs3">
-                            <a href="javascript:;" onclick="layer.tips('总出金', this, {tips: 3});" class="layadmin-backlog-body" style="color: #fff;background-color: #01AAED;">
-                                <h3>总出金</h3>
-                                <p><cite style="color:#fff" id="_chu">0</cite></p>
-                            </a>
-                        </li>
-                        
-                    </ul>
+
+
                 </div>
             </div>
 
@@ -100,7 +53,7 @@
 
 @section('scripts')
     <script type="text/html" id="table-useradmin-webuser">
-        <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="wallet_info">查看资金</a>
+{{--        <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="wallet_info">查看资金</a>--}}
 {{--        <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="order">查看合约订单</a>--}}
 {{--        <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="micro_risk">秒合约点控</a>--}}
     </script>
@@ -124,44 +77,29 @@
             elem: '#dateend'
         });
 
-        var parent_id = {{ $parent_id }};
         // console.log(parent_id);
 
-        admin.req( {
-            type : "POST",
-            url : '/agent/get_user_num',
-            dataType : "json",
-            data : {all : 1 , parent_id : parent_id},
-            done : function(result) { //返回数据根据结果进行相应的处理
-                $("#_num").html(result.data._num);
-                $("#_daili").html(result.data._daili);
-                $("#_ru").html(result.data._ru);
-                $("#_chu").html(result.data._chu);
-               
-            }
-        });
 
-        load(parent_id);
+        load();
 
-        function load(parent_id) {
-            parent_id = parent_id || 0;
+        function load() {
 
             table.render({
                 elem: '#san-user-manage'
-                , url: '/agent/user/lists?parent_id=' + parent_id //模拟接口
+                , url: '/agent/agent_commission/data'
                 , cols: [[
                     {type: 'checkbox', fixed: 'left'}
                     , {field: 'id', width: 60, title: 'ID', sort: true}
-                    , {field: 'account_number', title: '用户名', minWidth: 150}
-                    , {field: 'my_agent_level', title: '用户身份' , width : 120}
-                    , {field: 'card_id', title: '身份证号' , width : 180}
-                    , {field: 'parent_name', title: '上级代理商' , width : 120}
-                    , {field: 'phone', title: '手机号', minWidth: 150}
-                    , {field: 'email', title: '邮箱', minWidth: 150}
-                    , {field: 'extension_code', title: '邀请码', minWidth: 150}
-                    , {field: 'create_date', title: '加入时间', sort: true, width: 170}
-                    , {title: '操作', width: 300, align: 'center', fixed: 'right', toolbar: '#table-useradmin-webuser'}
+                    , {field: 'account_number', title: '充值的用户账户', minWidth: 150}
+                    , {field: 'charge_amount', title: '充值金额' , width : 120}
+                    , {field: 'commission', title: '佣金' , width : 180}
+                    , {field: 'type', title: '类型' , width : 120}
+                    , {field: 'created_at', title: '充值时间', minWidth: 150}
+                    , {field: 'updated_at', title: '到账时间', minWidth: 150}
+                    // , {title: '操作', width: 300, align: 'center', fixed: 'right', toolbar: '#table-useradmin-webuser'}
                 ]]
+
+
                 , page: true
                 , limit: 30
                 , height: 'full-320'
@@ -229,20 +167,6 @@
         form.on('submit(san-user-search)', function (data) {
             var field = data.field;
 
-
-            admin.req( {
-                type : "POST",
-                url : '/agent/get_user_num',
-                dataType : "json",
-                data : field,
-                done : function(result) { //返回数据根据结果进行相应的处理
-                    $("#_num").html(result.data._num);
-                    $("#_daili").html(result.data._daili);
-                    $("#_ru").html(result.data._ru);
-                    $("#_chu").html(result.data._chu);
-                }
-            });
-
             //执行重载
             table.reload('san-user-manage', {
                 where: field
@@ -262,17 +186,6 @@
             });
         });
 
-        //导出表格
-        $('.dao').click(function () {
-            var id = $('input[name="id"]').val();
-            var account_number = $('input[name="account_number"]').val();
-            var start = $('input[name="start"]').val();
-            var end = $('input[name="end"]').val();
-
-            var url='/agent/users_excel?id='+id+'&account_number='+account_number+'&start='+start+'&end='+end;
-            window.open(url);
-
-        })
 
     });
 </script>

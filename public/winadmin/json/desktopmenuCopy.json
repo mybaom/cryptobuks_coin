@@ -149,9 +149,9 @@
       "id": 19
     },*/
     {
-      "title": "投诉建议",
+      "title": "在线留言",
       "pageURL": "/admin/feedback/index",
-      "name": "投诉建议",
+      "name": "在线留言",
       "icon": "fa-volume-control-phone",
       "openType": 2,
       "maxOpen": -1,

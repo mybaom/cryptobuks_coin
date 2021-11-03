@@ -5,7 +5,7 @@
   <title>管理系统</title>
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-{{--  <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">--}}
+  <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
   <link rel="stylesheet" href="../layui/css/layui.css" media="all">
   <script>

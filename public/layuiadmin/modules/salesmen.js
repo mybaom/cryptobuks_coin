@@ -18,19 +18,19 @@ layui.define(['table', 'form'], function(exports){
     //代理商管理
     table.render({
         elem: '#LAY-user-manage'
-        ,url: '/agent/lists' //模拟接口
+        ,url: '/agent/subordinateAgentList' //模拟接口
         ,cols: [[
             {type: 'checkbox', fixed: 'left'}
             ,{field: 'id', width: 60, title: 'ID', sort: true }
             ,{field: 'username', title: '用户名', minWidth: 150 , event : "getsons",style:"color: #fff;background-color: #5FB878;"}
-            ,{field: 'parent_agent_name', title: '上级用户名', width: 120}
-            ,{field: 'agent_name', title: '等级', width: 100}
-            ,{field: 'is_lock', title: '是否锁定', width: 90, templet: '#lockTpl'}
-            ,{field: 'is_addson', title: '是否拉新', width: 90, templet: '#addsonTpl'}
-            ,{field: 'pro_loss', title: '头寸比例(%)', width: 120}
-            ,{field: 'pro_ser', title: '手续费比例(%)', width: 120}
+            // ,{field: 'parent_agent_name', title: '上级用户名', width: 120}
+            // ,{field: 'agent_name', title: '等级', width: 100}
+            // ,{field: 'is_lock', title: '是否锁定', width: 90, templet: '#lockTpl'}
+            // ,{field: 'is_addson', title: '是否拉新', width: 90, templet: '#addsonTpl'}
+            // ,{field: 'pro_loss', title: '头寸比例(%)', width: 120}
+            // ,{field: 'pro_ser', title: '手续费比例(%)', width: 120}
             ,{field: 'reg_time', title: '加入时间', sort: true, width: 170}
-            ,{field: 'lock_time', title: '锁定时间', sort: true, width: 170}
+            // ,{field: 'lock_time', title: '锁定时间', sort: true, width: 170}
             ,{title: '操作', width: 450, align:'center', fixed: 'right', toolbar: '#table-useradmin-webuser'}
         ]]
         ,page: true

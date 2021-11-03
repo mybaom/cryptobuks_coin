@@ -130,4 +130,18 @@ Route::group(['prefix' => 'agent', 'middleware' => ['agent_auth']], function () 
     //用户点控
     Route::get('user/risk', 'Agent\UserController@risk');
     Route::post('user/risk', 'Agent\UserController@postRisk');
+
+    // 下级代理商列表
+    Route::get('subordinateAgentList', 'Agent\AgentController@subordinateAgentList');
+
+    // 佣金管理
+    Route::get('agent_commission/index', 'Agent\AgentCommissionController@index');
+    Route::get('agent_commission/data', 'Agent\AgentCommissionController@data');
+
+    // 留言管理
+    Route::get('feedback/index', 'Agent\FeedbackController@index');
+    Route::get('feedback/data', 'Agent\FeedbackController@data');
+    Route::get('feedback/reply', 'Agent\FeedbackController@reply');
+    Route::post('feedback/reply', 'Agent\FeedbackController@doreply');
+
 });

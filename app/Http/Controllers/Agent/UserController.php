@@ -11,6 +11,7 @@ namespace App\Http\Controllers\Agent;
 
 use Illuminate\Http\Request;
 use App\{AccountLog, Agent, Currency, Users, UsersWalletOut};
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
@@ -43,7 +44,17 @@ class UserController extends Controller
             $users = $users->where('users.id', $id);
         }
         if ($parent_id > 0) {
-            $users = $users->where('users.agent_note_id', $parent_id);
+            $parentAgentInfo = DB::table('agent')->where('id', $parent_id)->get()->first();
+            $users = $users->where('users.parent_id', $parentAgentInfo->user_id);
+        }else{
+            $agent_id = Agent::getAgentId();
+            $res = Agent::where('parent_agent_id', $agent_id)->get();
+            $userIds = array_column(json_decode(json_encode($res)), 'user_id');
+            if($userIds) {
+                $users = $users->whereIn('users.parent_id', $userIds);
+            }else{
+                $users = $users->where('users.id', 0);
+            }
         }
         if ($account_number) {
             $users = $users->where('users.account_number', $account_number);
@@ -52,8 +63,8 @@ class UserController extends Controller
             $users->whereBetween('users.time', [strtotime($start . ' 0:0:0'), strtotime($end . ' 23:59:59')]);
         }
 
-        $agent_id = Agent::getAgentId();
-        $users = $users->whereRaw("FIND_IN_SET($agent_id,users.agent_path)");
+//        $agent_id = Agent::getAgentId();
+//        $users = $users->whereRaw("FIND_IN_SET($agent_id,users.agent_path)");
 
         $list = $users->select("users.*", "user_real.card_id")->paginate($limit);
 

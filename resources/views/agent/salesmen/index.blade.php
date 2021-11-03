@@ -59,9 +59,9 @@
                 <table id="LAY-user-manage" lay-filter="LAY-user-manage"></table>
 
                 <script type="text/html" id="table-useradmin-webuser">
-                    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i class="layui-icon layui-icon-edit"></i>编辑</a>
-                    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="addsonagent"><i class="layui-icon layui-icon-add-1"></i>添加其下级代理</a>
-                    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="getsons"><i class="layui-icon layui-icon-friends"></i>查看其下级代理</a>
+{{--                    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i class="layui-icon layui-icon-edit"></i>编辑</a>--}}
+{{--                    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="addsonagent"><i class="layui-icon layui-icon-add-1"></i>添加其下级代理</a>--}}
+{{--                    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="getsons"><i class="layui-icon layui-icon-friends"></i>查看其下级代理</a>--}}
                     <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="this-sons"><i class="layui-icon layui-icon-group"></i>查看其所有会员</a>
                 </script>
             </div>
