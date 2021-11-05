@@ -358,6 +358,7 @@ var ts = {
         btcLink: "比特币链",
         DontcanShell: "暂时不能卖出",
         tenThousand:"万",
+        apply_success: "申请成功",
     },
     hk: {
          juzudz:"請輸入居住地址",
@@ -626,6 +627,7 @@ var ts = {
       btcLink: "比特幣鏈",
       DontcanShell: "暂时唔卖埠",
       tenThousand:"万",
+      apply_success: "申请成功",
     },
     en: {
         "juzudz": "Please enter your residential address",
@@ -896,6 +898,7 @@ var ts = {
         "btcLink": "Bitcoin chain",
         "DontcanShell": "Can't sell for the time being",
         "tenThousand":"ten thousand",
+        "apply_success": "Successful application",
     },
     jp: {
         "juzudz": "住所を入力してください。",
@@ -1166,6 +1169,7 @@ var ts = {
         "btcLink": "通貨",
         "DontcanShell": "ビットコインチェーン",
         "tenThousand":"万",
+        "apply_success": "申し込みが成功した",
     },
     kor: {
         "juzudz": "거주 주 소 를 입력 하 세 요",
@@ -1436,6 +1440,7 @@ var ts = {
         "btcLink": "비트 코 인 체인",
         "DontcanShell": "당분간 팔 수 없어 요",
         "tenThousand":"만.",
+        "apply_success": "신청 성공",
     },
     th: {
         "juzudz": "กรุณาระบุที่อยู่อาศัยของคุณ",
@@ -1706,6 +1711,7 @@ var ts = {
         "btcLink": "โซ่บิต",
         "DontcanShell": "ไม่สามารถขายได้ชั่วคราว",
         "tenThousand":"ประดามี",
+        "apply_success": "สมัครเรียบร้อยแล้ว",
     },
     de: {
         "juzudz": "Bitte geben Sie Ihre Wohnadresse ein",
@@ -1976,6 +1982,7 @@ var ts = {
         "btcLink": "Bitcoin-Kette",
         "DontcanShell": "Kann vorerst nicht verkaufen",
         "tenThousand":"Zehntausend",
+        "apply_success": "Demande acceptée",
     },
     fr: {
         "juzudz": "Veuillez entrer votre adresse de résidence",
@@ -2246,6 +2253,7 @@ var ts = {
         "btcLink": "Chaîne bitcoin",
         "DontcanShell": "Ne peut pas être vendu pour le moment",
         "tenThousand":"dix mille",
+        "apply_success": "Successful application",
     },
     es: {
         "juzudz": "Por favor, introduzca la dirección de residencia",
@@ -2516,6 +2524,7 @@ var ts = {
         "btcLink": "Bitcoin chain",
         "DontcanShell": "No se puede vender por el momento",
         "tenThousand":"Diez mil",
+        "apply_success": "Aplicación exitosa",
     }
 
 };
