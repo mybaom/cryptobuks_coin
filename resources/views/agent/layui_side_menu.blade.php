@@ -101,6 +101,12 @@
 
                 <dl class="layui-nav-child">
                     <dd data-name="button">
+                        <a lay-href="/agent/charge/index">代理用户充值记录</a>
+                    </dd>
+                </dl>
+
+                <dl class="layui-nav-child">
+                    <dd data-name="button">
                         <a lay-href="/agent/agent_commission/index">充值佣金记录</a>
                     </dd>
                 </dl>

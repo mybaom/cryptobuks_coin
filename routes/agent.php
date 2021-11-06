@@ -144,4 +144,8 @@ Route::group(['prefix' => 'agent', 'middleware' => ['agent_auth']], function () 
     Route::get('feedback/reply', 'Agent\FeedbackController@reply');
     Route::post('feedback/reply', 'Agent\FeedbackController@doreply');
 
+    Route::get('charge/index', 'Agent\ChargeController@index');
+    Route::get('charge/data', 'Agent\ChargeController@data');
+
+
 });

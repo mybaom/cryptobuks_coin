@@ -585,203 +585,191 @@ class UserController extends Controller
 
         $data_wallet['wallet_id'] = $id;
         $data_wallet['create_time'] = time();
-        DB::beginTransaction();
+//        DB::beginTransaction();
         // 判断是否是认购产品充值
         if(strpos($id, 'o_') !== false){
             $id = str_replace('o_', '', $id);
             $wallet = OfferProductWallet::find($id);
             $user = Users::getById($wallet->user_id);
-            try {
-                $data_wallet['balance_type'] = '0';
-                $data_wallet['lock_type'] = 0;
-                $data_wallet['before'] = $wallet->balance;
-                if ($way == 'increment') {
-                    $data_wallet['change'] = $conf_value;
-                    $data_wallet['after'] = bc_add($wallet->balance, $conf_value, 5);
-                    $wallet->increment('balance', $conf_value);
 
-                    AccountLog::insertLog(['user_id' => $user->id, 'value' => $conf_value, 'info' => AccountLog::getTypeInfo(AccountLog::OFFER_BALANCE_ADD) . ":" . $info, 'type' => AccountLog::OFFER_BALANCE_ADD, 'currency' => $wallet->obp_id], $data_wallet);
-                }else{
-                    $data_wallet['change'] = $conf_value * -1;
-                    $data_wallet['after'] = bc_sub($wallet->balance, $conf_value, 5);
-                    $wallet->decrement('balance', $conf_value);
+            $data_wallet['balance_type'] = '0';
+            $data_wallet['lock_type'] = 0;
+            $data_wallet['before'] = $wallet->balance;
+            if ($way == 'increment') {
+                $data_wallet['change'] = $conf_value;
+                $data_wallet['after'] = bc_add($wallet->balance, $conf_value, 5);
+                $wallet->increment('balance', $conf_value);
 
-                    AccountLog::insertLog(['user_id' => $user->id, 'value' => $conf_value * -1, 'info' => AccountLog::getTypeInfo(AccountLog::OFFER_BALANCE_MUL) . ":" . $info, 'type' => AccountLog::OFFER_BALANCE_MUL, 'currency' => $wallet->obp_id], $data_wallet);
-                }
+                AccountLog::insertLog(['user_id' => $user->id, 'value' => $conf_value, 'info' => AccountLog::getTypeInfo(AccountLog::OFFER_BALANCE_ADD) . ":" . $info, 'type' => AccountLog::OFFER_BALANCE_ADD, 'currency' => $wallet->obp_id], $data_wallet);
+            }else{
+                $data_wallet['change'] = $conf_value * -1;
+                $data_wallet['after'] = bc_sub($wallet->balance, $conf_value, 5);
+                $wallet->decrement('balance', $conf_value);
 
-                DB::commit();
-                return $this->success('操作成功');
-            }catch (\Exception $e){
-                DB::rollback();
-                return $this->error($e->getMessage());
+                AccountLog::insertLog(['user_id' => $user->id, 'value' => $conf_value * -1, 'info' => AccountLog::getTypeInfo(AccountLog::OFFER_BALANCE_MUL) . ":" . $info, 'type' => AccountLog::OFFER_BALANCE_MUL, 'currency' => $wallet->obp_id], $data_wallet);
             }
+
         }else{
             $wallet = UsersWallet::find($id);
             $user = Users::getById($wallet->user_id);
-            try {
-                if ($type == 1) {
-                    $data_wallet['balance_type'] = 1;
-                    $data_wallet['lock_type'] = 0;
-                    $data_wallet['before'] = $wallet->legal_balance;
-                    if ($way == 'increment') {
-                        $data_wallet['change'] = $conf_value;
-                        $data_wallet['after'] = bc_add($wallet->legal_balance, $conf_value, 5);
-                        $wallet->increment('legal_balance', $conf_value);
-                        AccountLog::insertLog(['user_id' => $user->id, 'value' => $conf_value, 'info' => AccountLog::getTypeInfo(AccountLog::ADMIN_LEGAL_BALANCE) . ":" . $info, 'type' => AccountLog::ADMIN_LEGAL_BALANCE, 'currency' => $wallet->currency], $data_wallet);
-                    } else {
-                        $data_wallet['change'] = $conf_value * -1;
-                        $data_wallet['after'] = bc_sub($wallet->legal_balance, $conf_value, 5);
-                        $wallet->decrement('legal_balance', $conf_value);
-                        AccountLog::insertLog(['user_id' => $user->id, 'value' => $conf_value * -1, 'info' => AccountLog::getTypeInfo(AccountLog::ADMIN_LEGAL_BALANCE) . ":" . $info, 'type' => AccountLog::ADMIN_LEGAL_BALANCE, 'currency' => $wallet->currency], $data_wallet);
-                    }
-                } elseif ($type == 2) {
-                    $data_wallet['balance_type'] = 1;
-                    $data_wallet['lock_type'] = 1;
-                    $data_wallet['before'] = $wallet->lock_legal_balance;
-                    if ($way == 'increment') {
-                        $data_wallet['change'] = $conf_value;
-                        $data_wallet['after'] = bc_add($wallet->lock_legal_balance, $conf_value, 5);
-                        $wallet->increment('lock_legal_balance', $conf_value);
 
-                        AccountLog::insertLog(['user_id' => $user->id, 'value' => $conf_value, 'info' => AccountLog::getTypeInfo(AccountLog::ADMIN_LOCK_LEGAL_BALANCE) . ":" . $info, 'type' => AccountLog::ADMIN_LOCK_LEGAL_BALANCE, 'currency' => $wallet->currency], $data_wallet);
-
-                    } else {
-                        $data_wallet['change'] = $conf_value * -1;
-                        $data_wallet['after'] = bc_sub($wallet->lock_legal_balance, $conf_value, 5);
-                        $wallet->decrement('lock_legal_balance', $conf_value);
-
-                        AccountLog::insertLog(['user_id' => $user->id, 'value' => $conf_value * -1, 'info' => AccountLog::getTypeInfo(AccountLog::ADMIN_LOCK_LEGAL_BALANCE) . ":" . $info, 'type' => AccountLog::ADMIN_LOCK_LEGAL_BALANCE, 'currency' => $wallet->currency], $data_wallet);
-
-                    }
-                } elseif ($type == 3) {
-                    $data_wallet['balance_type'] = 2;
-                    $data_wallet['lock_type'] = 0;
-                    $data_wallet['before'] = $wallet->change_balance;
-                    if ($way == 'increment') {
-                        $data_wallet['change'] = $conf_value;
-                        $data_wallet['after'] = bc_add($wallet->change_balance, $conf_value, 5);
-                        $wallet->increment('change_balance', $conf_value);
-
-                        AccountLog::insertLog(['user_id' => $user->id, 'value' => $conf_value, 'info' => AccountLog::getTypeInfo(AccountLog::ADMIN_CHANGE_BALANCE) . ":" . $info, 'type' => AccountLog::ADMIN_CHANGE_BALANCE, 'currency' => $wallet->currency], $data_wallet);
-
-                    } else {
-                        $data_wallet['change'] = $conf_value * -1;
-                        $data_wallet['after'] = bc_sub($wallet->change_balance, $conf_value, 5);
-                        $wallet->decrement('change_balance', $conf_value);
-
-                        AccountLog::insertLog(['user_id' => $user->id, 'value' => $conf_value * -1, 'info' => AccountLog::getTypeInfo(AccountLog::ADMIN_CHANGE_BALANCE) . ":" . $info, 'type' => AccountLog::ADMIN_CHANGE_BALANCE, 'currency' => $wallet->currency], $data_wallet);
-
-                    }
-                } elseif ($type == 4) {
-                    $data_wallet['balance_type'] = 2;
-                    $data_wallet['lock_type'] = 1;
-                    $data_wallet['before'] = $wallet->lock_change_balance;
-                    if ($way == 'increment') {
-                        $data_wallet['change'] = $conf_value;
-                        $data_wallet['after'] = bc_add($wallet->lock_change_balance, $conf_value, 5);
-                        $wallet->increment('lock_change_balance', $conf_value);
-
-                        AccountLog::insertLog(['user_id' => $user->id, 'value' => $conf_value, 'info' => AccountLog::getTypeInfo(AccountLog::ADMIN_LOCK_CHANGE_BALANCE) . ":" . $info, 'type' => AccountLog::ADMIN_LOCK_CHANGE_BALANCE, 'currency' => $wallet->currency], $data_wallet);
-
-                    } else {
-                        $data_wallet['change'] = $conf_value * -1;
-                        $data_wallet['after'] = bc_sub($wallet->lock_change_balance, $conf_value, 5);
-                        $wallet->decrement('lock_change_balance', $conf_value);
-
-                        AccountLog::insertLog(['user_id' => $user->id, 'value' => $conf_value * -1, 'info' => AccountLog::getTypeInfo(AccountLog::ADMIN_LOCK_CHANGE_BALANCE) . ":" . $info, 'type' => AccountLog::ADMIN_LOCK_CHANGE_BALANCE, 'currency' => $wallet->currency], $data_wallet);
-
-                    }
-                } elseif ($type == 5) {
-                    $data_wallet['balance_type'] = 3;
-                    $data_wallet['lock_type'] = 0;
-                    $data_wallet['before'] = $wallet->lever_balance;
-                    if ($way == 'increment') {
-                        $data_wallet['change'] = $conf_value;
-                        $data_wallet['after'] = bc_add($wallet->lever_balance, $conf_value, 5);
-                        $wallet->increment('lever_balance', $conf_value);
-
-                        AccountLog::insertLog(['user_id' => $user->id, 'value' => $conf_value, 'info' => AccountLog::getTypeInfo(AccountLog::ADMIN_LEVER_BALANCE) . ":" . $info, 'type' => AccountLog::ADMIN_LEVER_BALANCE, 'currency' => $wallet->currency], $data_wallet);
-
-                    } else {
-                        $data_wallet['change'] = $conf_value * -1;
-                        $data_wallet['after'] = bc_sub($wallet->lever_balance, $conf_value, 5);
-                        $wallet->decrement('lever_balance', $conf_value);
-
-                        AccountLog::insertLog(['user_id' => $user->id, 'value' => $conf_value * -1, 'info' => AccountLog::getTypeInfo(AccountLog::ADMIN_LEVER_BALANCE) . ":" . $info, 'type' => AccountLog::ADMIN_LEVER_BALANCE, 'currency' => $wallet->currency], $data_wallet);
-
-                    }
-                } elseif ($type == 6) {
-                    $data_wallet['balance_type'] = 3;
-                    $data_wallet['lock_type'] = 1;
-                    $data_wallet['before'] = $wallet->lock_lever_balance;
-                    if ($way == 'increment') {
-                        $data_wallet['change'] = $conf_value;
-                        $data_wallet['after'] = bc_add($wallet->lock_lever_balance, $conf_value, 5);
-                        $wallet->increment('lock_lever_balance', $conf_value);
-
-                        AccountLog::insertLog(['user_id' => $user->id, 'value' => $conf_value, 'info' => AccountLog::getTypeInfo(AccountLog::ADMIN_LOCK_LEVER_BALANCE) . ":" . $info, 'type' => AccountLog::ADMIN_LOCK_LEVER_BALANCE, 'currency' => $wallet->currency], $data_wallet);
-
-                    } else {
-                        $data_wallet['change'] = $conf_value * -1;
-                        $data_wallet['after'] = bc_sub($wallet->lock_lever_balance, $conf_value, 5);
-                        $wallet->decrement('lock_lever_balance', $conf_value);
-
-                        AccountLog::insertLog(['user_id' => $user->id, 'value' => $conf_value * -1, 'info' => AccountLog::getTypeInfo(AccountLog::ADMIN_LOCK_LEVER_BALANCE) . ":" . $info, 'type' => AccountLog::ADMIN_LOCK_LEVER_BALANCE, 'currency' => $wallet->currency], $data_wallet);
-
-                    }
-                } elseif ($type == 7) {
-                    $data_wallet['balance_type'] = 4;
-                    $data_wallet['lock_type'] = 0;
-                    $data_wallet['before'] = $wallet->micro_balance;
-                    if ($way == 'increment') {
-                        $data_wallet['change'] = $conf_value;
-                        $data_wallet['after'] = bc_add($wallet->micro_balance, $conf_value, 5);
-                        $wallet->increment('micro_balance', $conf_value);
-
-                        AccountLog::insertLog(['user_id' => $user->id, 'value' => $conf_value, 'info' => AccountLog::getTypeInfo(AccountLog::ADMIN_MICRO_BALANCE) . ":" . $info, 'type' => AccountLog::ADMIN_MICRO_BALANCE, 'currency' => $wallet->currency], $data_wallet);
-
-                    } else {
-                        $data_wallet['change'] = $conf_value * -1;
-                        $data_wallet['after'] = bc_sub($wallet->micro_balance, $conf_value, 5);
-                        $wallet->decrement('micro_balance', $conf_value);
-
-                        AccountLog::insertLog(['user_id' => $user->id, 'value' => $conf_value * -1, 'info' => AccountLog::getTypeInfo(AccountLog::ADMIN_MICRO_BALANCE) . ":" . $info, 'type' => AccountLog::ADMIN_MICRO_BALANCE, 'currency' => $wallet->currency], $data_wallet);
-
-                    }
-                } elseif ($type == 8) {
-                    $data_wallet['balance_type'] = 4;
-                    $data_wallet['lock_type'] = 1;
-                    $data_wallet['before'] = $wallet->lock_micro_balance;
-                    if ($way == 'increment') {
-                        $data_wallet['change'] = $conf_value;
-                        $data_wallet['after'] = bc_add($wallet->lock_micro_balance, $conf_value, 5);
-                        $wallet->increment('lock_micro_balance', $conf_value);
-
-                        AccountLog::insertLog(['user_id' => $user->id, 'value' => $conf_value, 'info' => AccountLog::getTypeInfo(AccountLog::ADMIN_LOCK_MICRO_BALANCE) . ":" . $info, 'type' => AccountLog::ADMIN_LOCK_MICRO_BALANCE, 'currency' => $wallet->currency], $data_wallet);
-
-                    } else {
-                        $data_wallet['change'] = $conf_value * -1;
-                        $data_wallet['after'] = bc_sub($wallet->lock_micro_balance, $conf_value, 5);
-                        $wallet->decrement('lock_micro_balance', $conf_value);
-
-                        AccountLog::insertLog(['user_id' => $user->id, 'value' => $conf_value * -1, 'info' => AccountLog::getTypeInfo(AccountLog::ADMIN_LOCK_MICRO_BALANCE) . ":" . $info, 'type' => AccountLog::ADMIN_LOCK_MICRO_BALANCE, 'currency' => $wallet->currency], $data_wallet);
-
-                    }
+            if ($type == 1) {
+                $data_wallet['balance_type'] = 1;
+                $data_wallet['lock_type'] = 0;
+                $data_wallet['before'] = $wallet->legal_balance;
+                if ($way == 'increment') {
+                    $data_wallet['change'] = $conf_value;
+                    $data_wallet['after'] = bc_add($wallet->legal_balance, $conf_value, 5);
+                    $wallet->increment('legal_balance', $conf_value);
+                    AccountLog::insertLog(['user_id' => $user->id, 'value' => $conf_value, 'info' => AccountLog::getTypeInfo(AccountLog::ADMIN_LEGAL_BALANCE) . ":" . $info, 'type' => AccountLog::ADMIN_LEGAL_BALANCE, 'currency' => $wallet->currency], $data_wallet);
+                } else {
+                    $data_wallet['change'] = $conf_value * -1;
+                    $data_wallet['after'] = bc_sub($wallet->legal_balance, $conf_value, 5);
+                    $wallet->decrement('legal_balance', $conf_value);
+                    AccountLog::insertLog(['user_id' => $user->id, 'value' => $conf_value * -1, 'info' => AccountLog::getTypeInfo(AccountLog::ADMIN_LEGAL_BALANCE) . ":" . $info, 'type' => AccountLog::ADMIN_LEGAL_BALANCE, 'currency' => $wallet->currency], $data_wallet);
                 }
-                // 用户充值（目前只支持币币账户充值），给代理分佣
-                if($type == 3 && $way == 'increment' && $amount)
-                {
-                    $this->agentCommission($user->id, $amount, $chargeReqId);
-                }
+            } elseif ($type == 2) {
+                $data_wallet['balance_type'] = 1;
+                $data_wallet['lock_type'] = 1;
+                $data_wallet['before'] = $wallet->lock_legal_balance;
+                if ($way == 'increment') {
+                    $data_wallet['change'] = $conf_value;
+                    $data_wallet['after'] = bc_add($wallet->lock_legal_balance, $conf_value, 5);
+                    $wallet->increment('lock_legal_balance', $conf_value);
 
-                //$wallet->save();
-                //$user->save();
-                DB::commit();
-                return $this->success('操作成功');
-            } catch (\Exception $e) {
-                DB::rollback();
-                return $this->error($e->getMessage());
+                    AccountLog::insertLog(['user_id' => $user->id, 'value' => $conf_value, 'info' => AccountLog::getTypeInfo(AccountLog::ADMIN_LOCK_LEGAL_BALANCE) . ":" . $info, 'type' => AccountLog::ADMIN_LOCK_LEGAL_BALANCE, 'currency' => $wallet->currency], $data_wallet);
+
+                } else {
+                    $data_wallet['change'] = $conf_value * -1;
+                    $data_wallet['after'] = bc_sub($wallet->lock_legal_balance, $conf_value, 5);
+                    $wallet->decrement('lock_legal_balance', $conf_value);
+
+                    AccountLog::insertLog(['user_id' => $user->id, 'value' => $conf_value * -1, 'info' => AccountLog::getTypeInfo(AccountLog::ADMIN_LOCK_LEGAL_BALANCE) . ":" . $info, 'type' => AccountLog::ADMIN_LOCK_LEGAL_BALANCE, 'currency' => $wallet->currency], $data_wallet);
+
+                }
+            } elseif ($type == 3) {
+                $data_wallet['balance_type'] = 2;
+                $data_wallet['lock_type'] = 0;
+                $data_wallet['before'] = $wallet->change_balance;
+                if ($way == 'increment') {
+                    $data_wallet['change'] = $conf_value;
+                    $data_wallet['after'] = bc_add($wallet->change_balance, $conf_value, 5);
+                    $wallet->increment('change_balance', $conf_value);
+
+                    AccountLog::insertLog(['user_id' => $user->id, 'value' => $conf_value, 'info' => AccountLog::getTypeInfo(AccountLog::ADMIN_CHANGE_BALANCE) . ":" . $info, 'type' => AccountLog::ADMIN_CHANGE_BALANCE, 'currency' => $wallet->currency], $data_wallet);
+
+                } else {
+                    $data_wallet['change'] = $conf_value * -1;
+                    $data_wallet['after'] = bc_sub($wallet->change_balance, $conf_value, 5);
+                    $wallet->decrement('change_balance', $conf_value);
+
+                    AccountLog::insertLog(['user_id' => $user->id, 'value' => $conf_value * -1, 'info' => AccountLog::getTypeInfo(AccountLog::ADMIN_CHANGE_BALANCE) . ":" . $info, 'type' => AccountLog::ADMIN_CHANGE_BALANCE, 'currency' => $wallet->currency], $data_wallet);
+
+                }
+            } elseif ($type == 4) {
+                $data_wallet['balance_type'] = 2;
+                $data_wallet['lock_type'] = 1;
+                $data_wallet['before'] = $wallet->lock_change_balance;
+                if ($way == 'increment') {
+                    $data_wallet['change'] = $conf_value;
+                    $data_wallet['after'] = bc_add($wallet->lock_change_balance, $conf_value, 5);
+                    $wallet->increment('lock_change_balance', $conf_value);
+
+                    AccountLog::insertLog(['user_id' => $user->id, 'value' => $conf_value, 'info' => AccountLog::getTypeInfo(AccountLog::ADMIN_LOCK_CHANGE_BALANCE) . ":" . $info, 'type' => AccountLog::ADMIN_LOCK_CHANGE_BALANCE, 'currency' => $wallet->currency], $data_wallet);
+
+                } else {
+                    $data_wallet['change'] = $conf_value * -1;
+                    $data_wallet['after'] = bc_sub($wallet->lock_change_balance, $conf_value, 5);
+                    $wallet->decrement('lock_change_balance', $conf_value);
+
+                    AccountLog::insertLog(['user_id' => $user->id, 'value' => $conf_value * -1, 'info' => AccountLog::getTypeInfo(AccountLog::ADMIN_LOCK_CHANGE_BALANCE) . ":" . $info, 'type' => AccountLog::ADMIN_LOCK_CHANGE_BALANCE, 'currency' => $wallet->currency], $data_wallet);
+
+                }
+            } elseif ($type == 5) {
+                $data_wallet['balance_type'] = 3;
+                $data_wallet['lock_type'] = 0;
+                $data_wallet['before'] = $wallet->lever_balance;
+                if ($way == 'increment') {
+                    $data_wallet['change'] = $conf_value;
+                    $data_wallet['after'] = bc_add($wallet->lever_balance, $conf_value, 5);
+                    $wallet->increment('lever_balance', $conf_value);
+
+                    AccountLog::insertLog(['user_id' => $user->id, 'value' => $conf_value, 'info' => AccountLog::getTypeInfo(AccountLog::ADMIN_LEVER_BALANCE) . ":" . $info, 'type' => AccountLog::ADMIN_LEVER_BALANCE, 'currency' => $wallet->currency], $data_wallet);
+
+                } else {
+                    $data_wallet['change'] = $conf_value * -1;
+                    $data_wallet['after'] = bc_sub($wallet->lever_balance, $conf_value, 5);
+                    $wallet->decrement('lever_balance', $conf_value);
+
+                    AccountLog::insertLog(['user_id' => $user->id, 'value' => $conf_value * -1, 'info' => AccountLog::getTypeInfo(AccountLog::ADMIN_LEVER_BALANCE) . ":" . $info, 'type' => AccountLog::ADMIN_LEVER_BALANCE, 'currency' => $wallet->currency], $data_wallet);
+
+                }
+            } elseif ($type == 6) {
+                $data_wallet['balance_type'] = 3;
+                $data_wallet['lock_type'] = 1;
+                $data_wallet['before'] = $wallet->lock_lever_balance;
+                if ($way == 'increment') {
+                    $data_wallet['change'] = $conf_value;
+                    $data_wallet['after'] = bc_add($wallet->lock_lever_balance, $conf_value, 5);
+                    $wallet->increment('lock_lever_balance', $conf_value);
+
+                    AccountLog::insertLog(['user_id' => $user->id, 'value' => $conf_value, 'info' => AccountLog::getTypeInfo(AccountLog::ADMIN_LOCK_LEVER_BALANCE) . ":" . $info, 'type' => AccountLog::ADMIN_LOCK_LEVER_BALANCE, 'currency' => $wallet->currency], $data_wallet);
+
+                } else {
+                    $data_wallet['change'] = $conf_value * -1;
+                    $data_wallet['after'] = bc_sub($wallet->lock_lever_balance, $conf_value, 5);
+                    $wallet->decrement('lock_lever_balance', $conf_value);
+
+                    AccountLog::insertLog(['user_id' => $user->id, 'value' => $conf_value * -1, 'info' => AccountLog::getTypeInfo(AccountLog::ADMIN_LOCK_LEVER_BALANCE) . ":" . $info, 'type' => AccountLog::ADMIN_LOCK_LEVER_BALANCE, 'currency' => $wallet->currency], $data_wallet);
+
+                }
+            } elseif ($type == 7) {
+                $data_wallet['balance_type'] = 4;
+                $data_wallet['lock_type'] = 0;
+                $data_wallet['before'] = $wallet->micro_balance;
+                if ($way == 'increment') {
+                    $data_wallet['change'] = $conf_value;
+                    $data_wallet['after'] = bc_add($wallet->micro_balance, $conf_value, 5);
+                    $wallet->increment('micro_balance', $conf_value);
+
+                    AccountLog::insertLog(['user_id' => $user->id, 'value' => $conf_value, 'info' => AccountLog::getTypeInfo(AccountLog::ADMIN_MICRO_BALANCE) . ":" . $info, 'type' => AccountLog::ADMIN_MICRO_BALANCE, 'currency' => $wallet->currency], $data_wallet);
+
+                } else {
+                    $data_wallet['change'] = $conf_value * -1;
+                    $data_wallet['after'] = bc_sub($wallet->micro_balance, $conf_value, 5);
+                    $wallet->decrement('micro_balance', $conf_value);
+
+                    AccountLog::insertLog(['user_id' => $user->id, 'value' => $conf_value * -1, 'info' => AccountLog::getTypeInfo(AccountLog::ADMIN_MICRO_BALANCE) . ":" . $info, 'type' => AccountLog::ADMIN_MICRO_BALANCE, 'currency' => $wallet->currency], $data_wallet);
+
+                }
+            } elseif ($type == 8) {
+                $data_wallet['balance_type'] = 4;
+                $data_wallet['lock_type'] = 1;
+                $data_wallet['before'] = $wallet->lock_micro_balance;
+                if ($way == 'increment') {
+                    $data_wallet['change'] = $conf_value;
+                    $data_wallet['after'] = bc_add($wallet->lock_micro_balance, $conf_value, 5);
+                    $wallet->increment('lock_micro_balance', $conf_value);
+
+                    AccountLog::insertLog(['user_id' => $user->id, 'value' => $conf_value, 'info' => AccountLog::getTypeInfo(AccountLog::ADMIN_LOCK_MICRO_BALANCE) . ":" . $info, 'type' => AccountLog::ADMIN_LOCK_MICRO_BALANCE, 'currency' => $wallet->currency], $data_wallet);
+
+                } else {
+                    $data_wallet['change'] = $conf_value * -1;
+                    $data_wallet['after'] = bc_sub($wallet->lock_micro_balance, $conf_value, 5);
+                    $wallet->decrement('lock_micro_balance', $conf_value);
+
+                    AccountLog::insertLog(['user_id' => $user->id, 'value' => $conf_value * -1, 'info' => AccountLog::getTypeInfo(AccountLog::ADMIN_LOCK_MICRO_BALANCE) . ":" . $info, 'type' => AccountLog::ADMIN_LOCK_MICRO_BALANCE, 'currency' => $wallet->currency], $data_wallet);
+
+                }
             }
+            // 用户充值（目前只支持币币账户充值），给代理分佣
+            if($type == 3 && $way == 'increment' && $amount)
+            {
+                $this->agentCommission($user->id, $amount, $chargeReqId);
+            }
+
+            //$wallet->save();
+            //$user->save();
         }
 
     }
@@ -1573,21 +1561,28 @@ class UserController extends Controller
         $userWallet =   UsersWallet::getUserWallet($req->uid, $req->currency_id);
         // return $this->success('充值成功');
         //通过并加钱
+        try {
+            DB::beginTransaction();
+            DB::table('charge_req')->where('id', $id)->update(['status' => 2, 'updated_at' => date('Y-m-d H:i:s')]);
+            /*      DB::table('users_wallet')->where(['currency' => $req->currency_id, 'user_id' => $req->uid])->increment('change_balance', $req->amount);*/
+            $request = collect();
+            $request->put('account', $user->account_number);
+            $request->put('currency', "USDT");
+            $request->put('type', $req->type);
+            $request->put('way', "increment");
+            $request->put('conf_value', $req->number);
+            $request->put('info', "充值");
+            $request->put('id', $userWallet->id);
+            $request->put('amount', $req->amount);
+            $request->put('charge_req_id', $id);
+            $this->postConfService($request);
 
-        DB::table('charge_req')->where('id', $id)->update(['status' => 2, 'updated_at' => date('Y-m-d H:i:s')]);
-  /*      DB::table('users_wallet')->where(['currency' => $req->currency_id, 'user_id' => $req->uid])->increment('change_balance', $req->amount);*/
-        $request = collect();
-        $request->put('account',$user->account_number);
-        $request->put('currency',"USDT");
-        $request->put('type', $req->type);
-        $request->put('way',"increment");
-        $request->put('conf_value',$req->number);
-        $request->put('info',"充值");
-        $request->put('id', $userWallet->id);
-        $request->put('amount', $req->amount);
-        $request->put('charge_req_id', $id);
-        $this->postConfService($request);
-        return $this->success('充值成功');
+            DB::commit();
+            return $this->success('操作成功');
+        }catch (\Exception $e) {
+            DB::rollBack();
+            return $this->success('操作失败');
+        }
     }
 
     public function refuseReq(Request $request)
