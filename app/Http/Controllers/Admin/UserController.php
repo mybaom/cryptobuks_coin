@@ -1581,7 +1581,7 @@ class UserController extends Controller
             return $this->success('操作成功');
         }catch (\Exception $e) {
             DB::rollBack();
-            return $this->success('操作失败');
+            return $this->success('操作失败,' . $e->getMessage() . ':' . $e->getFile() . ':' . $e->getLine());
         }
     }
 
