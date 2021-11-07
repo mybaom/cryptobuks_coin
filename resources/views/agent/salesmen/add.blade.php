@@ -54,7 +54,7 @@
                                 <button class="layui-btn layui-btn-normal layui-btn-radius">{{$d['son_level']}}级代理商
                                 </button>
                             @elseif(isset($d['id']) && $d['id'])
-                                <button class="layui-btn layui-btn-normal layui-btn-radius">{{$d['self_info']}}</button>
+                                <button class="layui-btn layui-btn-normal layui-btn-radius">{{$d['self_info'] ?? ''}}</button>
                             @else
                                 <button class="layui-btn layui-btn-danger layui-btn-radius">不能添加代理商</button>
                             @endif
@@ -62,6 +62,22 @@
                     </div>
 
                     <div class="layui-form-item">
+                        <label class="layui-form-label">佣金比例（%）</label>
+                        <div class="layui-input-block">
+                            <script type="text/html" template>
+                                <input type="text" name="recharge_distribution" value="{{ isset($d['recharge_distribution']) ? $d['recharge_distribution'] : 0 }}"
+                                       lay-verify="pro_loss" placeholder="代理商的佣金比例" autocomplete="off"
+                                       class="layui-input">
+                            </script>
+                        </div>
+                        <script type="text/html" template>
+                            <div class="layui-form-mid layui-word-aux">设置下级代理商的佣金比例，该值不能超过<span
+                                        class="layui-badge">{{isset($d['rechargeDistributionII']) ? $d['rechargeDistributionII'] : 100}}</span>。如20.85%，则输入20.85
+                            </div>
+                        </script>
+                    </div>
+
+                    <div class="layui-form-item" style="display: none;">
                         <label class="layui-form-label">头寸比例（%）</label>
                         <div class="layui-input-block">
                             <script type="text/html" template>
@@ -77,7 +93,7 @@
                         </script>
                     </div>
 
-                    <div class="layui-form-item">
+                    <div class="layui-form-item" style="display: none;">
                         <label class="layui-form-label">手续费比例（%）</label>
                         <div class="layui-input-block">
                             <script type="text/html" template>
@@ -123,7 +139,7 @@
                         </div>
                         <div class="layui-form-mid layui-word-aux">当锁定时，该用户不能登录代理商管理平台</div>
                     </div>
-                    <div class="layui-form-item" lay-filter="sex">
+                    <div class="layui-form-item" lay-filter="sex" style="display: none;">
                         <label class="layui-form-label">允许拉新</label>
                         <div class="layui-input-block">
                             @if(isset($d['is_addson']))

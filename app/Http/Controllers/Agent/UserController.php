@@ -10,7 +10,7 @@
 namespace App\Http\Controllers\Agent;
 
 use Illuminate\Http\Request;
-use App\{AccountLog, Agent, Currency, Users, UsersWalletOut};
+use App\{AccountLog, Agent, Currency, Setting, Users, UsersWalletOut};
 use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
@@ -153,13 +153,24 @@ class UserController extends Controller
     //代理商管理
     public function salesmenIndex()
     {
-        return view("agent.salesmen.index");
+        $agentId = Agent::getAgentId();
+        $agentInfo = Agent::find($agentId);
+        if($agentInfo->level > 1){
+            return view("agent.salesmen.no_permission");
+        }else {
+            return view("agent.salesmen.index");
+        }
     }
 
     //添加代理商页面
     public function salesmenAdd()
     {
         $data = request()->all();
+        if(isset($data['id'])) {
+            $data = Agent::find($data['id']);
+        }
+
+        $data['rechargeDistributionII'] = Setting::getValueByKey('recharge_distribution_II', '');
 
         return view("agent.salesmen.add", ['d' => $data]);
     }

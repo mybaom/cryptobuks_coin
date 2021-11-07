@@ -364,6 +364,7 @@ class UserController extends Controller
                     DB::table('agent')->where('user_id', $id)->update([
                         'level' => 1,
                         'status' => 1,
+                        'is_addson' => 1,
                         'parent_agent_id' => 0,
                         'reg_time' => $time,
                         'agent_path' => "$agentInfo->id,$topAgentInfo->id",
@@ -377,7 +378,7 @@ class UserController extends Controller
                         'parent_agent_id' => 0,
                         'level' => 1,
                         'reg_time' => $time,
-                        'is_addson' => 0,
+                        'is_addson' => 1,
                         'recharge_distribution' => $recharge_distribution,
                     ]);
                     DB::table('agent_admin')->insertGetId([

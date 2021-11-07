@@ -585,13 +585,15 @@ class MemberController extends Controller
             return $this->notice('您的代理商帐号被锁定');
         }
 
+        $recharge_distribution_II = Setting::getValueByKey('recharge_distribution_II');
         $rules = [
             'pro_loss' => 'required|numeric|min:0.00|max:' . $_self->pro_loss,   //验证下级代理商的头寸比例是否正确
             'pro_ser' => 'required|numeric|min:0.00|max:' . $_self->pro_ser, // //验证下级代理商的手续费比例是否正确
             'is_lock' => 'required|in:1,0',
             'is_addson' => 'required|in:1,0',
             'user_id' => 'required|integer|min:0',
-            'id' => 'required|integer|min:0'
+            'id' => 'required|integer|min:0',
+            'recharge_distribution' => 'required|numeric|min:0.00|max:' . $recharge_distribution_II
         ];
 
         $messages = [
@@ -599,6 +601,10 @@ class MemberController extends Controller
             'pro_loss.numeric' => '头寸比例只能为数字',
             'pro_loss.min' => '头寸比例最小值为0.01',
             'pro_loss.max' => '头寸比例最大值为' . $_self->pro_loss,
+            'recharge_distribution.required' => '佣金比例不能为空',
+            'recharge_distribution.numeric' => '佣金比例只能为数字',
+            'recharge_distribution.min' => '佣金比例最小值为0.01',
+            'recharge_distribution.max' => '佣金比例最大值为' . $recharge_distribution_II,
             'pro_ser.required' => '手续费比例不能为空',
             'pro_ser.numeric' => '手续费比例只能为数字',
             'pro_ser.min' => '手续费比例最小值为0.01',
@@ -674,9 +680,10 @@ class MemberController extends Controller
         
         $agent->is_admin = 0;
         $agent->is_lock = $request->input('is_lock', 0);
-        $agent->is_addson = $request->input('is_addson', 1);
+        $agent->is_addson = $request->input('is_addson', 0);
         $agent->pro_loss = $request->input('pro_loss', 0.00);
         $agent->pro_ser = $request->input('pro_ser', 0.00);
+        $agent->recharge_distribution = $request->input('recharge_distribution', '');
         $agent->status = 1;
 
         try {

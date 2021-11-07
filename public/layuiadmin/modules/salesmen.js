@@ -29,6 +29,7 @@ layui.define(['table', 'form'], function(exports){
             // ,{field: 'is_addson', title: '是否拉新', width: 90, templet: '#addsonTpl'}
             // ,{field: 'pro_loss', title: '头寸比例(%)', width: 120}
             // ,{field: 'pro_ser', title: '手续费比例(%)', width: 120}
+            , {field: 'recharge_distribution', title: '佣金比例（%）', minWidth: 150}
             ,{field: 'reg_time', title: '加入时间', sort: true, width: 170}
             // ,{field: 'lock_time', title: '锁定时间', sort: true, width: 170}
             ,{title: '操作', width: 450, align:'center', fixed: 'right', toolbar: '#table-useradmin-webuser'}

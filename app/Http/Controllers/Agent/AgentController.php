@@ -54,7 +54,7 @@ class AgentController extends Controller
     {
         $agentId = Agent::getAgentId();
         $list = DB::table('agent')
-            ->select('id', 'username', DB::raw('FROM_UNIXTIME(reg_time) as reg_time'))
+            ->select('id', 'username', 'recharge_distribution', DB::raw('FROM_UNIXTIME(reg_time) as reg_time'))
             ->where('parent_agent_id', $agentId)
             ->paginate(15);
 

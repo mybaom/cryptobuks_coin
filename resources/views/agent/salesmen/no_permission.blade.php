@@ -10,60 +10,12 @@
         <div class="layui-card">
             <div class="layui-form layui-card-header layuiadmin-card-header-auto" lay-filter="layadmin-userfront-formlist">
                 <div class="layui-form-item">
-                    <div class="layui-inline">
-                        <label class="layui-form-label">ID</label>
-                        <div class="layui-input-block">
-                            <input type="text" name="id" placeholder="请输入" autocomplete="off" class="layui-input">
-                        </div>
-                    </div>
-                    <div class="layui-inline">
-                        <label class="layui-form-label">代理商用户名</label>
-                        <div class="layui-input-block">
-                            <input type="text" name="username" placeholder="请输入" autocomplete="off" class="layui-input">
-                        </div>
-                    </div>
-                    <div class="layui-inline">
-                        <label class="layui-form-label">是否锁定</label>
-                        <div class="layui-input-block">
-                            <select name="is_lock">
-                                <option value="2">不限</option>
-                                <option value="1">锁定</option>
-                                <option value="0">未锁定</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="layui-inline">
-                        <label class="layui-form-label">是否拉新</label>
-                        <div class="layui-input-block">
-                            <select name="is_addson">
-                                <option value="2">不限</option>
-                                <option value="1">允许拉新</option>
-                                <option value="0">禁止拉新</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="layui-inline">
-                        <button class="layui-btn layuiadmin-btn-useradmin" lay-submit lay-filter="LAY-user-front-search">
-                            <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
-                        </button>
-                    </div>
+
                 </div>
             </div>
 
             <div class="layui-card-body">
-                <div style="padding-bottom: 10px;">
-                    <!--<button class="layui-btn layuiadmin-btn-useradmin" data-type="batchdel">删除</button>-->
-                    <button class="layui-btn layuiadmin-btn-useradmin" data-type="add">添加下级代理商</button>
-                </div>
-
-                <table id="LAY-user-manage" lay-filter="LAY-user-manage"></table>
-
-                <script type="text/html" id="table-useradmin-webuser">
-                    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i class="layui-icon layui-icon-edit"></i>编辑</a>
-{{--                    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="addsonagent"><i class="layui-icon layui-icon-add-1"></i>添加其下级代理</a>--}}
-{{--                    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="getsons"><i class="layui-icon layui-icon-friends"></i>查看其下级代理</a>--}}
-                    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="this-sons"><i class="layui-icon layui-icon-group"></i>查看其所有会员</a>
-                </script>
+                对不起，您没有权限访问
             </div>
         </div>
     </div>
@@ -176,7 +128,7 @@
             });
         });
     </script>
-    
+
 @endsection
 
 <div id="this_all_sons">
