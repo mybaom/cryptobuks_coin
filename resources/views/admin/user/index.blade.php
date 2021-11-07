@@ -85,6 +85,7 @@
                 ,{field:'userreal_name', title:'真实姓名', width:120}
                 ,{field:'account_number', title:'交易账号', width:150, hide: true}
                 ,{field:'email', title:'邮箱', width:150, hide: true}
+                ,{field:'agent_type', title:'用户类型', width:150}
                 ,{field:'card_id', title: '身份证号',width: 180, hide: true}
                 ,{field:'extension_code', title:'邀请码', width:100}
                 ,{field: 'risk_name', title: '风控类型', width: 90}

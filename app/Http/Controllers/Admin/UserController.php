@@ -109,6 +109,7 @@ class UserController extends Controller
 
         $list = new Users();
         $list = $list->leftjoin("user_real", "users.id", "=", "user_real.user_id");
+        $list = $list->leftjoin("agent", "agent.user_id", "=", "users.id");
 
         if (!empty($account)) {
             $list = $list->where("phone", 'like', '%' . $account . '%')
@@ -126,7 +127,11 @@ class UserController extends Controller
             $list = $list->where('risk', $risk);
         }
 
-        $list = $list->select("users.*", "user_real.card_id")
+        $list = $list->select(
+            "users.*",
+            "user_real.card_id",
+            DB::raw("if(agent.id is null or agent.status = 0, '普通用戶', if(agent.level = 1, concat(agent.level, '级代理'), concat(agent.level, '级代理'))) as agent_type")
+        )
             ->orderBy('users.id', 'desc')
             ->paginate($limit);
 
@@ -164,20 +169,32 @@ class UserController extends Controller
             'agent.username',
             'agent.parent_agent_id',
             'agent.pro_loss',
-            'agent.pro_ser'
+            'agent.pro_ser',
+            'agent.recharge_distribution'
         )->where('agent.user_id', $id)
             ->where('agent.status', 1)
             ->leftjoin('agent as p', 'p.id', '=', 'agent.parent_agent_id')
             ->first();
+
+        $agentLevelList = [
+            0 => '',
+            1 => '',
+            2 => ''
+        ];
+        if($agentInfo && in_array($agentInfo->level, [1, 2]) && !empty($agentInfo->recharge_distribution))
+        {
+            $agentLevelList[$agentInfo->level] = $agentInfo->recharge_distribution;
+        }
 
         $agentList = DB::table('agent')
             ->select('u.account_number', 'agent.id')
             ->join('users as u', 'agent.user_id', '=', 'u.id')
             ->where('agent.level', '=', 1)
             ->where('agent.status', '=', 1)
+            ->where('agent.user_id', '!=', $id)
             ->get()->toArray();
 
-        return view('admin.user.edit', ['result' => $result, 'res' => $res, 'agent' => $agentInfo, 'agent_list' => $agentList]);
+        return view('admin.user.edit', ['result' => $result, 'res' => $res, 'agent' => $agentInfo, 'agentLevelList' => $agentLevelList, 'agent_list' => $agentList]);
     }
 
     public function doadd()
@@ -256,6 +273,7 @@ class UserController extends Controller
         $risk = Input::get('risk', 0);
         $agent_level = Input::get('agent_level');
         $parent_agent = Input::get('parent_agent');
+        $recharge_distribution = Input::get('recharge_distribution');
         $time = time();
 
         $id = Input::get("id");
@@ -348,7 +366,8 @@ class UserController extends Controller
                         'status' => 1,
                         'parent_agent_id' => 0,
                         'reg_time' => $time,
-                        'agent_path' => "$agentInfo->id,$topAgentInfo->id"
+                        'agent_path' => "$agentInfo->id,$topAgentInfo->id",
+                        'recharge_distribution' => $recharge_distribution,
                     ]);
                 }else{
                     $insertId = DB::table('agent')->insertGetId([
@@ -359,6 +378,7 @@ class UserController extends Controller
                         'level' => 1,
                         'reg_time' => $time,
                         'is_addson' => 0,
+                        'recharge_distribution' => $recharge_distribution,
                     ]);
                     DB::table('agent_admin')->insertGetId([
                         'agent_id' => $insertId,
@@ -389,6 +409,7 @@ class UserController extends Controller
                         'reg_time' => $time,
                         'agent_path' => "$agentInfo->id,$parentAgentInfo->agent_path",
                         'is_addson' => 0,
+                        'recharge_distribution' => $recharge_distribution,
                     ]);
                 }else{
                     $insertId = DB::table('agent')->insertGetId([
@@ -399,6 +420,7 @@ class UserController extends Controller
                         'level' => 2,
                         'reg_time' => $time,
                         'is_addson' => 0,
+                        'recharge_distribution' => $recharge_distribution,
                     ]);
                     DB::table('agent_admin')->insertGetId([
                         'agent_id' => $insertId,
@@ -516,7 +538,7 @@ class UserController extends Controller
         return response()->json(['code' => 0, 'data' => $list->items(), 'count' => $list->total()]);
     }
 
-//钱包锁定状态
+    //钱包锁定状态
     public function walletLock(Request $request)
     {
         $id = $request->get('id', 0);
@@ -788,10 +810,12 @@ class UserController extends Controller
             ->select(
                 'agent.user_id',
                 'agent.level',
+                'agent.recharge_distribution',
                 'agent.id as agent_id',
                 'a2.user_id as parent_user_id',
                 'a2.level as parent_level',
-                'a2.id as parent_agent_id'
+                'a2.id as parent_agent_id',
+                'a2.recharge_distribution as parent_recharge_distribution'
             )
             ->join('users', 'agent.user_id', '=', 'users.parent_id', 'inner')
             ->join('agent as a2', 'a2.id', '=', 'agent.parent_agent_id', 'left')
@@ -812,7 +836,7 @@ class UserController extends Controller
 
         if($userInfo->level == 1)
         {
-            $changeNum = number_format($rechargeDistributionI * $amount / $usdtInfo->price / 100, 5);
+            $changeNum = number_format(($userInfo->recharge_distribution ?? $rechargeDistributionI) * $amount / $usdtInfo->price / 100, 5, '.', '');
             $userWallet = UsersWallet::where('user_id', $userInfo->user_id)
                 ->lockForUpdate()
                 ->where('currency', $usdtInfo->id)
@@ -860,7 +884,7 @@ class UserController extends Controller
                 'agent_user_id' => $userInfo->user_id,
                 'charge_amount' => $amount,
                 'commission' => $changeNum,
-                'commission_proportion' => $rechargeDistributionI,
+                'commission_proportion' => ($userInfo->recharge_distribution ?? $rechargeDistributionI),
                 'currency_id' => $usdtInfo->id,
                 'agent_level' => $userInfo->level,
                 'parent_agent_id' => 0,
@@ -871,7 +895,7 @@ class UserController extends Controller
 
         if($userInfo->level == 2)
         {
-            $changeNum = number_format($rechargeDistributionII * $amount / $usdtInfo->price / 100, 5);
+            $changeNum = number_format(($userInfo->recharge_distribution ?? $rechargeDistributionII) * $amount / $usdtInfo->price / 100, 5, '.', '');
             $userWallet = UsersWallet::where('user_id', $userInfo->user_id)
                 ->lockForUpdate()
                 ->where('currency', $usdtInfo->id)
@@ -919,7 +943,7 @@ class UserController extends Controller
                 'agent_user_id' => $userInfo->user_id,
                 'charge_amount' => $amount,
                 'commission' => $changeNum,
-                'commission_proportion' => $rechargeDistributionII,
+                'commission_proportion' => ($userInfo->recharge_distribution ?? $rechargeDistributionII),
                 'currency_id' => $usdtInfo->id,
                 'agent_level' => $userInfo->level,
                 'parent_agent_id' => 0,
@@ -930,7 +954,7 @@ class UserController extends Controller
 
         if($userInfo->parent_level == 1)
         {
-            $changeNum = number_format($rechargeDistributionI * $amount / $usdtInfo->price / 100, 5);
+            $changeNum = number_format(($userInfo->parent_recharge_distribution ?? $rechargeDistributionI) * $amount / $usdtInfo->price / 100, 5, '.', '');
             $parentUserWallet = UsersWallet::where('user_id', $userInfo->parent_user_id)
                 ->lockForUpdate()
                 ->where('currency', $usdtInfo->id)
@@ -979,7 +1003,7 @@ class UserController extends Controller
                 'agent_user_id' => $userInfo->parent_user_id,
                 'charge_amount' => $amount,
                 'commission' => $changeNum,
-                'commission_proportion' => $rechargeDistributionI,
+                'commission_proportion' => ($userInfo->parent_recharge_distribution ?? $rechargeDistributionI),
                 'currency_id' => $usdtInfo->id,
                 'agent_level' => $userInfo->parent_level,
                 'parent_agent_id' => 0,
@@ -1600,11 +1624,15 @@ class UserController extends Controller
             $request->put('id', $userWallet->id);
             $request->put('amount', $req->amount);
             $request->put('charge_req_id', $id);
+            DB::connection()->enableQueryLog();
             $this->postConfService($request);
 
             DB::commit();
             return $this->success('操作成功');
         }catch (\Exception $e) {
+
+//            var_dump(DB::getQueryLog());
+            throw $e;
             DB::rollBack();
             return $this->success('操作失败,' . $e->getMessage() . ':' . $e->getFile() . ':' . $e->getLine());
         }

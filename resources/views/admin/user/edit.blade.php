@@ -48,12 +48,19 @@
         <div class="layui-form-item" id="parent_agent_box" style="display: {{$agent && $agent['level'] == 2 ? '' : 'none'}};">
             <label class="layui-form-label">上级代理</label>
             <div class="layui-input-block">
-                <select name="parent_agent" id="parent_agent" lay-verify="required" lay-filter="parent_agent">
+                <select name="parent_agent" id="parent_agent" lay-verify="{{ !empty($agent) && $agent->level >= 2 ? 'required' : ''}}" lay-filter="parent_agent">
                     <option value=""></option>
                     @foreach($agent_list as $item)
                         <option value="{{$item->id}}" {{ ($agent['parent_agent_id'] && $agent['parent_agent_id'] == $item->id) ? 'selected' : '' }} >{{$item->account_number}}</option>
                     @endforeach
                 </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item" id="recharge_distribution_box" style="display: {{$agent ? '' : 'none'}};">
+            <label class="layui-form-label">佣金比例（%）</label>
+            <div class="layui-input-block">
+                <input type="text" name="recharge_distribution" autocomplete="off" placeholder="" class="layui-input"  value="{{$agent->recharge_distribution ?? ''}}">
             </div>
         </div>
 
@@ -145,10 +152,17 @@
         layui.use(['upload', 'form'], function(){
             var upload = layui.upload,
             form = layui.form;
+            var agentLevelList = <?php echo json_encode($agentLevelList); ?>;
             form.on('select(agent_level)', function(data) {
                 $('#parent_agent').val('');
                 $('#parent_agent_box').hide();
+                $('#recharge_distribution_box').hide();
                 $('#parent_agent').attr('lay-verify', '');
+                $('[name="recharge_distribution"]').val(agentLevelList[data.value]);
+                if(data.value != 0)
+                {
+                    $('#recharge_distribution_box').show();
+                }
                 if(data.value == 2) {
                     $('#parent_agent').attr('lay-verify', 'required');
                     $('#parent_agent_box').show();
