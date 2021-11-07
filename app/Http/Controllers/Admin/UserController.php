@@ -817,8 +817,17 @@ class UserController extends Controller
                 ->lockForUpdate()
                 ->where('currency', $usdtInfo->id)
                 ->first();
+//            throw new \Exception($userInfo->user_id . '-' . $usdtInfo->id);
             if(!$userWallet){
-                throw new \Exception('user wallet not found.');
+                DB::table('users_wallet')->insert([
+                    'user_id' => $userInfo->user_id,
+                    'currency' => $usdtInfo->id
+                ]);
+                $userWallet = UsersWallet::where('user_id', $userInfo->user_id)
+                    ->lockForUpdate()
+                    ->where('currency', $usdtInfo->id)
+                    ->first();
+//                throw new \Exception('user wallet not found.');
             }
             // 增加余额
             $userWallet->increment('change_balance', $changeNum);
@@ -868,7 +877,15 @@ class UserController extends Controller
                 ->where('currency', $usdtInfo->id)
                 ->first();
             if(!$userWallet){
-                throw new \Exception('user wallet not found.');
+                DB::table('users_wallet')->insert([
+                    'user_id' => $userInfo->user_id,
+                    'currency' => $usdtInfo->id
+                ]);
+                $userWallet = UsersWallet::where('user_id', $userInfo->user_id)
+                    ->lockForUpdate()
+                    ->where('currency', $usdtInfo->id)
+                    ->first();
+//                throw new \Exception('user wallet not found.');
             }
 
             // 增加余额
@@ -919,7 +936,15 @@ class UserController extends Controller
                 ->where('currency', $usdtInfo->id)
                 ->first();
             if(!$parentUserWallet){
-                throw new \Exception('user wallet not found.');
+//                throw new \Exception('user wallet not found.');
+                DB::table('users_wallet')->insert([
+                    'user_id' => $userInfo->parent_user_id,
+                    'currency' => $usdtInfo->id
+                ]);
+                $parentUserWallet = UsersWallet::where('user_id', $userInfo->parent_user_id)
+                    ->lockForUpdate()
+                    ->where('currency', $usdtInfo->id)
+                    ->first();
             }
 
             // 增加余额
