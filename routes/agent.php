@@ -148,4 +148,8 @@ Route::group(['prefix' => 'agent', 'middleware' => ['agent_auth']], function () 
     Route::get('charge/data', 'Agent\ChargeController@data');
 
 
+    Route::get('cbv/index', 'Agent\CbvController@index');
+    Route::get('cbv/data', 'Agent\CbvController@data');
+
+
 });

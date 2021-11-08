@@ -112,6 +112,19 @@
                 </dl>
             </li>
 
+            <li data-name="template" class="layui-nav-item">
+                <a href="javascript:;" lay-tips="佣金记录" lay-direction="2">
+                    <i class="layui-icon layui-icon-dollar"></i>
+                    <cite>资金管理</cite>
+                </a>
+
+                <dl class="layui-nav-child">
+                    <dd data-name="button">
+                        <a lay-href="/agent/cbv/index">cbv持仓管理</a>
+                    </dd>
+                </dl>
+            </li>
+
             <li data-name="template" class="layui-nav-item" style="display:none">
                 <a href="javascript:;" lay-tips="统计报表" lay-direction="2">
                     <i class="layui-icon layui-icon-chart"></i>

@@ -48,8 +48,10 @@ class UserController extends Controller
             $users = $users->where('users.parent_id', $parentAgentInfo->user_id);
         }else{
             $agent_id = Agent::getAgentId();
+            $agentInfo = DB::table('agent')->where('id', $agent_id)->get()->first();
             $res = Agent::where('parent_agent_id', $agent_id)->get();
             $userIds = array_column(json_decode(json_encode($res)), 'user_id');
+            array_push($userIds, $agentInfo->user_id);
             if($userIds) {
                 $users = $users->whereIn('users.parent_id', $userIds);
             }else{
