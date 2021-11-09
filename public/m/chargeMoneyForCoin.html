@@ -110,8 +110,13 @@
         <div class="copy blue tc mt10 ft14" data-localize="assets.copyaddress">复制地址</div>
         <div class="cz-row">
 	    	<label data-localize="assets.num">充值数量</label>
-	    	<input id="number" type="number" :value="quantity" v-model="quantity"  style="background: #FFF; border:solid 1px #bbb;" />
+	    	<input id="number" type="text" :value="quantity" v-model="quantity" onkeyup="changeNumber(this)" onafterpaste="changeNumber(this)"  style="background: #FFF; border:solid 1px #bbb;" />
 	    </div>
+        <script>
+            function changeNumber(that) {
+
+            }
+        </script>
         <div class="qb-box">
             <aside data-localize="contract.currencyName">交易币种</aside>
             <select @change="currencyChange" id="currency" v-on:change="" style="width: 100%; height: 40px; margin-top: 20px;">
@@ -138,7 +143,7 @@
         </div>
 	    <div class="qb-box">
 	    	<aside data-localize="assets.dnum">到账金额</aside>
-	    	<input id="dnum" type="text" :value="(Math.floor(quantity * nowPrice * 100) / 100)" />
+	    	<input id="dnum" type="number" :value="quantity * nowPrice" />
 	    </div>
 	    <div class="ck-btn" data-localize="assets.cmoney" id="submit">充值</div>
         <div class="ft12 mt40 colorGrey">

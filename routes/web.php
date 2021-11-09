@@ -837,6 +837,9 @@ Route::group([ 'middleware' => ['lang', /*'check_user'*/]], function () {
         Route::any('offerproduct/goodslist_data', 'Admin\OfferProduct@goodsListData');//认购产品列表数据
         Route::any('offerproduct/goodsadd', 'Admin\OfferProduct@goodsAdd');//新增认购产品数据
         Route::any('offerproduct/goodsstart', 'Admin\OfferProduct@goodsStart');//修改认购产品状态
+        Route::any('offerproduct/getCbvWalletList', 'Admin\OfferProduct@getCbvWalletList');//认购产品钱包列表页面
+        Route::any('offerproduct/getCbvWalletData', 'Admin\OfferProduct@getCbvWalletData');//认购产品钱包列表
+
 
         // 代理
         Route::any('agent/list', 'Admin\AgentController@list');//代理列表

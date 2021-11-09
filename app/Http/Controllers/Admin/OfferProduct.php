@@ -3,6 +3,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\OfferProduct as OfferProductModel;
 use App\UlipaiGoods;
+use App\Users;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\Process\Process;
 
@@ -17,6 +18,35 @@ class OfferProduct extends Controller
         return view('admin.offerproduct.goodslist');
     }
 
+
+    public function getCbvWalletList()
+    {
+        return view('admin.offerproduct.cbv_wallet_list');
+    }
+
+    /**返回列表数据
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getCbvWalletData()
+    {
+        $limit = request()->input('limit', 10);
+        $account_number = request()->input('account_number', '');
+        $list = Users::select(
+            'users.*',
+            DB::raw('round(ifnull(opw.balance, 0), 4) as cbv_balance'),
+            DB::raw("ifnull(round(opw.balance * offer_buy_product.now_price, 4), 0) as cbv_now_price")
+        );
+
+        if($account_number)
+        {
+            $list->where('users.account_number', 'like', '%' . $account_number . '%');
+        }
+
+        $list = $list->leftjoin('offer_product_wallet as opw', 'opw.user_id', '=', 'users.id')
+            ->leftjoin("offer_buy_product", "offer_buy_product.id", "=", "opw.obp_id")
+            ->paginate($limit);
+        return $this->layuiData($list);
+    }
 
     /**返回列表数据
      * @return \Illuminate\Http\JsonResponse

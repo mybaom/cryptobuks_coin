@@ -262,6 +262,17 @@
       "extend": false,
       "childs": null,
       "id": 49
+    },
+    {
+      "title": "CBV持仓",
+      "pageURL": "/admin/offerproduct/getCbvWalletList",
+      "name": "CBV持仓",
+      "icon": "fa-gg-circle",
+      "openType": 2,
+      "maxOpen": -1,
+      "extend": false,
+      "childs": null,
+      "id": 49
     }
   ]
 }
