@@ -73,7 +73,7 @@
              
                     ,{field: 'bank', title: '银行卡', minWidth:100}
                     ,{field: 'user_account', title: '支付账号', minWidth:110}
-                    ,{field: 'amount', title: '数量', minWidth:80}
+                    ,{field: 'number', title: '数量', minWidth:80}
                     // ,{field: 'hes_account', title: '承兑商交易账号', minWidth:180}
                     // ,{field: 'money', title: '交易额度', minWidth:100}
                     ,{field: 'status', title: '交易状态', minWidth:100, templet: '#statustml'}
