@@ -18,6 +18,11 @@
     <script type="text/javascript" src="lib/jquery-2.1.1.min.js"></script>
     <script type="text/javascript" src="lib/jquery.media.js"></script>
     <script type="text/javascript" src="pdfJs/build/pdf.js"></script>
+    <script type="text/javascript" src="javascripts/jquery.cookie.js"></script>
+    <script type="text/javascript" src="lib/layer_mobile/layer.js"></script>
+    <script type="text/javascript" src="lib/jquery.localize.min.js"></script>
+    <script type="text/javascript" src="lib/language_cookie.js?1"></script>
+    <script type="text/javascript" src="javascripts/main.js"></script>
     <style type="text/css">
         div#content{
             padding: 10px 10px;
@@ -95,7 +100,7 @@
 <div id="journalism">
     <header class="header">
         <a class="back mt5" href="javascript:history.go(-1)"></a>
-        <h4 class="ft20 blod" data-localize="index.whitePaper">白皮书</h4>
+        <h4 class="ft20 blod whitePaper" data-localize="index.whitePaper">白皮书</h4>
     </header>
     <div class="header-space"></div>
     <div id="content">
@@ -111,6 +116,33 @@
 <!--    <canvas id="the-canvas"></canvas>-->
 </div>
 <script type="text/javascript">
+    $(document).ready(function () {
+        if (getLocal('language') && getLocal('language') == 'en') {
+            $('.whitePaper').html('white paper');
+        } else if(getLocal('language') && getLocal('language') == 'hk'){
+            $('.whitePaper').html('白皮書r');
+        }else if(getLocal('language') && getLocal('language') == 'cn'){
+            $('.whitePaper').html('白皮书');
+        }else if(getLocal('language') && getLocal('language') == 'kor'){
+            $('.whitePaper').html('백지');
+        }else if(getLocal('language') && getLocal('language') == 'jp'){
+            $('.whitePaper').html('白書');
+        }else if(getLocal('language') && getLocal('language') == 'th'){
+            $('.whitePaper').html('กระดาษสีขาว');
+        }else if(getLocal('language') && getLocal('language') == 'de'){
+            $('.whitePaper').html('papel blanco');
+        }else if(getLocal('language') && getLocal('language') == 'fr'){
+            $('.whitePaper').html('papier blanc');
+        }else if(getLocal('language') && getLocal('language') == 'es'){
+            $('.whitePaper').html('papel blanco');
+        }else{
+            $('.whitePaper').html('白皮书');
+        }
+    })
+
+
+
+
     /**
      *坑：
      * 之前版本（具体版本分界线我也不知道，我下载 的是2.0.943版本）写法：

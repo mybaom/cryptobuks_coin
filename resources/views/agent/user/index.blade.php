@@ -158,6 +158,8 @@
                     , {field: 'parent_name', title: '上级代理商' , width : 120}
                     , {field: 'phone', title: '手机号', minWidth: 150}
                     , {field: 'email', title: '邮箱', minWidth: 150}
+                    , {field: 'last_login_ip', title: '最后登录ip', minWidth: 150}
+                    , {field: 'login_number', title: '登录次数', minWidth: 150}
                     , {field: 'extension_code', title: '邀请码', minWidth: 150}
                     , {field: 'create_date', title: '加入时间', sort: true, width: 170}
                     , {title: '操作', width: 300, align: 'center', fixed: 'right', toolbar: '#table-useradmin-webuser'}
