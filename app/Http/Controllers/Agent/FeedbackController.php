@@ -43,8 +43,7 @@ class FeedbackController extends Controller
             $query->whereBetween('feedback.create_time', [strtotime($start . ' 0:0:0'), strtotime($end . ' 23:59:59')]);
         }
 
-
-        if($agent->level = 1){
+        if($agent->level == 1){
             $res = Agent::where('parent_agent_id', $agentId)->get();
             $userIds = array_column(json_decode(json_encode($res)), 'user_id');
             $query->whereIn('users.parent_id', $userIds);

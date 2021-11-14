@@ -266,7 +266,11 @@
     "more": "Charger plus",
     "nodata": "Pas encore d'enregistrement",
     "search":"Rechercher la devise",
-    "beizhu":"Remplissez l'adresse du transfert de devise (obligatoire)"
+    "beizhu":"Remplissez l'adresse du transfert de devise (obligatoire)",
+    "arrival_wallet_address": "Adresse du portefeuille d'arrivée",
+    "w06":"Montant minimum de retrait:",
+    "w10":"Votre compte sera confirmé dans 3 à 6 jours ouvrables.",
+    "w11":"Toutes les adresses de retrait de bbank sont des adresses de portefeuille froides à signature multiple, et aucun portefeuille n'a été lu par une machine connectée au réseau."
   },
   "td":{
     "drecord": "Enregistrement de la commande",

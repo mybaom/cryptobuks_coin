@@ -271,7 +271,11 @@
     "more":"Load more",
     "nodata":"No record yet",
     "search":"Search currency",
-    "beizhu":"Fill in the address of currency transfer (required)"  
+    "beizhu":"Fill in the address of currency transfer (required)",
+    "arrival_wallet_address": "Arrival wallet address",
+    "w06":"Minimum withdrawal amount:",
+    "w10":"Your account will arrive after confirmation in 3-6 working days.",
+    "w11":"The withdrawal addresses of all bbanks are multi signature cold wallet addresses, and all wallets have not been read by networked machines."
   },
   "td": {
     "drecord": "Order record",

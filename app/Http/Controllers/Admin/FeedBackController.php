@@ -15,6 +15,7 @@ class FeedBackController extends Controller
     public function index(){
         return view('admin.feedback.index');
     }
+
     public function feedbackList(Request $request){
         $limit = $request->get('limit', 20);
         $page = $request->get('page', 1);
@@ -29,6 +30,7 @@ class FeedBackController extends Controller
         // dd($result);
         return $this->layuiData($feedbackList);
     }
+
     public function feedBackDetail(Request $request){
         $id = $request->get('id', '');
         $feedback = FeedBack::find($id);

@@ -266,7 +266,11 @@
     "more":"Mehr laden",
     "nodata":"Noch kein Datensatz",
     "search":"Währung suchen",
-    "beizhu":"Geben Sie die Adresse der Währungsüberweisung ein (erforderlich)"
+    "beizhu":"Geben Sie die Adresse der Währungsüberweisung ein (erforderlich)",
+    "arrival_wallet_address": "Adresse der Ankunftstasche",
+    "w06":"Minimaler Rücknahmebetrag:",
+    "w10":"Ihr Konto wird nach Bestätigung in drei-6 Arbeitstagen eintreffen.",
+    "w11":"Die Rückzugsadressen aller Scheiden sind mehrere Signatur kalte Brieftasche Adressen, und alle Brieftaschen wurden nicht von vernetzten Maschinen gelesen."
   },
   "td":{
     "drecord":"Auftragsdatensatz",

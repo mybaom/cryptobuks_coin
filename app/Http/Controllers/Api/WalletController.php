@@ -961,7 +961,7 @@ class WalletController extends Controller
             DB::beginTransaction();
             $wallet = UsersWallet::where('user_id', $user_id)->where('currency', $currency_id)->lockForUpdate()->first();
         
-            if ($number > $wallet->micro_balance) {
+            if ($number > $wallet->change_balance) {
                 DB::rollBack();
                 return $this->error('余额不足');
             }
@@ -977,12 +977,12 @@ class WalletController extends Controller
             $walletOut->status = 1; //1提交提币2已经提币3失败
             $walletOut->save();
 
-            $result = change_wallet_balance($wallet, 4, -$number, AccountLog::WALLETOUT, '申请提币扣除余额');
+            $result = change_wallet_balance($wallet, 2, -$number, AccountLog::WALLETOUT, '申请提币扣除余额');
             if ($result !== true) {
                 throw new \Exception($result);
             }
 
-            $result = change_wallet_balance($wallet, 4, $number, AccountLog::WALLETOUT, '申请提币冻结余额', true);
+            $result = change_wallet_balance($wallet, 2, $number, AccountLog::WALLETOUT, '申请提币冻结余额', true);
             if ($result !== true) {
                 throw new \Exception($result);
             }
@@ -990,7 +990,7 @@ class WalletController extends Controller
             return $this->success('提币申请已成功，等待审核');
         } catch (\Exception $ex) {
             DB::rollBack();
-            return $this->error($ex->getMessage());
+            return $this->error($ex->getMessage().$ex->getFile().$ex->getLine());
         }
     }
 

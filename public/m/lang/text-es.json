@@ -266,7 +266,11 @@
     "more": "Cargar más",
     "nodata": "Aún no hay registro",
     "search": "Moneda de búsqueda",
-    "beizhu": "Introduzca la dirección de la transferencia de moneda (obligatorio)"
+    "beizhu": "Introduzca la dirección de la transferencia de moneda (obligatorio)",
+    "arrival_wallet_address": "Dirección de la cartera",
+    "w06":"Importe mínimo de retirada:",
+    "w10":"Su cuenta será confirmada en 3 - 6 días hábiles.",
+    "w11":"Todas las direcciones de retiro de bbank son direcciones de cartera fría multi - firmadas, todas las carteras no han sido leídas por una máquina conectada a Internet."
   },
   "td": {
     "drecord": "Registro de pedidos",
