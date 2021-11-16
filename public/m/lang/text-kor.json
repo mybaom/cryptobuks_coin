@@ -630,6 +630,7 @@
     "legalAccountBalance":" 법화 계정 잔액 "
   },
   "offerBuy": {
-    "footerTitle": "청 약"
+    "footerTitle": "청 약",
+    "InsufficientBalance": "잔고 가 부족 하 다"
   }
 }

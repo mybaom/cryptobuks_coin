@@ -626,6 +626,7 @@
     "legalAccountBalance":"法貨勘定残高"
   },
   "offerBuy": {
-    "footerTitle": "注文に応じる"
+    "footerTitle": "注文に応じる",
+    "InsufficientBalance": "残高が足りない"
   }
 }

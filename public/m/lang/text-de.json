@@ -669,6 +669,7 @@
     "legalAccountBalance":"Kontostand in gesetzlicher Währung"
     },
   "offerBuy": {
-      "footerTitle": "Abonnement"
+      "footerTitle": "Abonnement",
+      "InsufficientBalance": "Unzureichender Saldo"
   }
 }

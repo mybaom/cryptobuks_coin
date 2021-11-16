@@ -112,6 +112,7 @@
     </ul>
 
 </div>
+<span style="display: none;" id="offerBuy_InsufficientBalance" data-localize="offerBuy.InsufficientBalance">余额不足</span>
 <div class="CNY bgWhite filter-time">
     <a class="setDataMin" data-type="1">1min</a>
     <a class="setDataMin" data-type="5">5min</a>
@@ -690,7 +691,7 @@
                     var ye = parseFloat($('#ye').html())
                     var hzsl = parseFloat($('#hznum').html());
                     if(hzsl > ye){
-                        alert('余额不足');
+                        alert($('#offerBuy_InsufficientBalance').html());
                         return false;
                     }
                     var data = {

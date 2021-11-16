@@ -646,6 +646,7 @@
     "legalAccountBalance":"法币账户余额"
   },
   "offerBuy": {
-    "footerTitle": "认购"
+    "footerTitle": "认购",
+    "InsufficientBalance": "余额不足"
   }
 }

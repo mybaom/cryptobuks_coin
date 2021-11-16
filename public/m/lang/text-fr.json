@@ -646,6 +646,7 @@
     "legalAccountBalance": "Solde du compte en devise légale"
   },
   "offerBuy": {
-    "footerTitle": "Abonnement"
+    "footerTitle": "Abonnement",
+    "InsufficientBalance": "Solde insuffisant"
   }
 }

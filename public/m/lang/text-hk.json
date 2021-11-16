@@ -633,6 +633,7 @@
       "legalAccountBalance":"法幣帳戶餘額"
     },
   "offerBuy": {
-    "footerTitle": "认购"
+    "footerTitle": "认购",
+    "InsufficientBalance": "剩低瞓"
   }
 }

@@ -646,6 +646,7 @@
     "legalAccountBalance": "Saldo de la cuenta en moneda legal"
   },
   "offerBuy": {
-    "footerTitle": "Suscripción"
+    "footerTitle": "Suscripción",
+    "InsufficientBalance": "Saldo insuficiente"
   }
 }

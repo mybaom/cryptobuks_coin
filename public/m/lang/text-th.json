@@ -629,6 +629,7 @@
     "legalAccountBalance":"ยอดคงเหลือในบัญชีสกุลเงินตามกฎหมาย"
   },
   "offerBuy": {
-    "footerTitle": "nสมัครสมาชิก"
+    "footerTitle": "nสมัครสมาชิก",
+    "InsufficientBalance": "ขาดสมดุล"
   }
 }

@@ -651,6 +651,7 @@
     "legalAccountBalance":"Fiat account balance"
   },
   "offerBuy": {
-    "footerTitle": "OfferToBuy"
+    "footerTitle": "OfferToBuy",
+    "InsufficientBalance": "Insufficient Balance"
   }
 }
