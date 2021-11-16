@@ -70,6 +70,8 @@ Route::group([ 'middleware' => ['lang', /*'check_user'*/]], function () {
     Route::post('/api/news/detail', 'Api\NewsController@get');//获取文章详情
     Route::post('/api/news/help', 'Api\NewsController@getCategory');//帮助中心分类
     Route::post('/api/news/recommend', 'Api\NewsController@recommend');//推荐文章
+    Route::get('ulipai/get_county', 'Admin\MarketController@getCountry');
+    Route::get('ulipai/get_sq', 'Admin\MarketController@getSQ');
 
     Route::post('/api/news/get_invite_return_news', 'Api\NewsController@getInviteReturn');//获取邀请规则详情
     Route::get('/api/get_version', 'Api\DefaultController@getVersion');//获取版本号
