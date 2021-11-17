@@ -534,7 +534,7 @@ class UserController extends Controller
             return $this->error('参数错误');
         }
         $list = new UsersWallet();
-        $list = $list->where('user_id', $user_id)->where('currency','3')->orderBy('id', 'desc')->paginate($limit);
+        $list = $list->where('user_id', $user_id)->whereIn('currency', [1, 2, 3])->orderBy('id', 'desc')->paginate($limit);
 
         return response()->json(['code' => 0, 'data' => $list->items(), 'count' => $list->total()]);
     }

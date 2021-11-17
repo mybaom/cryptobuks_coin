@@ -258,10 +258,10 @@ class SmsController extends Controller
 
         if ($type == 'forget') {
             $user = Users::getByString($email);
-            if (empty($user)) return $this->error('账号错误');
+            if (empty($user)) return $this->error('account_error');
         } else {
             $user = Users::getByString($email);
-            if (!empty($user)) return $this->error('账号已存在');
+            if (!empty($user)) return $this->error('account_exists');
         }
         //  从设置中取出值
         $username = Setting::getValueByKey('phpMailer_username', '862917967@qq.com');
@@ -293,7 +293,7 @@ class SmsController extends Controller
            
             if ($res) {
                 session(['code' => $code]);
-                return $this->success('发送成功');
+                return $this->success('send_success');
             } else {
                 return $this->error('操作错误');
             }

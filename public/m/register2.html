@@ -615,7 +615,7 @@
                             settime();
                             layer_msg(data.message);
                         } else {
-                            layer_msg(data.message);
+                            layer_msg(getlg(data.message) ? getlg(data.message) : data.message);
                         }
                     }
                 });

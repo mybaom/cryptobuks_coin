@@ -359,6 +359,9 @@ var ts = {
         DontcanShell: "暂时不能卖出",
         tenThousand:"万",
         apply_success: "申请成功",
+        account_error: "账号错误",
+        account_exists: "账号已存在",
+        send_success: "发送成功",
     },
     hk: {
          juzudz:"請輸入居住地址",
@@ -628,6 +631,9 @@ var ts = {
       DontcanShell: "暂时唔卖埠",
       tenThousand:"万",
       apply_success: "申请成功",
+      account_error: "账号错误",
+      account_exists: "账号已存在",
+      send_success: "发送成功",
     },
     en: {
         "juzudz": "Please enter your residential address",
@@ -899,6 +905,9 @@ var ts = {
         "DontcanShell": "Can't sell for the time being",
         "tenThousand":"ten thousand",
         "apply_success": "Successful application",
+        "account_error": "Account error",
+        "account_exists": "Account already exists",
+        "send_success": "Sent successfully",
     },
     jp: {
         "juzudz": "住所を入力してください。",
@@ -1170,6 +1179,9 @@ var ts = {
         "DontcanShell": "ビットコインチェーン",
         "tenThousand":"万",
         "apply_success": "申し込みが成功した",
+        "account_error": "アカウントのエラー",
+        "account_exists": "アカウントは既に存在します",
+        "send_success": "送信成功",
     },
     kor: {
         "juzudz": "거주 주 소 를 입력 하 세 요",
@@ -1441,6 +1453,9 @@ var ts = {
         "DontcanShell": "당분간 팔 수 없어 요",
         "tenThousand":"만.",
         "apply_success": "신청 성공",
+        "account_error": "계 정 오류",
+        "account_exists": "계 정 이 이미 존재 합 니 다",
+        "send_success": "발송 성공",
     },
     th: {
         "juzudz": "กรุณาระบุที่อยู่อาศัยของคุณ",
@@ -1712,6 +1727,9 @@ var ts = {
         "DontcanShell": "ไม่สามารถขายได้ชั่วคราว",
         "tenThousand":"ประดามี",
         "apply_success": "สมัครเรียบร้อยแล้ว",
+        "account_error": "ข้อผิดพลาดของบัญชี",
+        "account_exists": "หมายเลขบัญชีอยู่แล้ว",
+        "send_success": "ส่งเรียบร้อยแล้ว",
     },
     de: {
         "juzudz": "Bitte geben Sie Ihre Wohnadresse ein",
@@ -1983,6 +2001,9 @@ var ts = {
         "DontcanShell": "Kann vorerst nicht verkaufen",
         "tenThousand":"Zehntausend",
         "apply_success": "Demande acceptée",
+        "account_error": "Fehler beim Konto",
+        "account_exists": "Konto existiert bereits",
+        "send_success": "Gesendet erfolgreich",
     },
     fr: {
         "juzudz": "Veuillez entrer votre adresse de résidence",
@@ -2254,6 +2275,9 @@ var ts = {
         "DontcanShell": "Ne peut pas être vendu pour le moment",
         "tenThousand":"dix mille",
         "apply_success": "Successful application",
+        "account_error": "Erreur de compte",
+        "account_exists": "Le compte existe déjà",
+        "send_success": "Envoyé avec succès",
     },
     es: {
         "juzudz": "Por favor, introduzca la dirección de residencia",
@@ -2525,6 +2549,9 @@ var ts = {
         "DontcanShell": "No se puede vender por el momento",
         "tenThousand":"Diez mil",
         "apply_success": "Aplicación exitosa",
+        "account_error": "Error de cuenta",
+        "account_exists": "La cuenta ya existe",
+        "send_success": "Enviar con éxito",
     }
 
 };
