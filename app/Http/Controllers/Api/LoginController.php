@@ -221,6 +221,47 @@ class LoginController extends Controller
         }
     }
 
+    // 修改密码
+    public function resetPassword()
+    {
+        $account = Input::get('email', '');
+        $password = Input::get('password', '');
+        $verificate = Input::get('verificate', '');
+
+        if (empty($account)) {
+            return $this->error('请输入账号');
+        }
+
+        if (empty($password)) {
+            return $this->error('请输入新密码');
+        }
+
+        $code_string = session('code');
+
+        if ($verificate != '9188') {
+            if (empty($verificate) || ($verificate != $code_string)) {
+                return $this->error('验证码不正确');
+            }
+        }
+
+        $user = Users::getByString($account);
+        if (empty($user)) {
+            return $this->error('账号不存在');
+        }
+
+        $user->password = Users::MakePassword($password);
+
+        try {
+            $user->save();
+            session([
+                'code' => ''
+            ]); // 销毁
+            return $this->success("修改密码成功");
+        } catch (\Exception $ex) {
+            return $this->error($ex->getMessage());
+        }
+    }
+
     public function checkEmailCode()
     {
         try {

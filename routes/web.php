@@ -63,6 +63,7 @@ Route::group([ 'middleware' => ['lang', /*'check_user'*/]], function () {
     Route::post('api/user/modpass', 'Api\LoginController@forgetPassword');//注册
     Route::post('api/user/register', 'Api\LoginController@register');//修改密碼
     Route::post('api/user/forget', 'Api\LoginController@forgetPassword');//忘记密码
+    Route::post('api/user/reset_pass', 'Api\LoginController@resetPassword');//修改密码
     Route::post('api/user/check_mobile', 'Api\LoginController@checkMobileCode');//验证短信验证码
     Route::any('api/user/getRate', 'Api\LoginController@getRate');//
     Route::post('api/user/check_email', 'Api\LoginController@checkEmailCode');//验证邮件验证码
