@@ -110,6 +110,7 @@ class UserController extends Controller
         $list = new Users();
         $list = $list->leftjoin("user_real", "users.id", "=", "user_real.user_id");
         $list = $list->leftjoin("agent", "agent.user_id", "=", "users.id");
+        $list = $list->leftjoin("agent AS s_agent", "agent.parent_agent_id", "=", "s_agent.id");
 
         if (!empty($account)) {
             $list = $list->where("phone", 'like', '%' . $account . '%')
@@ -128,10 +129,11 @@ class UserController extends Controller
         }
 
         $list = $list->select(
-            "users.*",
-            "user_real.card_id",
-            DB::raw("if(agent.id is null or agent.status = 0, '普通用戶', if(agent.level = 1, concat(agent.level, '级代理'), concat(agent.level, '级代理'))) as agent_type")
-        )
+                "users.*",
+                "user_real.card_id",
+                DB::raw("if(agent.id is null or agent.status = 0, '普通用戶', if(agent.level = 1, concat(agent.level, '级代理'), concat(agent.level, '级代理'))) as agent_type"),
+                's_agent.username as s_username'
+            )
             ->orderBy('users.id', 'desc')
             ->paginate($limit);
 
@@ -535,8 +537,34 @@ class UserController extends Controller
         }
         $list = new UsersWallet();
         $list = $list->where('user_id', $user_id)->whereIn('currency', [1, 2, 3])->orderBy('id', 'desc')->paginate($limit);
+        $list = json_decode(json_encode($list, JSON_UNESCAPED_UNICODE), true);
+        $offerProductWallet = new OfferProductWallet();
+        $cbvWallet = $offerProductWallet->where('user_id', $user_id)->where('obp_id', '=', 1)->orderBy('id', 'desc')->first();
+        if(! $cbvWallet)
+        {
+            $addCbvWalletResult = $offerProductWallet->insert([
+                'obp_id' => 1,
+                'user_id' => $user_id,
+                'balance' => 0,
+            ]);
+        }
 
-        return response()->json(['code' => 0, 'data' => $list->items(), 'count' => $list->total()]);
+        $cbvWallet = $offerProductWallet->select(
+            'id',
+            DB::raw('"CBV" as currency_name'),
+            DB::raw('0.00000000 as micro_balance'),
+            DB::raw('0.00000000 as lock_micro_balance'),
+            DB::raw('balance as change_balance'),
+            DB::raw('0.00000000 as lock_change_balance'),
+            DB::raw('create_time')
+        )->where('user_id', $user_id)->where('obp_id', '=', 1)->orderBy('id', 'desc')->first();
+        if($cbvWallet && $list['data']) {
+            $cbvWallet = json_decode(json_encode($cbvWallet, JSON_UNESCAPED_UNICODE), true);
+            $cbvWallet['id'] = 'o_' . (string)$cbvWallet['id'];
+            $list['data'][] = $cbvWallet;
+        }
+
+        return response()->json(['code' => 0, 'data' => $list['data'], 'count' => $list['total']]);
     }
 
     //钱包锁定状态
@@ -566,11 +594,18 @@ class UserController extends Controller
      * */
     public function conf(Request $request)
     {
-        $id = $request->get('id', 0);
+        $id = $request->get('id', '');
         if (empty($id)) {
             return $this->error('参数错误');
         }
-        $walletInfo = UsersWallet::find($id);
+
+        if(strpos($id,'o_') !== false) {
+            $id = str_replace('o_', '', $id);
+            $walletInfo = OfferProductWallet::find($id);
+        }else{
+            $walletInfo = UsersWallet::find($id);
+        }
+
         $list = DB::table('users_wallet')
             ->select('users_wallet.id', 'currency.name')
             ->join('currency', 'currency.id', '=', 'users_wallet.currency')
@@ -1051,7 +1086,7 @@ class UserController extends Controller
             $type = $request->get('type', 1);
             $conf_value = $request->get('conf_value', 0);
             if(strpos($request->get('id'), 'o_') !== false) {
-                if ($wallet->balance < $conf_value) {
+                if ($wallet->balance < $conf_value && $way == 'decrement') {
                     return $validator->errors()->add('isBalance', '此钱包币币账户余额不足' . $conf_value . '元');
                 }
             }else{
@@ -1290,8 +1325,8 @@ class UserController extends Controller
 
                     }
                 }
-                //$wallet->save();
-                //$user->save();
+//                $wallet->save();
+//                $user->save();
                 DB::commit();
                 return $this->success('操作成功');
             } catch (\Exception $e) {

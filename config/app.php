@@ -40,6 +40,8 @@ return [
 	'usdt_erc20' => env('WALLET_ADDRESS_USDT_ERC20',''),
 	
 	'ltc'  => env('WALLET_ADDRESS_LTC',''),
+
+    'domain_type_is_ssl' => env('DOMAIN_TYPE_IS_SSL', true),
     /*
     |--------------------------------------------------------------------------
     | Application Name
