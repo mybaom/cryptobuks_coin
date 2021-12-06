@@ -64,7 +64,7 @@
     <div class="plr15 ft14 mt20">
         <p class="mt20" data-localize="assets.avaiable">可用</p>
         <p class="mt20 ft14 bold"><span class="balance-num">0.00</span> 
-        <!--<span class="title">USDT</span>-->
+        <span class="title">CBV</span>
         </p>
         
         <div class="bline mt30">
@@ -92,13 +92,15 @@
     <script>
         $(function () {
             // FastClick.attach(document.body);
-            var currency =3;// get_param('id');
+            var currency = 1;// get_param('id');
+            var wallet_type = 2;
             var balance, min_number, rate;
             initDataToken({
-                url: 'wallet/get_info',
+                url: 'wallet/get_cbv_info',
                 type: 'post',
                 data: {
-                    currency
+                    currency,
+                    wallet_type
                 }
             }, function (res) {
                 balance = res.legal_balance;
@@ -144,6 +146,7 @@
                     type: 'post',
                     data: {
                         currency,
+                        wallet_type,
                         number,
                         goods_id,
                     }

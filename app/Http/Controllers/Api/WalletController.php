@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\CurrencyQuotation;
 use App\MyBank;
+use App\OfferProductWallet;
 use Illuminate\Support\Carbon;
 use App\Conversion;
 use App\FlashAgainst;
@@ -223,7 +224,7 @@ class WalletController extends Controller
         $currency_id = Input::post("currency", '');
         $number = Input::post("number", '');
         $goods_id=Input::post("goods_id",'');
-        
+        $wallet_type=Input::post("wallet_type",'');
         
         if ($number <= 0) {
             return $this->error('输入的金额不能为负数');
@@ -238,7 +239,7 @@ class WalletController extends Controller
         // }
         
         
-        $ulipaigoods=UlipaiGoods::find($goods_id);
+        $ulipaigoods = UlipaiGoods::find($goods_id);
         
         if($number<$ulipaigoods->min || $number>$ulipaigoods->max){
              return $this->error('买入数量不在范围内');
@@ -247,26 +248,58 @@ class WalletController extends Controller
       
         try {
             DB::beginTransaction();
-            $wallet = UsersWallet::where('user_id', $user_id)->where('currency', $currency_id)->lockForUpdate()->first();
-       
-        
-            if ($number > $wallet->micro_balance) {
-                DB::rollBack();
-                return $this->error('余额不足');
+            // 普通货币
+            $beforeBalance = 0;
+            if($wallet_type == 1) {
+                $wallet = UsersWallet::select('users_wallet.*',DB::raw('ifnull(currency_quotation.now_price, currency.price) as now_price'))
+                    ->join('currency_quotation', 'currency_quotation.currency_id', '=', 'users_wallet.currency', 'left')
+                    ->join('currency', 'currency.id', '=', 'users_wallet.currency', 'left')
+                    ->where('user_id', $user_id)->where('currency', $currency_id)
+                    ->lockForUpdate()
+                    ->first();
+                if ($number > $wallet->micro_balance) {
+                    DB::rollBack();
+                    return $this->error('余额不足');
+                }
+
+                $beforeBalance = $wallet->micro_balance;
+                $wallet->micro_balance = bc_sub($wallet->micro_balance, $number, 5);
+                $wallet->save();
+            }else{
+                //认购货币
+                $wallet = OfferProductWallet::select('offer_product_wallet.*','offer_buy_product.now_price')
+                    ->join('offer_buy_product', 'offer_buy_product.id', '=', 'offer_product_wallet.obp_id', 'left')
+                    ->where('user_id', $user_id)->where('obp_id', $currency_id)->lockForUpdate()->first();
+                if ($number > $wallet->balance) {
+                    DB::rollBack();
+                    return $this->error('余额不足');
+                }
+
+                $beforeBalance = $wallet->balance;
+                $wallet->balance = bc_sub($wallet->balance, $number, 5);
+                $wallet->save();
             }
-            
+
+            $UlipaiOrder = new UlipaiOrder();
+            $UlipaiOrder->user_id=$user_id;
+            $UlipaiOrder->goods_id=$goods_id;
+            $UlipaiOrder->title=$ulipaigoods->title;
+            $UlipaiOrder->num=$number * $wallet->now_price;
+            $UlipaiOrder->cycle=$ulipaigoods->cycle;
+            $UlipaiOrder->addtime=time();
+            $UlipaiOrder->save();
+
             $data_wallet1 = [
                 'balance_type' =>  4,
-                'wallet_id' => $wallet->id,
+                'wallet_id' => $wallet_type == 2 ? 'o_' . $wallet->id : $wallet->id,
                 'lock_type' => 0,
                 'create_time' => time(),
-                'before' => $wallet->micro_balance,
+                'before' => $beforeBalance,
                 'change' => -$number,
-                'after' => bc_sub($wallet->micro_balance, $number, 5),
+                'after' => bc_sub($beforeBalance, $number, 5),
             ];
-                
-                     
-     
+
+
             AccountLog::insertLog(
                 [
                     'user_id' => $user_id,
@@ -278,26 +311,7 @@ class WalletController extends Controller
                 $data_wallet1
             );
             
-           
-            $wallet->micro_balance=bc_sub($wallet->micro_balance,$number,5);
-            $wallet->save();
-            
-         
-            
-            
-            
-            $UlipaiOrder=new UlipaiOrder();
-            $UlipaiOrder->user_id=$user_id;
-            $UlipaiOrder->goods_id=$goods_id;
-            $UlipaiOrder->title=$ulipaigoods->title;
-            $UlipaiOrder->num=$number;
-            $UlipaiOrder->cycle=$ulipaigoods->cycle;
-            $UlipaiOrder->addtime=time();
-            $UlipaiOrder->save();
-            
 
-           
-           
             DB::commit();
             return $this->success('成功');
         } catch (\Exception $ex) {
@@ -842,6 +856,30 @@ class WalletController extends Controller
         
     }
 
+    public function getCbvInfo()
+    {
+        $user_id = Users::getUserId();
+        $cbvWallet = OfferProductWallet::where('user_id', $user_id)->where('obp_id', '=', 1)->orderBy('id', 'desc')->first();
+        if(! $cbvWallet)
+        {
+            $addCbvWalletResult = OfferProductWallet::insert([
+                'obp_id' => 1,
+                'user_id' => $user_id,
+                'balance' => 0,
+            ]);
+        }
+        $cbvWallet = OfferProductWallet::select(
+            DB::raw('0 as rate'),
+            DB::raw('0 as min_number'),
+            DB::raw('"cbv" as name'),
+            DB::raw('balance as legal_balance'),
+            DB::raw('balance as change_balance'),
+            DB::raw("1 as is_open_CTbi"),
+            DB::raw("0 as yubao")
+        )->where('user_id', $user_id)->where('obp_id', '=', 1)->orderBy('id', 'desc')->first();
+        return $this->success($cbvWallet);
+    }
+
     //↓↓↓↓↓↓下边是提币的一些接口//app只有交易账户可以提币
     //渲染提币时的页面，最小交易额，手续费,可用余额
     public function getCurrencyInfo()
@@ -1247,6 +1285,7 @@ class WalletController extends Controller
             return $this->error($rex);
         }
     }
+
     public function sendLtcKMB()
     {
         $user_id = Users::getUserId();
@@ -1301,6 +1340,7 @@ class WalletController extends Controller
             return $this->error($rex->getMessage());
         }
     }
+
     //获取pb的余额交易余额
     public function PB()
     {
@@ -1310,6 +1350,7 @@ class WalletController extends Controller
         })->where('user_id', $user_id)->first();
         return $this->success($wallet->change_balance);
     }
+
     //闪兑信息
     public function flashAgainstList(Request $request)
     {
