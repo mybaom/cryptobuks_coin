@@ -181,15 +181,6 @@ class WalletController extends Controller
        //托管中的订单
        $orders_in_custody=UlipaiOrder::where(['user_id'=>$user_id,'status'=>1])->count();
        
-       
-       
-       
-       
-       
-       
-       
-       
-       
         return $this->success([
             'legal_wallet' => $legal_wallet,
             'change_wallet' => $change_wallet,
@@ -240,6 +231,8 @@ class WalletController extends Controller
         
         
         $ulipaigoods = UlipaiGoods::find($goods_id);
+        $thisTime = time();
+        $endTime = $thisTime + (86400 * $ulipaigoods->cycle);
         
         if($number<$ulipaigoods->min || $number>$ulipaigoods->max){
              return $this->error('买入数量不在范围内');
@@ -257,13 +250,13 @@ class WalletController extends Controller
                     ->where('user_id', $user_id)->where('currency', $currency_id)
                     ->lockForUpdate()
                     ->first();
-                if ($number > $wallet->micro_balance) {
+                if ($number > $wallet->change_balance) {
                     DB::rollBack();
                     return $this->error('余额不足');
                 }
 
-                $beforeBalance = $wallet->micro_balance;
-                $wallet->micro_balance = bc_sub($wallet->micro_balance, $number, 5);
+                $beforeBalance = $wallet->change_balance;
+                $wallet->change_balance = bc_sub($wallet->change_balance, $number, 5);
                 $wallet->save();
             }else{
                 //认购货币
@@ -281,12 +274,15 @@ class WalletController extends Controller
             }
 
             $UlipaiOrder = new UlipaiOrder();
+            $UlipaiOrder->currency_type=$wallet_type;
+            $UlipaiOrder->currency_id=$currency_id;
             $UlipaiOrder->user_id=$user_id;
             $UlipaiOrder->goods_id=$goods_id;
             $UlipaiOrder->title=$ulipaigoods->title;
             $UlipaiOrder->num=$number * $wallet->now_price;
             $UlipaiOrder->cycle=$ulipaigoods->cycle;
-            $UlipaiOrder->addtime=time();
+            $UlipaiOrder->addtime=$thisTime;
+            $UlipaiOrder->endtime=$endTime;
             $UlipaiOrder->save();
 
             $data_wallet1 = [
@@ -318,6 +314,18 @@ class WalletController extends Controller
             DB::rollBack();
             return $this->error($ex->getMessage());
         }
+    }
+
+    public function getCurrencyWalletList()
+    {
+        $user_id = Users::getUserId();
+        $list = DB::table('users_wallet as uw')
+            ->select('uw.change_balance','c.name','c.id')
+            ->join('currency as c', 'c.id', '=', 'uw.currency', 'inner')
+            ->where('uw.user_id', '=', $user_id)
+            ->get();
+
+        return $this->success($list);
     }
     
     /*

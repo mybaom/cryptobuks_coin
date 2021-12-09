@@ -61,10 +61,17 @@
         <h4 class="ft16" data-localize="ulipai.index">U利派</h4>
     </header>
     <div class="header-space"></div>
-    <div class="plr15 ft14 mt20">
+    <div class="plr15 ft14 mt20" id="app">
+
+        <div class="bline mt30">
+            <select v-if="currency_list" style="width: 100%;height: 32px;border: 0;" v-on:change="change_currency">
+                <option v-for="item in currency_list" :key="item.id" :value="item.id" :selected="item.id == check_currency_id">{{item.name}}</option>
+            </select>
+        </div>
+
         <p class="mt20" data-localize="assets.avaiable">可用</p>
-        <p class="mt20 ft14 bold"><span class="balance-num">0.00</span> 
-        <span class="title">CBV</span>
+        <p v-if="currency_list.length > 0 && currency_list[check_currency_index]" class="mt20 ft14 bold"><span class="balance-num">{{currency_list[check_currency_index].change_balance}}</span>
+        <span v-if="currency_list.length > 0 && currency_list[check_currency_index]" class="title">{{currency_list[check_currency_index].name}}</span>
         </p>
         
         <div class="bline mt30">
@@ -82,6 +89,7 @@
       
         <div class="mention tc ft14 mt20" data-localize="ulipai.mr"  style="background: #588bf7;">买入</div>
     </div>
+    <script type="text/javascript" src="lib/vue.min.js"></script>
     <script src="lib/jquery-2.1.1.min.js"></script>
     <script src="javascripts/fastclick.js"></script>
     <script src="javascripts/jquery.cookie.js"></script>
@@ -90,29 +98,68 @@
     <script type="text/javascript" src="lib/language_cookie.js"></script>
     <script src="javascripts/main.js"></script>
     <script>
+
+        var app = new Vue({
+            el: '#app',
+            data: {
+                currency_list: [],
+                check_currency_index: null,
+                check_currency_id: 3
+            },
+            mounted: function() {
+            },
+            created: function(){
+                var that = this;
+                var balance, min_number, rate;
+                initDataToken({
+                    url: 'wallet/get_currency_wallet_list',
+                    type: 'post',
+                    data: {}
+                }, function (res) {
+                    for (var i = 0; i < res.length; i++)
+                    {
+                        if(res[i].id == that.check_currency_id)
+                        {
+                            that.check_currency_index = i;
+                        }
+                    }
+                    that.currency_list = res;
+                })
+            },
+            methods: {
+                change_currency: function (event) {
+                    this.check_currency_id = event.target.value;
+                    for (var i = 0; i < this.currency_list.length; i++)
+                    {
+                        if(this.currency_list[i].id == event.target.value)
+                        {
+                            this.check_currency_index = i;
+                        }
+                    }
+                }
+            }
+        });
+
         $(function () {
             // FastClick.attach(document.body);
-            var currency = 1;// get_param('id');
-            var wallet_type = 2;
-            var balance, min_number, rate;
-            initDataToken({
-                url: 'wallet/get_cbv_info',
-                type: 'post',
-                data: {
-                    currency,
-                    wallet_type
-                }
-            }, function (res) {
-                balance = res.legal_balance;
-                $('.balance-num').html(balance)
-                $('.title').html(res.name)
-                rate = res.rate;
-                $('.ratenum').html(rate)
-                min_number = res.min_number;
-                // $('.count').attr('placeholder', getlg('minimum') + iTofixed(min_number,2))
-                var num = 0;
-                $('.reach-num').html(iTofixed(num,2));
-            })
+            // var currency = 1;// get_param('id');
+            // var wallet_type = 1;
+            // var balance, min_number, rate;
+            // initDataToken({
+            //     url: 'wallet/get_currency_wallet_list',
+            //     type: 'post',
+            //     data: {}
+            // }, function (res) {
+            //     balance = res.legal_balance;
+            //     $('.balance-num').html(balance)
+            //     $('.title').html(res.name)
+            //     rate = res.rate;
+            //     $('.ratenum').html(rate)
+            //     min_number = res.min_number;
+            //     // $('.count').attr('placeholder', getlg('minimum') + iTofixed(min_number,2))
+            //     var num = 0;
+            //     $('.reach-num').html(iTofixed(num,2));
+            // })
             
             var aU = function(c) {
                     var b = new RegExp("(^|&)" + c + "=([^&]*)(&|$)", "i"),
@@ -140,6 +187,8 @@
                     //请输入转入数量
                     return layer_msg(getlg('zhuanruAmount'));
                 }
+                var currency = app.check_currency_id;
+                var wallet_type = 1;
 
                 initDataToken({
                     url: 'wallet/yubaozhuanru',
@@ -163,7 +212,7 @@
                 postData();
             })
             $('.all_in').click(function () {
-                $('.count').val(balance);
+                $('.count').val(app.currency_list[app.check_currency_index].change_balance);
                 var num = iTofixed(balance - rate,2);
                 if (num > 0) {
                     $('.reach-num').html(num);

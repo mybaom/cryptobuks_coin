@@ -218,6 +218,7 @@ Route::group([ 'middleware' => ['lang', /*'check_user'*/]], function () {
 		Route::post('wallet/charge_req', 'Api\WalletController@chargeReq');
         Route::post('wallet/get_info', 'Api\WalletController@getCurrencyInfo');//获取提币信息
         Route::post('wallet/get_cbv_info', 'Api\WalletController@getCbvInfo');//获取cbv信息
+        Route::post('wallet/get_currency_wallet_list', 'Api\WalletController@getCurrencyWalletList');
         Route::post('wallet/get_address', 'Api\WalletController@getAddressByCurrency');//获取提币地址
         Route::post('wallet/out', 'Api\WalletController@postWalletOut')->middleware([
             'demo_limit',
