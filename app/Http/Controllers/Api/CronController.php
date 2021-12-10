@@ -120,76 +120,117 @@ class CronController extends Controller
      */
     public function UliPaiInterest()
     {
-         //当日利息比例
+        //当日利息比例
         //利率
         $linv = UlipaiGoods::pluck("interest_rate_today",'id')->toArray();
         
-        
-        $ulipaiOrder=UlipaiOrder::where('status',1)->get()->toArray();
-        
-        if(!empty($ulipaiOrder)){
+        $ulipaiOrder = UlipaiOrder::where('status',1)->get()->toArray();
+
+        // 获取普通货币列表
+        $currencyList = DB::table('currency AS c')
+            ->select('c.id', 'c.name', DB::raw('ifnull(cq.now_price, c.price) as price'))
+            ->leftJoin('currency_quotation AS cq', function($query){
+                $query->on('cq.currency_id', '=', 'c.id')
+                    ->where('cq.legal_id', '=', 3);
+            })
+            ->get()->toArray();
+        $currencyList = array_column($currencyList, null, 'id');
+
+        // 获取认购货币列表
+        $offerProductCurrencyList = DB::table('offer_buy_product')
+            ->select('id','name','now_price as price')
+            ->get()->toArray();
+        $offerProductCurrencyList = array_column($offerProductCurrencyList, null, 'id');
+        // 以cbv为结算，获取cbv信息
+        $cbvInfo = $offerProductCurrencyList[1];
+
+        if(!empty($ulipaiOrder) && !empty($cbvInfo)){
             try {
                 DB::beginTransaction();
                 
                 foreach ($ulipaiOrder as $key=>$val){
                     //如果前一天委托，今日不算收益
-                    // if(date("Ymd",strtotime("-1 day"))==date("Ymd",$val['addtime']) || date("Ymd",$val['addtime'])==date("Ymd")){
+                    // if(date("Ymd",strtotime("-1 day")) == date("Ymd",$val['addtime']) || date("Ymd",$val['addtime']) == date("Ymd")){
                     //     continue;
                     // }
-                    
-                    $lixi=$val['num']*($linv[$val['goods_id']]*0.01);
-                  
-                    if($lixi>0){
-                        $income_days=$val['income_days']+1;
-                        if($income_days>=$val['cycle']){
+
+                    if($val['currency_type'] == 1 && $val['currency_id'])
+                    {
+                        $currencyInfo = $currencyList[$val['currency_id']];
+                    }else if($val['currency_type'] == 2 && $val['currency_id']){
+                        $currencyInfo = $offerProductCurrencyList[$val['currency_id']];
+                    }
+                    if(empty($currencyInfo) || !$currencyInfo)
+                    {
+                        continue;
+                    }
+
+                    // 计算利息，cbv结算
+                    $lixi = round($val['num'] * $currencyInfo->price * ($linv[$val['goods_id']] * 0.01) / $cbvInfo->price, 4);
+
+//                    $lixi = $val['num'] * ($linv[$val['goods_id']] * 0.01);
+
+                    // 如果利息大于0
+                    if($lixi > 0){
+                        // 收益天数增加1天
+                        $income_days = $val['income_days']+1;
+                        // 如果收益天数等于现在周期天数则设置订单状态为结束
+                        if($income_days >= $val['cycle']){
                             $status=0;
                             $endtime=time();
                         }else{
                             $status=1;
                             $endtime=0;
                         }
-                        
-                        $UlipaiOrder=UlipaiOrder::where('id',$val['id'])->lockForUpdate()->first();
+
+                        $UlipaiOrder=UlipaiOrder::where('id', $val['id'])->lockForUpdate()->first();
                         $UlipaiOrder->profit=$val['profit']+$lixi;
                         $UlipaiOrder->income_days=$income_days;
                         $UlipaiOrder->status=$status;
                         $UlipaiOrder->endtime=$endtime;
-                        
+
                         if(!$UlipaiOrder->save()){
                             DB::rollBack();
                         }
-                        
-                        if($status==0){
-                            $UsersWallet=UsersWallet::where([['user_id','=',$val['user_id']],['currency','=',3]])->first()->toArray();
-                        
-                            $data_wallet1 = [
-                                'balance_type' =>  4,
-                                'wallet_id' =>$UsersWallet['id'],
-                                'lock_type' => 0,
-                                'create_time' => time(),
-                                'before' => $UsersWallet['micro_balance'],
-                                'change' => $val['num']+$val['profit']+$lixi,
-                                'after' => bc_add($UsersWallet['micro_balance'], $val['num']+$val['profit']+$lixi, 5),
-                            ];
-                            
-                                 
-                 
-                            $b=AccountLog::insertLog(
-                                [
-                                    'user_id' => $val['user_id'],
-                                    'value' => $val['num']+$val['profit']+$lixi,
-                                    'info' => 'U利派委托到期，加入余额',
-                                    'type' => AccountLog::INSURANCE_MONEY,
-                                    'currency' => $UsersWallet['currency'],
-                                ],
-                                $data_wallet1
-                            );
-                        
-                            if(!$b){
-                                 DB::rollBack();
+
+                        // 把收益充值到cbv
+
+
+
+                        // 到期恢复余额
+                        if($status == 0){
+                            $UsersWallet = UsersWallet::where([['user_id','=',$val['user_id']],['currency','=',3]])->first()->toArray();
+                            if($UsersWallet) {
+                                // 恢复余额
+//                                UsersWallet::where([['user_id','=',$val['user_id']],['currency','=',3]])
+
+                                $data_wallet1 = [
+                                    'balance_type' => 4,
+                                    'wallet_id' => $UsersWallet['id'],
+                                    'lock_type' => 0,
+                                    'create_time' => time(),
+                                    'before' => $UsersWallet['change_balance'],
+                                    'change' => $val['num'] + $val['profit'] + $lixi,
+                                    'after' => bc_add($UsersWallet['change_balance'], $val['num'] + $val['profit'] + $lixi, 5),
+                                ];
+
+                                $b = AccountLog::insertLog(
+                                    [
+                                        'user_id' => $val['user_id'],
+                                        'value' => $val['num'] + $val['profit'] + $lixi,
+                                        'info' => 'U利派委托到期，加入余额',
+                                        'type' => AccountLog::INSURANCE_MONEY,
+                                        'currency' => $UsersWallet['currency'],
+                                    ],
+                                    $data_wallet1
+                                );
+
+                                if (!$b) {
+                                    DB::rollBack();
+                                }
                             }
                         }
-                        
+
                     }
                 }
                   
@@ -197,10 +238,8 @@ class CronController extends Controller
                 return $this->success('成功');
             } catch (\Exception $ex) {
                 DB::rollBack();
-                return $this->error($ex->getMessage());
+                return $this->error($ex->getFile() . $ex->getLine() . $ex->getMessage());
             }
-            
-            
         }    
         
     }

@@ -231,8 +231,6 @@ class WalletController extends Controller
         
         
         $ulipaigoods = UlipaiGoods::find($goods_id);
-        $thisTime = time();
-        $endTime = $thisTime + (86400 * $ulipaigoods->cycle);
         
         if($number<$ulipaigoods->min || $number>$ulipaigoods->max){
              return $this->error('买入数量不在范围内');
@@ -281,8 +279,7 @@ class WalletController extends Controller
             $UlipaiOrder->title=$ulipaigoods->title;
             $UlipaiOrder->num=$number * $wallet->now_price;
             $UlipaiOrder->cycle=$ulipaigoods->cycle;
-            $UlipaiOrder->addtime=$thisTime;
-            $UlipaiOrder->endtime=$endTime;
+            $UlipaiOrder->addtime=time();
             $UlipaiOrder->save();
 
             $data_wallet1 = [
