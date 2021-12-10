@@ -211,6 +211,7 @@ class AccountLog extends Model
 
     const  LOWER_REBATE = 250;//下级返利
     const  INSURANCE_MONEY=251;//持币生币
+    const  ULIPAI_INTEREST=253;//U利派利息
     const AGENT_COMMISSION=252;//用户充值给代理的分佣
 
     public function getAccountNumberAttribute()

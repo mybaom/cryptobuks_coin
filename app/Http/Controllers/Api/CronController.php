@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\MyBank;
+use App\OfferProductWallet;
 use Illuminate\Support\Carbon;
 use App\Conversion;
 use App\FlashAgainst;
@@ -194,33 +195,67 @@ class CronController extends Controller
                         }
 
                         // 把收益充值到cbv
+                        $offerProductWallet = new OfferProductWallet();
+                        $cbvWalletInfo = $offerProductWallet->where('user_id', '=', $val['user_id'])->where('obp_id', '=', 1)->get()->first();
+                        if(! $cbvWalletInfo)
+                        {
+                            $addCbvWalletResult = $offerProductWallet->insert([
+                                'obp_id' => 1,
+                                'user_id' => $val['user_id'],
+                                'balance' => 0,
+                            ]);
+                            $cbvWalletInfo = $offerProductWallet->where('user_id', '=', $val['user_id'])->where('obp_id', '=', 1)->get()->first();
+                        }
 
+                        $cbvWallet = [
+                            'balance_type' => 6,
+                            'wallet_id' => $cbvWalletInfo->id,
+                            'lock_type' => 0,
+                            'create_time' => time(),
+                            'before' => $cbvWalletInfo->balance,
+                            'change' => $lixi,
+                            'after' => bc_add($cbvWalletInfo->balance, $lixi, 5),
+                        ];
 
+                        $b = AccountLog::insertLog(
+                            [
+                                'user_id' => $val['user_id'],
+                                'value' => $lixi,
+                                'info' => 'U利派利息',
+                                'type' => AccountLog::ULIPAI_INTEREST,
+                                'currency' => $cbvWalletInfo->obp_id,
+                            ],
+                            $cbvWallet
+                        );
+
+                        $cbvWalletInfo->balance = $cbvWalletInfo->balance + $lixi;
+                        $cbvWalletInfo->save();
 
                         // 到期恢复余额
                         if($status == 0){
-                            $UsersWallet = UsersWallet::where([['user_id','=',$val['user_id']],['currency','=',3]])->first()->toArray();
+                            $UsersWallet = UsersWallet::where([['user_id','=',$val['user_id']],['currency','=',$val['currency_id']]])->first();
                             if($UsersWallet) {
                                 // 恢复余额
-//                                UsersWallet::where([['user_id','=',$val['user_id']],['currency','=',3]])
+                                $UsersWallet->change_balance = $UsersWallet->change_balance + $val['num'];
+                                $UsersWallet->save();
 
                                 $data_wallet1 = [
                                     'balance_type' => 4,
-                                    'wallet_id' => $UsersWallet['id'],
+                                    'wallet_id' => $UsersWallet->id,
                                     'lock_type' => 0,
                                     'create_time' => time(),
-                                    'before' => $UsersWallet['change_balance'],
-                                    'change' => $val['num'] + $val['profit'] + $lixi,
-                                    'after' => bc_add($UsersWallet['change_balance'], $val['num'] + $val['profit'] + $lixi, 5),
+                                    'before' => $UsersWallet->change_balance,
+                                    'change' => $val['num'],
+                                    'after' => bc_add($UsersWallet->change_balance, $val['num'], 5),
                                 ];
 
                                 $b = AccountLog::insertLog(
                                     [
                                         'user_id' => $val['user_id'],
-                                        'value' => $val['num'] + $val['profit'] + $lixi,
+                                        'value' => $val['num'],
                                         'info' => 'U利派委托到期，加入余额',
                                         'type' => AccountLog::INSURANCE_MONEY,
-                                        'currency' => $UsersWallet['currency'],
+                                        'currency' => $UsersWallet->currency,
                                     ],
                                     $data_wallet1
                                 );
@@ -243,25 +278,5 @@ class CronController extends Controller
         }    
         
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
 }

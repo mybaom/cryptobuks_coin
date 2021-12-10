@@ -277,7 +277,7 @@ class WalletController extends Controller
             $UlipaiOrder->user_id=$user_id;
             $UlipaiOrder->goods_id=$goods_id;
             $UlipaiOrder->title=$ulipaigoods->title;
-            $UlipaiOrder->num=$number * $wallet->now_price;
+            $UlipaiOrder->num=$number;
             $UlipaiOrder->cycle=$ulipaigoods->cycle;
             $UlipaiOrder->addtime=time();
             $UlipaiOrder->save();
