@@ -110,7 +110,7 @@ class UserController extends Controller
         $list = new Users();
         $list = $list->leftjoin("user_real", "users.id", "=", "user_real.user_id");
         $list = $list->leftjoin("agent", "agent.user_id", "=", "users.id");
-        $list = $list->leftjoin("agent AS s_agent", "agent.parent_agent_id", "=", "s_agent.id");
+        $list = $list->leftjoin("agent AS s_agent", "s_agent.user_id", "=", "users.parent_id");
 
         if (!empty($account)) {
             $list = $list->where("phone", 'like', '%' . $account . '%')
