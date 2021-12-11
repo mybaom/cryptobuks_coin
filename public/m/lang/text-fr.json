@@ -18,7 +18,8 @@
       "addtime": "Heure de la délégation",
       "endtime": "Heure de fin",
       "cunrunum": "Veuillez saisir la quantité de transfert",
-      "mr": "Acheter"
+      "mr": "Acheter",
+      "day_income":"Gains journaliers"
   },
   "zdy":{
       "tibitongdan": "Canal de retrait",

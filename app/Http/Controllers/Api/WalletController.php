@@ -172,8 +172,8 @@ class WalletController extends Controller
        
        $ulipaiorder=UlipaiOrder::where(['user_id'=>$user_id,'status'=>1])->get()->toArray();
        foreach ($ulipaiorder as $key=>$val){
-           $interest_rate_today=UlipaiGoods::where("id",$val['goods_id'])->value('interest_rate_today');
-           $expected_earnings_today+=$interest_rate_today*0.01*$val['num'];
+           $interest_rate_today=UlipaiGoods::where("id",$val['goods_id'])->value('today_profit');
+           $expected_earnings_today+=$interest_rate_today*$val['num'];
        }
      
        //累计收益

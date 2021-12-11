@@ -18,7 +18,8 @@
       "addtime":" delegate time",
       "endtime":"end time",
       "cunrunum":"please enter the transfer in quantity",
-      "mr":"buy"
+      "mr":"buy",
+      "day_income":"Daily income"
   },
     "zdy":{
         "tibitongdan":"Cash withdrawal channel",  

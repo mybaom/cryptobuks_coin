@@ -19,7 +19,8 @@
       "addtime":"委託時間",
       "endtime":"結束時間",
       "cunrunum":"請輸入轉入數量",
-      "mr":"買入"
+      "mr":"買入",
+      "day_income":"日收益"
   },
     "zdy":{
         "close":"關閉",

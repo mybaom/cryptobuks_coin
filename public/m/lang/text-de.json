@@ -18,7 +18,8 @@
 		"addtime":"Delegationszeit",
 		"endtime":"Endzeit",
 		"cunrunum":"Bitte geben Sie die Überweisungsmenge ein",
-		"mr": "Kaufen"
+		"mr": "Kaufen",
+        "day_income":"Tägliches Einkommen"
     },
     "zdy":{
 		"tibitongdan":"Abhebungskanal",

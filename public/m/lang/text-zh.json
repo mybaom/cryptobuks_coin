@@ -18,7 +18,8 @@
       "addtime":"委托时间",
       "endtime":"结束时间",
       "cunrunum":"请输入转入数量",
-      "mr":"买入"
+      "mr":"买入",
+      "day_income":"日收益"
   },
   "zdy":{
       "tibitongdan":"提币通道",      
