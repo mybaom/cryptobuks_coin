@@ -320,6 +320,7 @@ class WalletController extends Controller
             ->select('uw.change_balance','c.name','c.id')
             ->join('currency as c', 'c.id', '=', 'uw.currency', 'inner')
             ->where('uw.user_id', '=', $user_id)
+            ->where('c.id', '=', 3)
             ->get();
 
         return $this->success($list);

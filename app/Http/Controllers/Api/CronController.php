@@ -123,7 +123,7 @@ class CronController extends Controller
     {
         //当日利息比例
         //利率
-        $linv = UlipaiGoods::pluck("interest_rate_today",'id')->toArray();
+        $linv = UlipaiGoods::pluck("today_profit",'id')->toArray();
         
         $ulipaiOrder = UlipaiOrder::where('status',1)->get()->toArray();
 
@@ -167,8 +167,7 @@ class CronController extends Controller
                     }
 
                     // 计算利息，cbv结算
-                    $lixi = round($val['num'] * $currencyInfo->price * ($linv[$val['goods_id']] * 0.01) / $cbvInfo->price, 4);
-
+                    $lixi = round($val['num'] * $linv[$val['goods_id']], 4);
 //                    $lixi = $val['num'] * ($linv[$val['goods_id']] * 0.01);
 
                     // 如果利息大于0
@@ -275,7 +274,9 @@ class CronController extends Controller
                 DB::rollBack();
                 return $this->error($ex->getFile() . $ex->getLine() . $ex->getMessage());
             }
-        }    
+        }else{
+            return $this->success('没有要结算的订单');
+        }
         
     }
     

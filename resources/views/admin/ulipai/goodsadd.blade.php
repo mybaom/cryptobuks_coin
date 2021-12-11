@@ -25,27 +25,34 @@
             </div>
         </div>
         
-        
+{{--        --}}
+{{--        <div class="layui-form-item">--}}
+{{--            <label class="layui-form-label">最小日收益率%</label>--}}
+{{--            <div class="layui-input-inline">--}}
+{{--                <input type="text" name="min_daily_yield" lay-verify="required" autocomplete="off" placeholder="" class="layui-input" value="@if(!empty($result->min_daily_yield)){{$result->min_daily_yield}}@endif">--}}
+{{--            </div>--}}
+{{--        </div>--}}
+{{--        --}}
+{{--         <div class="layui-form-item">--}}
+{{--            <label class="layui-form-label">最大日收益率%</label>--}}
+{{--            <div class="layui-input-inline">--}}
+{{--                <input type="text" name="max_daily_yield" lay-verify="required" autocomplete="off" placeholder="" class="layui-input" value="@if(!empty($result->max_daily_yield)){{$result->max_daily_yield}}@endif">--}}
+{{--            </div>--}}
+{{--        </div>--}}
+{{--        --}}
+{{--        --}}
+{{--        --}}
+{{--        <div class="layui-form-item">--}}
+{{--            <label class="layui-form-label">今日收益率设置%</label>--}}
+{{--            <div class="layui-input-inline">--}}
+{{--                <input type="text" name="interest_rate_today" lay-verify="required" autocomplete="off" placeholder="" class="layui-input" value="@if(!empty($result->interest_rate_today)){{$result->interest_rate_today}}@endif">--}}
+{{--            </div>--}}
+{{--        </div>--}}
+
         <div class="layui-form-item">
-            <label class="layui-form-label">最小日收益率%</label>
+            <label class="layui-form-label">CBV收益</label>
             <div class="layui-input-inline">
-                <input type="text" name="min_daily_yield" lay-verify="required" autocomplete="off" placeholder="" class="layui-input" value="@if(!empty($result->min_daily_yield)){{$result->min_daily_yield}}@endif">
-            </div>
-        </div>
-        
-         <div class="layui-form-item">
-            <label class="layui-form-label">最大日收益率%</label>
-            <div class="layui-input-inline">
-                <input type="text" name="max_daily_yield" lay-verify="required" autocomplete="off" placeholder="" class="layui-input" value="@if(!empty($result->max_daily_yield)){{$result->max_daily_yield}}@endif">
-            </div>
-        </div>
-        
-        
-        
-        <div class="layui-form-item">
-            <label class="layui-form-label">今日收益率设置%</label>
-            <div class="layui-input-inline">
-                <input type="text" name="interest_rate_today" lay-verify="required" autocomplete="off" placeholder="" class="layui-input" value="@if(!empty($result->interest_rate_today)){{$result->interest_rate_today}}@endif">
+                <input type="text" name="today_profit" lay-verify="required" autocomplete="off" placeholder="" class="layui-input" value="@if(!empty($result->today_profit)){{$result->today_profit}}@endif">
             </div>
         </div>
 

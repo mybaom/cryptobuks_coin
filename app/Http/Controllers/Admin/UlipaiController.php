@@ -77,9 +77,10 @@ class UlipaiController extends Controller
             $data['title']          = request()->input('title', '');
             $data['min']         = request()->input('min', 0);
             $data['max']       = request()->input('max', 0);
-            $data['min_daily_yield']          = request()->input('min_daily_yield', 0);
-            $data['max_daily_yield']        = request()->input('max_daily_yield', 0);
-            $data['interest_rate_today']        = request()->input('interest_rate_today', 0);
+            $data['today_profit']       = request()->input('today_profit', 0);
+//            $data['min_daily_yield']          = request()->input('min_daily_yield', 0);
+//            $data['max_daily_yield']        = request()->input('max_daily_yield', 0);
+//            $data['interest_rate_today']        = request()->input('interest_rate_today', 0);
             $data['cycle']            = request()->input('cycle', 0);
             
 
@@ -88,9 +89,9 @@ class UlipaiController extends Controller
            
             if (!is_numeric($data['max']) || !is_numeric($data['min'])) return $this->error('大小限额只能是数字');
             if ($data['max'] < $data['min']) return $this->error('错误的大小限额');
-            if (!is_numeric($data['min_daily_yield']) || !is_numeric($data['max_daily_yield'])) return $this->error('日收益率只能是数字');
-            if ($data['min_daily_yield'] < 0 || $data['max_daily_yield'] < 0) return $this->error('日收益率不能为负数');
-            if ($data['max_daily_yield'] < 0 || $data['min_daily_yield'] < 0) return $this->error('错误的日收益率');
+//            if (!is_numeric($data['min_daily_yield']) || !is_numeric($data['max_daily_yield'])) return $this->error('日收益率只能是数字');
+//            if ($data['min_daily_yield'] < 0 || $data['max_daily_yield'] < 0) return $this->error('日收益率不能为负数');
+//            if ($data['max_daily_yield'] < 0 || $data['min_daily_yield'] < 0) return $this->error('错误的日收益率');
 
 
             $id = request()->input('id', 0);
@@ -108,10 +109,11 @@ class UlipaiController extends Controller
                 $UlipaiGoods->title       = $data['title'];
                 $UlipaiGoods->min          = $data['min'];
                 $UlipaiGoods->max        = $data['max'];
-                $UlipaiGoods->min_daily_yield        = $data['min_daily_yield'];
-                $UlipaiGoods->max_daily_yield            = $data['max_daily_yield'];
-                $UlipaiGoods->interest_rate_today = $data['interest_rate_today'];
+//                $UlipaiGoods->min_daily_yield        = $data['min_daily_yield'];
+//                $UlipaiGoods->max_daily_yield            = $data['max_daily_yield'];
+//                $UlipaiGoods->interest_rate_today = $data['interest_rate_today'];
                 $UlipaiGoods->cycle   = $data['cycle'];
+                $UlipaiGoods->today_profit = $data['today_profit'];
               
 
                 $info = $UlipaiGoods->save();

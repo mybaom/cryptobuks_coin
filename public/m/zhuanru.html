@@ -81,7 +81,7 @@
                 <div>
                     <!--<span class="white_gray title">USDT</span>-->
                     <span class="">|</span>
-                    <span class=" bold all_in" data-localize="deals.all">全部</span>
+                    <span class="bold all_in" data-localize="deals.all">全部</span>
                 </div>
             </div>
         </div>
@@ -212,23 +212,25 @@
                 postData();
             })
             $('.all_in').click(function () {
-                $('.count').val(app.currency_list[app.check_currency_index].change_balance);
-                var num = iTofixed(balance - rate,2);
-                if (num > 0) {
-                    $('.reach-num').html(num);
-                } else {
-                    $('.reach-num').html('0.00');
-                }
+                $('.count').val(parseInt(app.currency_list[app.check_currency_index].change_balance));
+                // var num = iTofixed(parseInt(app.currency_list[app.check_currency_index].change_balance) - rate,2);
+                // if (num > 0) {
+                //     $('.reach-num').html(num);
+                // } else {
+                //     $('.reach-num').html('0.00');
+                // }
 
             })
             $('.count').keyup(function () {
                 var value = $(this).val();
-                var num = iTofixed(value - rate,2);
-                if (num > 0) {
-                    $('.reach-num').html(num);
-                } else {
-                    $('.reach-num').html('0.00');
-                }
+                var num = parseInt(value);
+                $('.count').val(num);
+                // var num = iTofixed(value - rate,2);
+                // if (num > 0) {
+                //     $('.reach-num').html(parseInt(num));
+                // } else {
+                //     $('.reach-num').html('0.00');
+                // }
 
             })
 
