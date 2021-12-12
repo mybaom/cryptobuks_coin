@@ -22,11 +22,34 @@ class AgentController extends Controller
     public function listData()
     {
         $limit = request()->input('limit', 10);
-        $list = AgentModel::with('user')->paginate($limit);
-        foreach ($list as $k => $v)
-        {
-            $list[$k]['account_number'] = $v['user']['account_number'];
-        }
+//        $list = AgentModel::with('user')->paginate($limit);
+        $list = DB::table('agent as a')
+            ->select(
+                'a.id',
+                'a.username',
+                DB::raw('concat(a.level, "级代理") as level'),
+                DB::raw('(select count(1) as c from agent where agent.parent_agent_id = a.id) as lower_agent_count'), // 下级代理数
+                DB::raw('(select count(1) as c from users where users.parent_id = a.user_id) as user_count'), // 招新数
+                DB::raw('(select sum(charge_amount) as s from agent_commission as ac where ac.agent_id = a.id) as recharge_amount'), // 下级用户充值总金额
+                DB::raw('(select ifnull(sum(commission), 0) as s from agent_commission as ac where ac.agent_id = a.id) as recharge_income'), // 充值总收益
+                DB::raw('(select ifnull(sum(charge_amount), 0) as s from agent_commission as ac where ac.agent_id = a.id and ac.type = 1) as direct_recharge_amount'), // 直接用户充值总金额
+                DB::raw('(select ifnull(sum(commission), 0) as s from agent_commission as ac where ac.agent_id = a.id and ac.type = 1) as direct_recharge_income'), // 直接用户充值总收益
+                DB::raw('(select ifnull(sum(charge_amount), 0) as s from agent_commission as ac where ac.agent_id = a.id and ac.type = 2) as indirect_recharge_amount'), // 间接用户充值总金额
+                DB::raw('(select ifnull(sum(commission), 0) as s from agent_commission as ac where ac.agent_id = a.id and ac.type = 2) as indirect_recharge_income'), // 间接用户充值总收益
+
+                'u.account_number',
+                'a.parent_agent_id',
+                'sa.username as parent_agent_name',
+                'a.reg_time',
+                'sa.username as parent_agent_name'
+            )
+            ->leftJoin('users as u', 'u.id', '=', 'a.user_id')
+            ->leftJoin('agent as sa', 'sa.id', '=', 'a.parent_agent_id')
+            ->paginate($limit);
+//        foreach ($list as $k => $v)
+//        {
+//            $list[$k]['account_number'] = $v['user']['account_number'];
+//        }
         return $this->layuiData($list);
     }
 
@@ -115,16 +138,16 @@ class AgentController extends Controller
 
     public function start(){
         $id = request()->input('id', 0);
-        $offerProduct = AgentModel::find($id);
-        switch ($offerProduct->status){
+        $agentInfo = AgentModel::find($id);
+        switch ($agentInfo->status){
             case  0:
-                $offerProduct->status = 1;
+                $agentInfo->status = 1;
                 break;
             case 1:
-                $offerProduct->status = 0;
+                $agentInfo->status = 0;
                 break;
         }
-        $offerProduct->save();
+        $agentInfo->save();
         return $this->success('保存成功');
     }
 

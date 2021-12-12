@@ -851,6 +851,7 @@ Route::group([ 'middleware' => ['lang', /*'check_user'*/]], function () {
         Route::any('agent/list_data', 'Admin\AgentController@listData');//代理列表数据
         Route::any('agent/add', 'Admin\AgentController@add');//新增代理数据
         Route::any('agent/start', 'Admin\AgentController@start');//修改代理状态
+        Route::any('agent/del', 'Admin\AgentController@start');//修改代理状态
         
         Route::any('ulipai/orderlist', 'Admin\UlipaiController@orderList');//U利派订单
         Route::any('ulipai/orderlist_data', 'Admin\UlipaiController@orderListData');//U利派列表数据
