@@ -343,16 +343,16 @@ var ts = {
         dbxe:"单笔限额",
         rsyl:"日收益率",
         zq:"周期(天)",
-          wtz:"委托中",
-          yjs:"已结束",
-          title:"委托产品类型",
-          num:"委托数量",      
-          income_days:"收益天数",
-          addtime:"委托时间",
-          endtime:"结束时间",
-          cunrunum:"请输入转入数量",
-          ljsy:"累计收益",
-          mr:"买入",
+        wtz:"委托中",
+        yjs:"已结束",
+        title:"委托产品类型",
+        num:"委托数量",
+        income_days:"收益天数",
+        addtime:"委托时间",
+        endtime:"结束时间",
+        cunrunum:"请输入转入数量",
+        ljsy:"累计收益",
+        mr:"买入",
         renamerequired:"真实姓名不能为空",
         currencyName: "币种",
         btcLink: "比特币链",
@@ -362,6 +362,7 @@ var ts = {
         account_error: "账号错误",
         account_exists: "账号已存在",
         send_success: "发送成功",
+        day_income: "日收益",
     },
     hk: {
          juzudz:"請輸入居住地址",
@@ -634,6 +635,7 @@ var ts = {
       account_error: "账号错误",
       account_exists: "账号已存在",
       send_success: "发送成功",
+      day_income:"日收益",
     },
     en: {
         "juzudz": "Please enter your residential address",
@@ -908,6 +910,7 @@ var ts = {
         "account_error": "Account error",
         "account_exists": "Account already exists",
         "send_success": "Sent successfully",
+        "day_income":"Daily income",
     },
     jp: {
         "juzudz": "住所を入力してください。",
@@ -1182,6 +1185,7 @@ var ts = {
         "account_error": "アカウントのエラー",
         "account_exists": "アカウントは既に存在します",
         "send_success": "送信成功",
+        "day_income":"日収"
     },
     kor: {
         "juzudz": "거주 주 소 를 입력 하 세 요",
@@ -1456,6 +1460,7 @@ var ts = {
         "account_error": "계 정 오류",
         "account_exists": "계 정 이 이미 존재 합 니 다",
         "send_success": "발송 성공",
+        "day_income":"일수익"
     },
     th: {
         "juzudz": "กรุณาระบุที่อยู่อาศัยของคุณ",
@@ -1730,6 +1735,7 @@ var ts = {
         "account_error": "ข้อผิดพลาดของบัญชี",
         "account_exists": "หมายเลขบัญชีอยู่แล้ว",
         "send_success": "ส่งเรียบร้อยแล้ว",
+        "day_income":"กำไรรายวัน",
     },
     de: {
         "juzudz": "Bitte geben Sie Ihre Wohnadresse ein",
@@ -2004,6 +2010,7 @@ var ts = {
         "account_error": "Fehler beim Konto",
         "account_exists": "Konto existiert bereits",
         "send_success": "Gesendet erfolgreich",
+        "day_income":"Tägliches Einkommen",
     },
     fr: {
         "juzudz": "Veuillez entrer votre adresse de résidence",
@@ -2278,6 +2285,7 @@ var ts = {
         "account_error": "Erreur de compte",
         "account_exists": "Le compte existe déjà",
         "send_success": "Envoyé avec succès",
+        "day_income":"Gains journaliers",
     },
     es: {
         "juzudz": "Por favor, introduzca la dirección de residencia",
@@ -2552,6 +2560,7 @@ var ts = {
         "account_error": "Error de cuenta",
         "account_exists": "La cuenta ya existe",
         "send_success": "Enviar con éxito",
+        "day_income":"Ingresos diarios",
     }
 
 };
