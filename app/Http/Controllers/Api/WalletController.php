@@ -233,7 +233,7 @@ class WalletController extends Controller
         $ulipaigoods = UlipaiGoods::find($goods_id);
         
         if($number<$ulipaigoods->min || $number>$ulipaigoods->max){
-             return $this->error('买入数量不在范围内');
+             return $this->error('buy_number_no_between');
         }
       
       
@@ -306,7 +306,7 @@ class WalletController extends Controller
             
 
             DB::commit();
-            return $this->success('成功');
+            return $this->success('success');
         } catch (\Exception $ex) {
             DB::rollBack();
             return $this->error($ex->getMessage());
