@@ -2586,7 +2586,6 @@ var lg = getLocal('language') || 'zh';
 
 function getlg(keys) {
     var keys = keys;
-    console.log(keys)
     if (getLocal('language') == 'hk') {
         return ts.hk[keys];
     } else if (getLocal('language') == 'en') {
