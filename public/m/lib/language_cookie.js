@@ -363,6 +363,8 @@ var ts = {
         account_exists: "账号已存在",
         send_success: "发送成功",
         day_income: "日收益",
+        buy_number_no_between: "买入数量不在范围内",
+        success: "成功",
     },
     hk: {
          juzudz:"請輸入居住地址",
@@ -636,6 +638,8 @@ var ts = {
       account_exists: "账号已存在",
       send_success: "发送成功",
       day_income:"日收益",
+      buy_number_no_between: "買入數量不在範圍內",
+      success: "成功",
     },
     en: {
         "juzudz": "Please enter your residential address",
@@ -911,6 +915,8 @@ var ts = {
         "account_exists": "Account already exists",
         "send_success": "Sent successfully",
         "day_income":"Daily income",
+        "buy_number_no_between": "Purchase quantity is out of range",
+        "success": "success",
     },
     jp: {
         "juzudz": "住所を入力してください。",
@@ -1185,7 +1191,9 @@ var ts = {
         "account_error": "アカウントのエラー",
         "account_exists": "アカウントは既に存在します",
         "send_success": "送信成功",
-        "day_income":"日収"
+        "day_income":"日収",
+        "buy_number_no_between": "購入数量が範囲外である",
+        "success": "成功",
     },
     kor: {
         "juzudz": "거주 주 소 를 입력 하 세 요",
@@ -1460,7 +1468,9 @@ var ts = {
         "account_error": "계 정 오류",
         "account_exists": "계 정 이 이미 존재 합 니 다",
         "send_success": "발송 성공",
-        "day_income":"일수익"
+        "day_income":"일수익",
+        "buy_number_no_between": "매입 수량이 범위 내에 있지 않다",
+        "success": "성취",
     },
     th: {
         "juzudz": "กรุณาระบุที่อยู่อาศัยของคุณ",
@@ -1736,6 +1746,8 @@ var ts = {
         "account_exists": "หมายเลขบัญชีอยู่แล้ว",
         "send_success": "ส่งเรียบร้อยแล้ว",
         "day_income":"กำไรรายวัน",
+        "buy_number_no_between": "ปริมาณการซื้อไม่ได้อยู่ในช่วง",
+        "success": "ประสบความสำเร็จ",
     },
     de: {
         "juzudz": "Bitte geben Sie Ihre Wohnadresse ein",
@@ -2011,6 +2023,8 @@ var ts = {
         "account_exists": "Konto existiert bereits",
         "send_success": "Gesendet erfolgreich",
         "day_income":"Tägliches Einkommen",
+        "buy_number_no_between": "Die Einkaufsmenge ist außer Reichweite",
+        "success": "Erfolg",
     },
     fr: {
         "juzudz": "Veuillez entrer votre adresse de résidence",
@@ -2286,6 +2300,8 @@ var ts = {
         "account_exists": "Le compte existe déjà",
         "send_success": "Envoyé avec succès",
         "day_income":"Gains journaliers",
+        "buy_number_no_between": "Quantité achetée hors de portée",
+        "success": "Succès",
     },
     es: {
         "juzudz": "Por favor, introduzca la dirección de residencia",
@@ -2561,6 +2577,8 @@ var ts = {
         "account_exists": "La cuenta ya existe",
         "send_success": "Enviar con éxito",
         "day_income":"Ingresos diarios",
+        "buy_number_no_between": "Cantidad de compra fuera de rangon",
+        "success": "éxito",
     }
 
 };

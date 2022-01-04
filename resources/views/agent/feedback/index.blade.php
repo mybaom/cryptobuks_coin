@@ -124,7 +124,7 @@
                 layer.open({
                     title: '回复'
                     , type: 2
-                    , content: '{{url('/agent/feedback/reply')}}?id=' + data.id
+                    , content: '/agent/feedback/reply?id=' + data.id
                     // , maxmin: true
                     , area: ['1000px', '600px']
                 });

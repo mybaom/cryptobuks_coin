@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Agent;
 
 use App\Agent;
 use App\FeedBack;
+use App\Users;
 use Illuminate\Support\Facades\DB;
 
 class FeedbackController extends Controller
@@ -46,6 +47,7 @@ class FeedbackController extends Controller
         if($agent->level == 1){
             $res = Agent::where('parent_agent_id', $agentId)->get();
             $userIds = array_column(json_decode(json_encode($res)), 'user_id');
+            $userIds = array_merge([$agent->user_id], $userIds);
             $query->whereIn('users.parent_id', $userIds);
         }else{
             $query->where('users.parent_id', $agent->user_id);

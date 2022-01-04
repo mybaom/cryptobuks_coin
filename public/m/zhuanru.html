@@ -190,7 +190,7 @@
                 var currency = app.check_currency_id;
                 var wallet_type = 1;
 
-                initDataToken({
+                initDataToken3({
                     url: 'wallet/yubaozhuanru',
                     type: 'post',
                     data: {
@@ -200,14 +200,54 @@
                         goods_id,
                     }
                 }, function (res) {
-                   
-                    layer_msg(res)
+                    layer_msg(getlg(res.message));
                     setTimeout(() => {
                         location.href = 'ulischool.html'
                     }, 1500);
                 })
 
             }
+
+            function initDataToken3(params, callback) {
+                // layer_loading();
+                var url = _API + params.url;
+                var type = params.type || 'get';
+                var data = params.data || [];
+                var token = get_user_login();
+                $.ajax({
+                    url,
+                    type,
+                    data,
+                    beforeSend: function beforeSend(request) {
+                        request.setRequestHeader('Authorization', token)
+                    },
+                    success: function (res) {
+                        layer_close();
+                        if (res.type == 'ok') {
+                            callback && callback(res)
+                        } else {
+                            callback && callback(res)
+                            if (res.type == '997') {
+                                setTimeout(() => {
+                                    location.href = 'adding.html';
+                                }, 1500);
+                            }
+                            if (res.type == '998') {
+                                setTimeout(() => {
+                                    location.href = 'authentication.html';
+                                }, 1500);
+                            }
+                            if (res.type == '999') {
+                                location.href = 'login.html'
+                            }
+
+
+                        }
+                    }
+                })
+            }
+
+
             $('.mention').click(function () {
                 postData();
             })
