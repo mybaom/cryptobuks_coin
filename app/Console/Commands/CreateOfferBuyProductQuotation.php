@@ -11,6 +11,37 @@ class CreateOfferBuyProductQuotation extends Command{
     protected $description = "生产认购产品行情数据";
 
     public function handle(){
+        // 获取产品数据
+        $products = OfferProduct::getProducts();
+
+        foreach ($products as $k => $v) {
+            $getData = true;
+            while ($getData) {
+                list($data, $insertData, $closePrice) = $this->createdData($v);
+                if($this->convert_scientific_number_to_normal(abs($data['highest_price']-$data['lowest_price'])/$data['highest_price']) < 0.01){
+                    $getData = false;
+                }
+            }
+
+            DB::beginTransaction();
+            try {
+                $updateNowPriceResult = DB::table('offer_buy_product')->where('id', $v->id)->update(['now_price' => $closePrice]);
+                // 如果更新失败则再更新一次
+                if (!$updateNowPriceResult) {
+                    DB::table('offer_buy_product')->where('id', $v->id)->update(['now_price' => $closePrice]);
+                }
+                if ($insertData) {
+                    DB::table('offer_product_increase_record')->insert($insertData);
+                }
+                DB::commit();
+            } catch (\Exception $e) {
+                echo $e->getMessage();
+                DB::rollBack();
+            }
+        }
+    }
+
+    public function createdData($v){
         // 获取时间
         $advanceMin = 2; // 提前预设两分钟后的数据
         $time = time() + 60 * $advanceMin;
@@ -22,33 +53,29 @@ class CreateOfferBuyProductQuotation extends Command{
         $isThirtyMin = ($currentMin % 30) == 0 ? true : false;
         $isHourMin = ($currentMin % 60) == 0 ? true : false;
         $insertData = [];
-        // 获取产品数据
-        $products = OfferProduct::getProducts();
-        DB::beginTransaction();
-        try {
-            foreach ($products as $k => $v) {
-                $todayPrice = $v->today_price;
-                // 如果今日行情起售价为0或者为0点则更新今日起售现价为现价
-                if ($v->today_price == 0 || $currentMin == '00') {
-                    $updateTodayPriceResult = DB::table('offer_buy_product')->where('id', $v->id)->update(['today_price' => $v->now_price]);
-                    // 如果更新失败则再更新一次
-                    if (!$updateTodayPriceResult) {
-                        DB::table('offer_buy_product')->where('id', $v->id)->update(['today_price' => $v->now_price]);
-                    }
-                    // 今日起售价也更换为现价
-                    $todayPrice = $v->now_price;
-                }
 
-                // 获得浮动价格
-                $price1 = $this->getReasonablePrice(
-                    $this->getNowPrice(
-                        $todayPrice,
-                        $v->now_price,
-                        $v->rise_fall_probability / 100,
-                        $v->min_increase / 100,
-                        $v->max_increase / 100
-                    )
-                , rand(0, 1));
+        $todayPrice = $v->today_price;
+        // 如果今日行情起售价为0或者为0点则更新今日起售现价为现价
+        if ($v->today_price == 0 || $currentMin == '00') {
+            $updateTodayPriceResult = DB::table('offer_buy_product')->where('id', $v->id)->update(['today_price' => $v->now_price]);
+            // 如果更新失败则再更新一次
+            if (!$updateTodayPriceResult) {
+                DB::table('offer_buy_product')->where('id', $v->id)->update(['today_price' => $v->now_price]);
+            }
+            // 今日起售价也更换为现价
+            $todayPrice = $v->now_price;
+        }
+
+        // 获得浮动价格
+        $price1 = $this->getReasonablePrice(
+            $this->getNowPrice(
+                $todayPrice,
+                $v->now_price,
+                $v->rise_fall_probability / 100,
+                $v->min_increase / 100,
+                $v->max_increase / 100
+            )
+            , rand(0, 1));
 //                $price2 = $this->getNowPrice(
 //                        $todayPrice,
 //                        $v->now_price,
@@ -56,70 +83,54 @@ class CreateOfferBuyProductQuotation extends Command{
 //                        $v->min_increase / 100,
 //                        $v->max_increase / 100
 //                    );
-                $price2 = $this->getReasonablePrice(
-                    $this->getNowPrice(
-                        $todayPrice,
-                        $v->now_price,
-                        $v->rise_fall_probability / 100,
-                        $v->min_increase / 100,
-                        $v->max_increase / 100
-                    ),
-                rand(0, 1));
-                $price3 = $this->getReasonablePrice(
-                    $this->getNowPrice(
-                        $todayPrice,
-                        $v->now_price,
-                        $v->rise_fall_probability / 100,
-                        $v->min_increase / 100,
-                        $v->max_increase / 100
-                    )
-                , rand(0, 1));
+        $price2 = $this->getReasonablePrice(
+            $this->getNowPrice(
+                $todayPrice,
+                $v->now_price,
+                $v->rise_fall_probability / 100,
+                $v->min_increase / 100,
+                $v->max_increase / 100
+            ),
+            rand(0, 1));
+        $price3 = $this->getReasonablePrice(
+            $this->getNowPrice(
+                $todayPrice,
+                $v->now_price,
+                $v->rise_fall_probability / 100,
+                $v->min_increase / 100,
+                $v->max_increase / 100
+            )
+            , rand(0, 1));
 
 //                list($highestPrice, $lowestPrice) = $this->getSortList([$price1, $price3]);
-                list($highestPrice, $closePrice, $lowestPrice) = $this->getSortList([$price1, $price2, $price3]);
-                $openPrice = (float)$v->now_price;
-                //$closePrice = $price2;
+        list($highestPrice, $closePrice, $lowestPrice) = $this->getSortList([$price1, $price2, $price3]);
+        $openPrice = (float)$v->now_price;
+        //$closePrice = $price2;
 
-                $data = ['obp_id' => $v->id,
-                    'highest_price' => $highestPrice,
-                    'close_price' => $closePrice,
-                    'lowest_price' => $lowestPrice,
-                    'open_price' => $openPrice,
-                    'minute' => $currentDate,
-                    'time' => $time,
-                    'volume' => rand($v->min_volume, $v->max_volume)
-                ];
-                $insertData[] = array_merge($data, ['time_type' => 1]);
-                if ($isFiveMin) {
-                    $insertData[] = array_merge($data, ['time_type' => 2]);
-                }
-                if ($isFifteenMin) {
-                    $insertData[] = array_merge($data, ['time_type' => 3]);
-                }
-                if ($isThirtyMin) {
-                    $insertData[] = array_merge($data, ['time_type' => 4]);
-                }
-                if ($isHourMin) {
-                    $insertData[] = array_merge($data, ['time_type' => 5]);
-                }
-
-                $updateNowPriceResult = DB::table('offer_buy_product')->where('id', $v->id)->update(['now_price' => $closePrice]);
-                // 如果更新失败则再更新一次
-                if (!$updateNowPriceResult) {
-                    DB::table('offer_buy_product')->where('id', $v->id)->update(['now_price' => $closePrice]);
-                }
-            }
-
-            if ($insertData) {
-                DB::table('offer_product_increase_record')->insert($insertData);
-            }
-
-            DB::commit();
-        }catch (\Exception $e) {
-            DB::rollBack();
+        $data = ['obp_id' => $v->id,
+            'highest_price' => $highestPrice,
+            'close_price' => $closePrice,
+            'lowest_price' => $lowestPrice,
+            'open_price' => $openPrice,
+            'minute' => $currentDate,
+            'time' => $time,
+            'volume' => rand($v->min_volume, $v->max_volume)
+        ];
+        $insertData[] = array_merge($data, ['time_type' => 1]);
+        if ($isFiveMin) {
+            $insertData[] = array_merge($data, ['time_type' => 2]);
+        }
+        if ($isFifteenMin) {
+            $insertData[] = array_merge($data, ['time_type' => 3]);
+        }
+        if ($isThirtyMin) {
+            $insertData[] = array_merge($data, ['time_type' => 4]);
+        }
+        if ($isHourMin) {
+            $insertData[] = array_merge($data, ['time_type' => 5]);
         }
 
-        return true;
+        return [$data, $insertData, $closePrice];
     }
 
     /**

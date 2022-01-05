@@ -15,6 +15,14 @@ abstract class TestCase extends BaseTestCase
         echo ($dataLen-30)/$dataLen*100;
     }
 
+    public function testNumberDiffrent()
+    {
+        $a = 31321;
+        $b = 31322;
+        echo $this->convert_scientific_number_to_normal(abs($a-$b)/$a) > 0.01 ? 'gt' : 'lt';
+
+    }
+
     public function testKModel(){
         // 起售价
         $startPrice = 10;
