@@ -19,9 +19,9 @@ class CreateOfferBuyProductQuotation extends Command{
             while ($getData) {
                 list($data, $insertData, $closePrice) = $this->createdData($v);
                 if(
-                    $this->convert_scientific_number_to_normal(abs($data['highest_price']-$data['lowest_price'])/$data['highest_price']) < 0.01
+                    $this->convert_scientific_number_to_normal(abs($data['highest_price']-$data['lowest_price'])/$data['highest_price']) < 0.003
                     &&
-                    $this->convert_scientific_number_to_normal(abs($data['close_price']-$data['open_price'])/$data['close_price']) < 0.01
+                    $this->convert_scientific_number_to_normal(abs($data['close_price']-$data['open_price'])/$data['close_price']) < 0.003
                 ){
                     $getData = false;
                 }

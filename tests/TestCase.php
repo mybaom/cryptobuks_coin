@@ -17,8 +17,9 @@ abstract class TestCase extends BaseTestCase
 
     public function testNumberDiffrent()
     {
-        $a = 31321;
-        $b = 31322;
+        $a = 0.99951;
+        $b = 0.99029;
+        echo $this->convert_scientific_number_to_normal(abs($a-$b)/$a) . "\n";
         echo $this->convert_scientific_number_to_normal(abs($a-$b)/$a) > 0.01 ? 'gt' : 'lt';
 
     }
