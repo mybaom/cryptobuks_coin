@@ -88,7 +88,7 @@
                                     </div>
                                 </div>
                                 <div class="main-price">
-                                    <div class="name_1 usdprice" :style="item.change < 0?'color:#e3046f':'color:#00c087'">{{item.now_price || 0.00 | toFixed4}}</div>
+                                    <div class="name_1 usdprice" :style="item.change < 0?'color:#e3046f':'color:#00c087'">{{item.now_price || 0.00 | toFixed6}}</div>
                                     <!--<div class="name_2 cnyprice">≈-->
                                     <!--    {{item.now_price * item.rmb_relation || 0.00 | toFixed2}}CNY</div>-->
                                 </div>
@@ -183,6 +183,10 @@
                 toFixed4: function (value) {
                     var vals = iTofixed(value,4);
 						return vals;
+                },
+                toFixed6: function (value) {
+                    var vals = iTofixed(value,6);
+                    return vals;
                 },
                 toFixed4s: function (value) {
                     var vals = iTofixed(value,0);
