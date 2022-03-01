@@ -144,6 +144,7 @@ class CreateOfferBuyProductQuotation extends Command{
      */
     public function getReasonablePrice($nowPrice, $addOrSub = true)
     {
+        $nowPrice = $this->convert_scientific_number_to_normal($nowPrice);
         $nowPrice = $this->subPrice($nowPrice);
         // 获取当前价格在什么价位
         $beforeInt = substr($nowPrice,0, strrpos($nowPrice,"."));
