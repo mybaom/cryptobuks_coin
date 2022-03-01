@@ -120,6 +120,7 @@ class CreateOfferBuyProductQuotation extends Command{
             'time' => $time,
             'volume' => rand($v->min_volume, $v->max_volume)
         ];
+        echo json_encode($data);die;
         $insertData[] = array_merge($data, ['time_type' => 1]);
         if ($isFiveMin) {
             $insertData[] = array_merge($data, ['time_type' => 2]);
@@ -150,7 +151,7 @@ class CreateOfferBuyProductQuotation extends Command{
         $beforeInt = substr($nowPrice,0, strrpos($nowPrice,"."));
         // 如果价格大于0，则获得价格小数后两位的位置
         if($beforeInt > 0){
-            $subLength = strlen($beforeInt) + 4;
+            $subLength = strlen($beforeInt) + 3;
         }else{
             // 如果价格小于0，则拿到价格的非零的第一位数在哪个位置
             $afterNumber = substr($nowPrice,strripos($nowPrice,".")+1);
@@ -176,10 +177,10 @@ class CreateOfferBuyProductQuotation extends Command{
                     $subLength = 8;
                     break;
                 case 4:
-                    $subLength = 8;
+                    $subLength = 7;
                     break;
                 case 3:
-                    $subLength = 8;
+                    $subLength = 7;
                     break;
                 case 2:
                     $subLength = 7;
