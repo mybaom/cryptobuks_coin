@@ -44,7 +44,7 @@
                     ,{field: 'title', title: '产品名', Width:150}
                     ,{field: 'min', title: '最小限额', minWidth:150}
                     ,{field: 'max', title: '最大限额', minWidth:50}
-                    ,{field: 'today_profit', title: '每日产生CBV收益/USDT', minWidth:200}
+                    ,{field: 'today_profit', title: '每日产生CBZ收益/USDT', minWidth:200}
                     ,{field: 'cycle', title: '周期（天）', minWidth:80}
                     ,{field:'status', title:'是否开启', minWidth:100, templet: '#switchTpl', unresize: true}
                     ,{title:'操作',toolbar: '#barDemo'}

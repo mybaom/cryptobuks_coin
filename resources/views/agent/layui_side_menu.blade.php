@@ -120,7 +120,7 @@
 
                 <dl class="layui-nav-child">
                     <dd data-name="button">
-                        <a lay-href="/agent/cbv/index">cbv持仓管理</a>
+                        <a lay-href="/agent/cbv/index">cbz持仓管理</a>
                     </dd>
                 </dl>
             </li>

@@ -92,7 +92,7 @@ var vue = new Vue({
 				success: function (data) {
 					if (data.type == 'ok') {
 						var res = data.message;
-						that.Lists.find((item) => item.currency_name == 'CBV').usdt_price = res.now_price;
+						that.Lists.find((item) => item.currency_name == 'CBZ').usdt_price = res.now_price;
 						that.getChangeCount();
 					} else if (data.type == '999') {
 						window.location = 'login.html';

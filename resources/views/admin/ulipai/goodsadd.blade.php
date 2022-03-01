@@ -50,7 +50,7 @@
 {{--        </div>--}}
 
         <div class="layui-form-item">
-            <label class="layui-form-label">CBV收益</label>
+            <label class="layui-form-label">CBZ收益</label>
             <div class="layui-input-inline">
                 <input type="text" name="today_profit" lay-verify="required" autocomplete="off" placeholder="" class="layui-input" value="@if(!empty($result->today_profit)){{$result->today_profit}}@endif">
             </div>

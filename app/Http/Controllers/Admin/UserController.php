@@ -551,7 +551,7 @@ class UserController extends Controller
 
         $cbvWallet = $offerProductWallet->select(
             'id',
-            DB::raw('"CBV" as currency_name'),
+            DB::raw('"CBZ" as currency_name'),
             DB::raw('0.00000000 as micro_balance'),
             DB::raw('0.00000000 as lock_micro_balance'),
             DB::raw('balance as change_balance'),

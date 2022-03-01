@@ -877,7 +877,7 @@ class WalletController extends Controller
         $cbvWallet = OfferProductWallet::select(
             DB::raw('0 as rate'),
             DB::raw('0 as min_number'),
-            DB::raw('"cbv" as name'),
+            DB::raw('"cbz" as name'),
             DB::raw('balance as legal_balance'),
             DB::raw('balance as change_balance'),
             DB::raw("1 as is_open_CTbi"),

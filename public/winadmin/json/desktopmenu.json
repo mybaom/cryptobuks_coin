@@ -264,9 +264,9 @@
       "id": 49
     },
     {
-      "title": "CBV持仓",
+      "title": "CBZ持仓",
       "pageURL": "/admin/offerproduct/getCbvWalletList",
-      "name": "CBV持仓",
+      "name": "CBZ持仓",
       "icon": "fa-gg-circle",
       "openType": 2,
       "maxOpen": -1,
