@@ -58,7 +58,10 @@
                 $.ajax({
                     url:'{{url('admin/user/add')}}'
                     ,type:'post'
-                    ,dataType:'json'
+                    ,dataType:'json',
+                    beforeSend:function(xhr) {
+                        xhr.setRequestHeader('X-Requested-With', {toString: function(){ return 'XMLHttpRequest'; }});
+                    }
                     ,data : data
                     ,success:function(res){
                         if(res.type=='error'){
