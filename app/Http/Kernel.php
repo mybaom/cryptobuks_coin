@@ -69,5 +69,6 @@ class Kernel extends HttpKernel
         'lever_hold_check' => \App\Http\Middleware\HoldCheck::class,
         'demo_limit' => \App\Http\Middleware\DemoLimit::class,
         'validate_locked' => \App\Http\Middleware\ValidateUserLocked::class,
+        'cors' => \App\Http\Middleware\Cors::class,
     ];
 }
