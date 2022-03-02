@@ -527,11 +527,11 @@ Route::group([ 'middleware' => ['lang', /*'check_user'*/]], function () {
     Route::post('/admin/login', 'Admin\DefaultController@login');
 //Route::get('/admin/login1', 'Admin\DefaultController@login1');
 //管理后台
-    Route::group(['prefix' => 'winadmin', 'middleware' => ['admin_auth']], function () {
+    Route::group(['prefix' => 'winadmin', 'middleware' => ['admin_auth', 'cors']], function () {
         Route::get('/index', 'Admin\DefaultController@index');
     });
 //管理后台
-    Route::group(['prefix' => 'admin', 'middleware' => ['admin_auth']], function () {
+    Route::group(['prefix' => 'admin', 'middleware' => ['admin_auth', 'cors']], function () {
         //查询新订单接口
         Route::get('/trackOrder', 'Admin\DefaultController@trackOrder');
         //币币
