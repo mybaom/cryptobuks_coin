@@ -203,6 +203,7 @@ class Users extends Model
         return self::where("phone", $string)
             ->orwhere('email', $string)
             ->orWhere('account_number', $string)
+            ->orWhere('extension_code', $string)
             ->first();
     }
 

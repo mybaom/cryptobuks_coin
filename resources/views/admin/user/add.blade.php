@@ -27,7 +27,7 @@
             </div>
         </div>
         <div class="layui-form-item">
-            <label class="layui-form-label">推荐人手机号或邮箱</label>
+            <label class="layui-form-label">推荐人手机号/邀请码/邮箱</label>
             <div class="layui-input-block">
                 <input type="text" name="parent" autocomplete="off" placeholder="" class="layui-input" value="">
             </div>
