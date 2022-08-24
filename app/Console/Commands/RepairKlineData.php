@@ -118,7 +118,7 @@ class RepairKlineData extends Command
                     "vol"            => $v[5],
                     "amount"         => $v[5]
                 ];
-
+//                echo json_encode($marketData, 256);die;
                 $setEsResult = $this->setEs($marketData);
 
                 if(! $setEsResult)
