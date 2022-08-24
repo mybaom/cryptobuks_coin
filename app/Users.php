@@ -106,7 +106,7 @@ class Users extends Model
     }
     public function getUsdtMicAttribute()
     {
-        $value = $this->getAttribute['id'];
+        $value = $this->getAttribute('id');
         if(empty($value)){
             return '';
         }
@@ -119,7 +119,7 @@ class Users extends Model
     //秒合约账号
     public function getUsdtAttribute()
     {
-        $value = $this->getAttributes['id'];
+        $value = $this->getAttributes('id');
         if(empty($value)){
             return '';
         }
@@ -132,7 +132,7 @@ class Users extends Model
 
     public function getCautionMoneyAttribute()
     {
-        $value = $this->getAttributes['id'];
+        $value = $this->getAttributes('id');
         if(empty($value)){
             return '';
         }
@@ -148,7 +148,7 @@ class Users extends Model
 
     public function getMyAgentLevelAttribute()
     {
-        $value = $this->attributes['agent_id'] ?? 0;
+        $value = $this->getAttributes('id');
         if ($value == 0) {
             return '普通用户';
         } else {
@@ -289,11 +289,11 @@ class Users extends Model
 
     public function getIsSellerAttribute()
     {
-         $id=$this->getAttribute['id'];
-         if(empty($id)){
-             return 0;
-         }
-        $seller = Seller::where('user_id', $this->getAttribute['id'])->first();
+        $id=$this->getAttribute('id');
+        if(empty($id)){
+            return 0;
+        }
+        $seller = Seller::where('user_id', $id)->first();
         if (!empty($seller)) {
             return 1;
         }
@@ -338,7 +338,7 @@ class Users extends Model
 
     public function getRiskNameAttribute()
     {
-        $risk = $this->attributes['risk'] ?? 0;
+        $risk = $this->attributes('id');
         return self::$roleList[$risk];
     }
 
