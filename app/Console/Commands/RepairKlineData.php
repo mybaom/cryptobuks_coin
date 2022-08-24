@@ -18,7 +18,8 @@ class RepairKlineData extends Command
 
     protected static $esClient = null;
 
-    protected static $resoucesUrl = 'https://zitzoom.com/Json/temp/Chain/Line/{{period}}/{{name}}.json';
+//    protected static $resoucesUrl = 'https://zitzoom.com/Json/temp/Chain/Line/{{period}}/{{name}}.json';
+    protected static $resoucesUrl = 'https://api.zb.com/data/v1/kline?market={{name}}_usdt&type={{period}}';
 
     protected static $period = [
         5 => "1min",
@@ -77,17 +78,17 @@ class RepairKlineData extends Command
                     }catch (\Exception $e){
                         echo FormatOutput::red('获取资源数据失败，url：' . $url, '') .PHP_EOL;
                     }
-                    if(empty($resources['data']) || empty($resources['status']) || $resources['status'] != 'ok')
+                    if(empty($resources['data']))
                     {
                         echo FormatOutput::red('获取资源数据失败，url：' . $url, '') .PHP_EOL;
                         continue;
                     }
-                    if(empty($resources['ch']))
+                    if(empty($resources['moneyType']))
                     {
                         echo FormatOutput::red('获取资源类型失败，url：' . $url, '') .PHP_EOL;
                         continue;
                     }
-                    if(strpos($resources['ch'], 'usdt') === false)
+                    if(strpos($resources['moneyType'], 'USDT') === false)
                     {
                         echo FormatOutput::red('资源类型非USDT，url：' . $url, '') .PHP_EOL;
                         continue;
@@ -106,16 +107,16 @@ class RepairKlineData extends Command
             foreach ($resources as $k => $v)
             {
                 $marketData = [
-                    "id"             => $v['id'],
+                    "id"             => $v[0],
                     "period"         => $period,
                     "base-currency"  => $currency['name'],
                     "quote-currency" => "USDT",
-                    "open"           => $v['open'],
-                    "close"          => $v['close'],
-                    "high"           => $v['high'],
-                    "low"            => $v['low'],
-                    "vol"            => $v['vol'],
-                    "amount"         => $v['amount']
+                    "open"           => $v[1],
+                    "high"           => $v[2],
+                    "low"            => $v[3],
+                    "close"          => $v[4],
+                    "vol"            => $v[5],
+                    "amount"         => $v[5]
                 ];
 
                 $setEsResult = $this->setEs($marketData);
