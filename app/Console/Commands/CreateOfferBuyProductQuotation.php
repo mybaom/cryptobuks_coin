@@ -120,7 +120,6 @@ class CreateOfferBuyProductQuotation extends Command{
             'time' => $time,
             'volume' => rand($v->min_volume, $v->max_volume)
         ];
-        echo json_encode($data);die;
         $insertData[] = array_merge($data, ['time_type' => 1]);
         if ($isFiveMin) {
             $insertData[] = array_merge($data, ['time_type' => 2]);
