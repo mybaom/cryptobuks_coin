@@ -107,7 +107,7 @@ class RepairKlineData extends Command
             foreach ($resources as $k => $v)
             {
                 $marketData = [
-                    "id"             => $v[0],
+                    "id"             => $v[0] / 1000,
                     "period"         => $period,
                     "base-currency"  => $currency['name'],
                     "quote-currency" => "USDT",
