@@ -434,7 +434,7 @@ class MarketHour extends Model
 //        $type = $base_currency . '.' . $quote_currency . '.' . $peroid;
         $type = 'doc';
         $es_client = self::getEsearchClient();
-
+        $size = 1440;
         $params = [
             'index' => 'market.kline',
             'type' =>  $type,//'doc',//
