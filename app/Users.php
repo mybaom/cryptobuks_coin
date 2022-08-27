@@ -338,7 +338,7 @@ class Users extends Model
 
     public function getRiskNameAttribute()
     {
-        $risk = $this->attributes('id');
+        $risk = $this->attributes['risk'];
         return self::$roleList[$risk];
     }
 
