@@ -18,10 +18,11 @@ class CreateOfferBuyProductQuotation extends Command{
             $getData = true;
             while ($getData) {
                 list($data, $insertData, $closePrice) = $this->createdData($v);
+                // 0.0001384的时候0.003k线有点假，基本都是差不多长度
                 if(
                     $this->convert_scientific_number_to_normal(abs($data['highest_price']-$data['lowest_price'])/$data['highest_price']) < 0.003
                     &&
-                    $this->convert_scientific_number_to_normal(abs($data['close_price']-$data['open_price'])/$data['close_price']) < 0.003
+                    $this->convert_scientific_number_to_normal(abs($data['close_price']-$data['open_price'])/$data['close_price']) < 0.007
                 ){
                     $getData = false;
                 }
