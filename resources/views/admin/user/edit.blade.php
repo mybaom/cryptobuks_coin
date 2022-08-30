@@ -39,8 +39,8 @@
                 <select lay-filter="agent_level" name="agent_level" lay-verify="required" lay-filter="risk_mode">
                     <option value=""></option>
                     <option value="0" {{ (!$agent) ? 'selected' : '' }} >非代理</option>
-                    <option value="1" {{ ($agent['level'] == 1) ? 'selected' : '' }} >一级代理</option>
-                    <option value="2" {{ ($agent['level'] == 2) ? 'selected' : '' }} >二级代理</option>
+                    <option value="1" {{ (!empty($agent['level']) && $agent['level'] == 1) ? 'selected' : '' }} >一级代理</option>
+                    <option value="2" {{ (!empty($agent['level']) && $agent['level'] == 2) ? 'selected' : '' }} >二级代理</option>
                 </select>
             </div>
         </div>

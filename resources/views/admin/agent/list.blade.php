@@ -68,7 +68,7 @@
             form.on('switch(sexDemo)', function(obj){
                 var id = this.value;
                 $.ajax({
-                    url:'{{url('admin/agent/start')}}',
+                    url:'/admin/agent/start',
                     type:'post',
                     dataType:'json',
                     data:{id:id},
