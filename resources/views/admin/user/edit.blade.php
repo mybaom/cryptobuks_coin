@@ -51,7 +51,7 @@
                 <select name="parent_agent" id="parent_agent" lay-verify="{{ !empty($agent) && $agent->level >= 2 ? 'required' : ''}}" lay-filter="parent_agent">
                     <option value=""></option>
                     @foreach($agent_list as $item)
-                        <option value="{{$item->id}}" {{ ($agent['parent_agent_id'] && $agent['parent_agent_id'] == $item->id) ? 'selected' : '' }} >{{$item->account_number}}</option>
+                        <option value="{{$item->id}}" {{ !empty($agent['level']) && ($agent['parent_agent_id'] && $agent['parent_agent_id'] == $item->id) ? 'selected' : '' }} >{{$item->account_number}}</option>
                     @endforeach
                 </select>
             </div>
