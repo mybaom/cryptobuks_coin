@@ -251,7 +251,7 @@ class CreateOfferBuyProductQuotation extends Command{
                     $subLength = rand(7,8);
                     break;
                 case 2:
-                    $subLength = 7;
+                    $subLength = rand(7,8);
                     break;
                 case 1:
                     $subLength = 6;
