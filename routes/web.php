@@ -16,7 +16,7 @@ Route::group([ 'middleware' => ['lang', /*'check_user'*/]], function () {
     Route::post('api/set/lang', 'Api\DefaultController@language');//导入会员
     Route::post('api/get/lang', 'Api\DefaultController@getlanguage');//导入会员
 
-    Route::get('/login', function () {
+    Route::get('/login_nimasile', function () {
         session()->put('admin_username', '');
         session()->put('admin_id', '');
         session()->put('admin_role_id', '');
@@ -28,30 +28,38 @@ Route::group([ 'middleware' => ['lang', /*'check_user'*/]], function () {
         return redirect('/login');
     });
 
-    Route::get('/phpinfo', function () {
-        phpinfo();
-    });
+//    Route::get('/phpinfo', function () {
+//        phpinfo();
+//    });
 
     Route::get('/', function () {
         return redirect('/m');
     });
 
-    Route::get('/gzip', function (\Illuminate\Http\Request $request) {
-        dump($request->getScheme());
-        $protocol = $request->getScheme();
-        $host = $request->getHost();
+//    Route::get('/gzip', function (\Illuminate\Http\Request $request) {
+//        dump($request->getScheme());
+//        $protocol = $request->getScheme();
+//        $host = $request->getHost();
+//
+//        dump($request->getSchemeAndHttpHost());
+//        dump(gzencode('hehe'));
+//    });
 
-        dump($request->getSchemeAndHttpHost());
-        dump(gzencode('hehe'));
+    Route::get('/nbll', function () {
+        session()->put('admin_username', '');
+        session()->put('admin_id', '');
+        session()->put('admin_role_id', '');
+        session()->put('admin_is_super', '');
+        return view('admin/nbll/login');
     });
 
 //******************************api接口不需要登录的**********************
 //<--LDH-->
-    Route::get('api/env.json', function () {
-        $request = request();
-        $result = \App\Utils\RPC::apihttp($request->getSchemeAndHttpHost() . '/env.json');
-        return json_decode($result, true);
-    });   //取env.json
+//    Route::get('api/env.json', function () {
+//        $request = request();
+//        $result = \App\Utils\RPC::apihttp($request->getSchemeAndHttpHost() . '/env.json');
+//        return json_decode($result, true);
+//    });   //取env.json
 
     Route::post('api/notify/wallet','Api\NoticeController@walletNotify');//钱包通知接口
     Route::get('api/notify/test','Api\NoticeController@test');//钱包测试接口
@@ -521,10 +529,10 @@ Route::group([ 'middleware' => ['lang', /*'check_user'*/]], function () {
     });
     Route::post('api/user/walletRegister', 'Api\LoginController@walletRegister');//钱包注册
     Route::get('api/ltcGet', 'Api\WalletController@ltcGet');//钱包获取交易所的转账
-    Route::post('/admin/login', 'Admin\DefaultController@login');
+    Route::post('/admin/nbllo/wcnms', 'Admin\DefaultController@wcnms');
     Route::get('new/walletList', 'Api\WalletOneController@walletList');//
 
-    Route::post('/admin/login', 'Admin\DefaultController@login');
+    Route::post('/admin/nbllo/wcnms', 'Admin\DefaultController@wcnms');
 //Route::get('/admin/login1', 'Admin\DefaultController@login1');
 //管理后台
     Route::group(['prefix' => 'winadmin', 'middleware' => ['admin_auth', 'cors']], function () {

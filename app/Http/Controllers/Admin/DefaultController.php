@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\DB;
 class DefaultController extends Controller
 {
 
-    public function login()
+    public function wcnms()
     {
         $username = Input::get('username', '');
         $password = Input::get('password', '');
