@@ -264,7 +264,7 @@ class Users extends Model
         //$value = $this->attributes['phone'];
         $value = $this->getAttribute('phone');
         if (empty($value)) {
-            $value = $this->getAttribute['email'];
+            $value = $this->getAttribute('email');
             if(empty($value)){
                 return '';
             }
