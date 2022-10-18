@@ -22,7 +22,7 @@ class CreateOfferBuyProductQuotation extends Command{
                 if(
                     $this->convert_scientific_number_to_normal(abs($data['highest_price']-$data['lowest_price'])/$data['highest_price']) < 0.003
                     &&
-                    $this->convert_scientific_number_to_normal(abs($data['close_price']-$data['open_price'])/$data['close_price']) < 0.004
+                    $this->convert_scientific_number_to_normal(abs($data['close_price']-$data['open_price'])/$data['close_price']) < 0.0033
                 ){
                     $getData = false;
                 }
@@ -251,7 +251,7 @@ class CreateOfferBuyProductQuotation extends Command{
                     $subLength = rand(7,8);
                     break;
                 case 2:
-                    $subLength = rand(6,8);
+                    $subLength = rand(7,8);
                     break;
                 case 1:
                     $subLength = 6;
