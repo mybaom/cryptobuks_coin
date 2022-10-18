@@ -166,13 +166,13 @@ class UliPaiSettlement extends Command
                 }
 
                 DB::commit();
-                return $this->success('成功');
+                echo '成功';die;
             } catch (\Exception $ex) {
                 DB::rollBack();
-                return $this->error($ex->getFile() . $ex->getLine() . $ex->getMessage());
+                echo $ex->getFile() . $ex->getLine() . $ex->getMessage();die;
             }
         }else{
-            return $this->success('没有要结算的订单');
+            echo '没有要结算的订单';die;
         }
     }
 
