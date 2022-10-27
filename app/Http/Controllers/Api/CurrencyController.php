@@ -643,9 +643,9 @@ class CurrencyController extends Controller
             'USDT' => Setting::getValueByKey('recharge_usdt_address', '')
         ];
 //        $getRechargeAddress = [
-//            'BTC' => '37uLL3Jn8zc81MT5UGwAoUx2Za8yoUC4cT',
-//            'ETH' => '0xeFc84e679d5A18870d8C7445cC2F2508aECA2C8d',
-//            'USDT' => '0xeFc84e679d5A18870d8C7445cC2F2508aECA2C8d'
+//            'BTC' => Setting::getValueByKey('recharge_btc_address', ''),
+//            'ETH' => Setting::getValueByKey('recharge_eth_address', ''),
+//            'USDT' => Setting::getValueByKey('recharge_usdt_address', '')
 //        ];
         return $this->success($getRechargeAddress);
     }
