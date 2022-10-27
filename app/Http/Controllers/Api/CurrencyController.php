@@ -136,7 +136,7 @@ class CurrencyController extends Controller
         $period = $request->get('period');
         $start = $request->get('from', null);
         $end = $request->get('to', null);
-       
+
         $symbol = strtoupper($symbol);
         //类型，1=15分钟，2=1小时，3=4小时,4=一天,5=分时,6=5分钟，7=30分钟,8=一周，9=一月,10=一年
         $period_list = [
@@ -196,7 +196,7 @@ class CurrencyController extends Controller
         $base_currency = Currency::where('name', $base_currency)
             ->where("is_display", 1)
             ->first();
-           
+
         $quote_currency = Currency::where('name', $quote_currency)
             ->where("is_display", 1)
             ->where("is_legal", 1)
@@ -244,8 +244,8 @@ class CurrencyController extends Controller
     }
 
     public function klineMarket(Request $request)
-    {	
-        
+    {
+
         $symbol = $request->input('symbol');
         $period = $request->input('period');
         $from = $request->input('from', null);
@@ -284,7 +284,7 @@ class CurrencyController extends Controller
             ];
         }
         $periods = array_keys($period_list);
-      
+
         if ($period == '' || !in_array($period, $periods)) {
             return [
                 'code' => -1,
@@ -315,7 +315,7 @@ class CurrencyController extends Controller
                 'data' => null
             ];
         }
-       
+
         $result = MarketHour::getEsearchMarket($base_currency, $quote_currency, $period, $from, $to);
 
         $result = array_map(function ($value) {
@@ -323,17 +323,17 @@ class CurrencyController extends Controller
             $value['volume'] = $value['amount'] ?? 0;
             return $value;
         }, $result);
-        
-        
-       
+
+
+
         return [
             'code' => 1,
             'msg' => 'success',
             'data' => $result
         ];
     }
-    
-    
+
+
 
     public function newQuotation()
     {
@@ -637,16 +637,16 @@ class CurrencyController extends Controller
 
     public function getChargeCoinAddress()
     {
-//        $getRechargeAddress = [
-//            'BTC' => Setting::getValueByKey('recharge_btc_address', ''),
-//            'ETH' => Setting::getValueByKey('recharge_eth_address', ''),
-//            'USDT' => Setting::getValueByKey('recharge_usdt_address', '')
-//        ];
         $getRechargeAddress = [
-            'BTC' => '37uLL3Jn8zc81MT5UGwAoUx2Za8yoUC4cT',
-            'ETH' => '0xeFc84e679d5A18870d8C7445cC2F2508aECA2C8d',
-            'USDT' => '0xeFc84e679d5A18870d8C7445cC2F2508aECA2C8d'
+            'BTC' => Setting::getValueByKey('recharge_btc_address', ''),
+            'ETH' => Setting::getValueByKey('recharge_eth_address', ''),
+            'USDT' => Setting::getValueByKey('recharge_usdt_address', '')
         ];
+//        $getRechargeAddress = [
+//            'BTC' => '37uLL3Jn8zc81MT5UGwAoUx2Za8yoUC4cT',
+//            'ETH' => '0xeFc84e679d5A18870d8C7445cC2F2508aECA2C8d',
+//            'USDT' => '0xeFc84e679d5A18870d8C7445cC2F2508aECA2C8d'
+//        ];
         return $this->success($getRechargeAddress);
     }
 
