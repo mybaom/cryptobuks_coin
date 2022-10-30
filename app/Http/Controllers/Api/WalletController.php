@@ -965,7 +965,7 @@ class WalletController extends Controller
             return $this->error('输入的金额不能为负数');
         }
         
-          $userreal = UserReal::where('user_id', $user_id)->first();
+        $userreal = UserReal::where('user_id', $user_id)->first();
         
         // $userjuzu=UserJuzu::where('user_id', $user_id)->first();
         
@@ -996,11 +996,7 @@ class WalletController extends Controller
         if ($number < $currencyInfo->min_number) {
             return $this->error('数量不能少于最小值');
         }
-        
-        
-        
-        
-        
+
         try {
             DB::beginTransaction();
             $wallet = UsersWallet::where('user_id', $user_id)->where('currency', $currency_id)->lockForUpdate()->first();
@@ -1026,10 +1022,10 @@ class WalletController extends Controller
                 throw new \Exception($result);
             }
 
-            $result = change_wallet_balance($wallet, 2, $number, AccountLog::WALLETOUT, '申请提币冻结余额', true);
-            if ($result !== true) {
-                throw new \Exception($result);
-            }
+//            $result = change_wallet_balance($wallet, 2, $number, AccountLog::WALLETOUT, '申请提币冻结余额', true);
+//            if ($result !== true) {
+//                throw new \Exception($result);
+//            }
             DB::commit();
             return $this->success('提币申请已成功，等待审核');
         } catch (\Exception $ex) {
